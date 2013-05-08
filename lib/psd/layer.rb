@@ -27,6 +27,8 @@ class PSD
       extra_len = @file.read_int
       layer_end = @file.tell + extra_len
 
+      parse_mask_data
+
       @file.seek layer_end
 
       return self
@@ -74,6 +76,10 @@ class PSD
       @blendingMode = @blendMode.mode
       @opacity = @blendMode.opacity
       @visible = @blendMode.visible
+    end
+
+    def parse_mask_data
+      @mask = Mask.read(@file)
     end
   end
 end
