@@ -1,7 +1,7 @@
 # This doesn't seem to be working properly yet.
 # Creates an infinite loop for some reason.
 
-module PSD
+class PSD
   class SkipBlock < BinData::Primitive
     endian  :big
 

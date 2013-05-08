@@ -1,4 +1,4 @@
-module PSD
+class PSD
   class Resource < BinData::Record
     endian  :big
 

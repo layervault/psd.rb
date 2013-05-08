@@ -1,4 +1,4 @@
-module PSD
+class PSD
   class Resources
     def initialize(file)
       @file = file
@@ -6,7 +6,7 @@ module PSD
     end
 
     def parse
-      n = @file.read(4).unpack('L>')[0]
+      n = @file.read_int
       length = n
       start = @file.tell
 

@@ -1,4 +1,4 @@
-module PSD
+class PSD
   module Helpers
     def width
       header.cols
@@ -6,6 +6,10 @@ module PSD
 
     def height
       header.rows
+    end
+
+    def layers
+      layer_mask.layers
     end
   end
 end

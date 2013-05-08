@@ -1,4 +1,4 @@
-module PSD
+class PSD
   class Header < BinData::Record
     endian :big
 
