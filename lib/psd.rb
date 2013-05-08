@@ -7,6 +7,8 @@ Dir.glob(dir_root + '/psd/*') {|file| require file}
 
 module PSD
   class File
+    include PSD::Helpers
+
     def initialize(file)
       @file = file.is_a?(String) ? ::File.open(file) : file
 
@@ -18,6 +20,7 @@ module PSD
     # parse all sections of the PSD.
     def parse!
       header
+      resources
 
       return true
     end
@@ -26,12 +29,8 @@ module PSD
       @header ||= PSD::Header.read(@file)
     end
 
-    def width
-      header.cols
-    end
-
-    def height
-      header.rows
+    def resources
+      @resources ||= PSD::Resources.new(@file).parse
     end
   end
 end
