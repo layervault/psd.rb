@@ -12,15 +12,11 @@ class PSD
 
     # Really weird padding business
     def name_length
-      pad2(name_len + 1) - 1
+      Util.pad2(name_len + 1) - 1
     end
 
     def resource_size
-      pad2(res_size)
-    end
-
-    def pad2(i)
-      ((i + 1) / 2) * 2
+      Util.pad2(res_size)
     end
   end
 end

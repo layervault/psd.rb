@@ -14,10 +14,34 @@ class PSD
 
     def skip
       @file.seek @file.read_int, IO::SEEK_CUR
+      return self
     end
 
     def parse
-      
+      mask_size = @file.read_int
+      finish = @file.tell + mask_size
+
+      return self if mask_size <= 0
+
+      layer_info_size = Util.pad2(@file.read_int)
+      pos = @file.tell
+
+      if layer_info_size > 0
+        layer_count = @file.read_short
+
+        if layer_count < 0
+          layer_count = layer_count.abs
+          @mergedAlpha = true
+        end
+
+        if layer_count * (18 + 6 * @header.channels) > layer_info_size
+          raise "Unlikely number of layers parsed: #{layer_count}"
+        end
+      end
+
+      layer_count.times do
+        @layers << PSD::Layer.new(@file).parse
+      end
 
       return self
     end
