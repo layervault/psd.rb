@@ -15,5 +15,5 @@ end
 
 psd = PSD.new('examples/images/example.psd')
 psd.parse!
-
-PSDOutput.print_folders psd.layers_with_structure
+psd.layers_with_structure
+# PSDOutput.print_folders psd.layers_with_structure
