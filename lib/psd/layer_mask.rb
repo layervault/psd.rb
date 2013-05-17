@@ -51,8 +51,6 @@ class PSD
 
           layer.parse_channel_image!(@header)
         end
-
-        @layer_section_end = @file.tell
       end
 
       # Layers are parsed in reverse order
@@ -69,17 +67,17 @@ class PSD
     def export(outfile)
       if @layers.size == 0
         # No data, just read whatever's here.
-        return outfile.write @file.read(@section_end - @section_start)
+        return outfile.write @file.read(@section_end - start_of_section)
       end
 
       # Read the initial mask data since it won't change
       outfile.write @file.read(@layer_section_start - @file.tell)
 
-      @layers.each do |layer|
+      @layers.reverse.each do |layer|
         layer.export(outfile)
       end
 
-      outfile.write @file.read(@section_end - @file.tell)
+      outfile.write @file.read(end_of_section - @file.tell)
     end
 
     private

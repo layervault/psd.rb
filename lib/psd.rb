@@ -78,7 +78,7 @@ class PSD
 
     # Nothing in the header or resources we want to bother with changing
     # right now. Write it straight to file.
-    outfile.write @file.read(@resources.section_end)
+    outfile.write @file.read(@resources.end_of_section)
 
     # Now, the changeable part. Layers and masks.
     layer_mask.export(outfile)

@@ -6,7 +6,7 @@ class PSD
     string  :blend_key, read_length: 4, trim_value: true
     uint8   :opacity
     uint8   :clipping
-    bit8   :flags
+    bit8    :flags
     skip    length: 1
 
     BLEND_MODES = {

@@ -59,7 +59,12 @@ class PSD
     end
 
     def export(outfile)
+      export_info(outfile)
       
+      @blend_mode.write(outfile)
+      @file.seek(@blend_mode.num_bytes, IO::SEEK_CUR)
+
+      outfile.write @file.read(end_of_section - @file.tell)
     end
 
     def [](val)
@@ -108,6 +113,18 @@ class PSD
       end
 
       end_section(:info)
+    end
+
+    def export_info(outfile)
+      [@top, @left, @bottom, @right].each { |val| outfile.write_int(val) }
+      outfile.write_short(@channels)
+
+      @channels_info.each do |channel_info|
+        outfile.write_short channel_info[:id]
+        outfile.write_int channel_info[:length]
+      end
+
+      @file.seek end_of_section(:info)
     end
 
     def parse_blend_modes
