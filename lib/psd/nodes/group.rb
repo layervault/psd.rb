@@ -3,8 +3,6 @@ class PSD::Node
     include PSD::HasChildren
     include PSD::Node::ParseLayers
     attr_reader :name, :top, :left, :bottom, :right
-    # alias_method :width, :cols
-    # alias_method :height, :rows
 
     def initialize(name, layers)
       @name = name
@@ -15,14 +13,18 @@ class PSD::Node
     def rows
       @right - @left
     end
+    alias :height :rows
 
     def cols
       @bottom - @top
     end
+    alias :width :cols
 
     def to_hash
       {
         name: name,
+        height: height,
+        width: width,
         children: children.map(&:to_hash)
       }
     end
