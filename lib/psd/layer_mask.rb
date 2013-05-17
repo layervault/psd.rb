@@ -1,5 +1,7 @@
 class PSD
-  class LayerMask < Section
+  class LayerMask
+    include Section
+    
     attr_reader :layers
 
     def initialize(file, header)

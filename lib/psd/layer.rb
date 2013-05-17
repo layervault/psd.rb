@@ -1,5 +1,7 @@
 class PSD
-  class Layer < Section
+  class Layer
+    include Section
+    
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
     attr_reader :channels, :image
@@ -57,8 +59,7 @@ class PSD
     end
 
     def export(outfile)
-      # TEMPORARY
-      outfile.write @file.read(section_end - section_start)
+      
     end
 
     def [](val)
@@ -88,6 +89,7 @@ class PSD
     private
 
     def parse_info
+      start_section(:info)
 
       @top = @file.read_int
       @left = @file.read_int
@@ -104,6 +106,8 @@ class PSD
 
         @channels_info << {id: channel_id, length: channel_length}
       end
+
+      end_section(:info)
     end
 
     def parse_blend_modes

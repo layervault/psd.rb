@@ -1,5 +1,7 @@
 class PSD
-  class Resources < Section
+  class Resources
+    include Section
+    
     def initialize(file)
       @file = file
       @resources = []
