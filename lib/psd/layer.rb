@@ -7,10 +7,10 @@ class PSD
       @file = file
       @image = nil
       @mask = {}
-      @blendingRanges = {}
+      @blending_ranges = {}
       @adjustments = {}
       @channels_info = []
-      @blendMode = {}
+      @blend_mode = {}
 
       @layerType = 'normal'
       @blendingMode = 'normal'
@@ -28,6 +28,8 @@ class PSD
       layer_end = @file.tell + extra_len
 
       parse_mask_data
+      parse_blending_ranges
+      parse_legacy_layer_name
 
       @file.seek layer_end
 
@@ -71,15 +73,53 @@ class PSD
     end
 
     def parse_blend_modes
-      @blendMode = BlendMode.read(@file)
+      @blend_mode = BlendMode.read(@file)
 
-      @blendingMode = @blendMode.mode
-      @opacity = @blendMode.opacity
-      @visible = @blendMode.visible
+      @blendingMode = @blend_mode.mode
+      @opacity = @blend_mode.opacity
+      @visible = @blend_mode.visible
     end
 
     def parse_mask_data
       @mask = Mask.read(@file)
+    end
+
+    def parse_blending_ranges
+      length = @file.read_int
+
+      @blending_ranges[:grey] = {
+        source: {
+          black: @file.read_short,
+          white: @file.read_short
+        },
+        dest: {
+          black: @file.read_short,
+          white: @file.read_short
+        }
+      }
+
+      @blending_ranges[:num_channels] = (length - 8) / 8
+
+      @blending_ranges[:channels] = []
+      @blending_ranges[:num_channels].times do
+        @blending_ranges[:channels] << {
+          source: {
+            black: @file.read_short,
+            white: @file.read_short
+          },
+          dest: {
+            black: @file.read_short,
+            white: @file.read_short
+          }
+        }
+      end
+    end
+
+    # The old school layer names are encoded in MacRoman format,
+    # not UTF-8. Luckily Ruby kicks ass at character conversion.
+    def parse_legacy_layer_name
+      len = Util.pad4 @file.read(1).unpack('C')[0]
+      @legacy_name = @file.read(len).encode('UTF-8', 'MacRoman')
     end
   end
 end
