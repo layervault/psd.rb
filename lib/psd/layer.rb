@@ -2,6 +2,8 @@ class PSD
   class Layer
     attr_reader :top, :left, :bottom, :right, :channels
     attr_reader :rows, :cols
+    attr_reader :name, :mask, :blending_ranges, :adjustments, :channels_info
+    attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
 
     def initialize(file)
       @file = file
@@ -12,10 +14,10 @@ class PSD
       @channels_info = []
       @blend_mode = {}
 
-      @layerType = 'normal'
-      @blendingMode = 'normal'
+      @layer_type = 'normal'
+      @blending_mode = 'normal'
       @opacity = 255
-      @fillOpacity = 255
+      @fill_opacity = 255
     end
 
     def parse(index=nil)
@@ -32,7 +34,9 @@ class PSD
       parse_legacy_layer_name
       parse_extra_data
 
-      @file.seek @layer_end
+      @name = @legacy_name unless @name
+
+      @file.seek @layer_end # Skip over any filler zeros
 
       return self
     end
@@ -76,7 +80,7 @@ class PSD
     def parse_blend_modes
       @blend_mode = BlendMode.read(@file)
 
-      @blendingMode = @blend_mode.mode
+      @blending_mode = @blend_mode.mode
       @opacity = @blend_mode.opacity
       @visible = @blend_mode.visible
     end
@@ -120,7 +124,7 @@ class PSD
     # not UTF-8. Luckily Ruby kicks ass at character conversion.
     def parse_legacy_layer_name
       len = Util.pad4 @file.read(1).unpack('C')[0]
-      @legacy_name = @file.read(len).encode('UTF-8', 'MacRoman')
+      @legacy_name = @file.read(len).encode('UTF-8', 'MacRoman').delete("\000")
     end
 
     # This section is a bit tricky to parse because it represents all of the
@@ -139,7 +143,7 @@ class PSD
         case key
         when 'luni' # Unicode layer name
           len = @file.read_int * 2
-          @name = @file.read(len).unpack("A#{len}")[0].encode('UTF-8')
+          @name = @file.read(len).unpack("A#{len}")[0].encode('UTF-8').delete("\000")
 
           # The name seems to be padded with null bytes. This is the easiest solution.
           @file.seek pos + length
