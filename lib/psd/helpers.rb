@@ -20,23 +20,9 @@ class PSD
       layers.select { |l| l.folder? }
     end
 
-    def layers_with_structure
-      result = {layers: []}
-      parseStack = []
-      layers.each do |layer|
-        if layer.folder?
-          parseStack << result
-          result = {name: layer.name, layers: []}
-        elsif layer.hidden?
-          temp = result
-          result = parseStack.pop
-          result[:layers] << temp
-        else
-          result[:layers] << layer
-        end
-      end
-
-      return result
+    # constructs a tree of the current document
+    def tree
+      @root ||= PSD::Node::Root.new(self)
     end
   end
 end

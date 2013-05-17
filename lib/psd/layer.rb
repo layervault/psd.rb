@@ -1,5 +1,5 @@
 class PSD
-  class Layer
+  class Layer < Node
     attr_reader :top, :left, :bottom, :right, :channels
     attr_reader :rows, :cols
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
