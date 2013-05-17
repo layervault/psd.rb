@@ -3,12 +3,10 @@ class PSD
   class Root < Node
     include PSD::HasChildren
 
+    attr_reader :children
+
     def initialize(layers)
-      @children = []
-      layers.each do |layer|
-        layer.parent = self
-        @children << layer
-      end
+      super(layers)
     end
   end
 end

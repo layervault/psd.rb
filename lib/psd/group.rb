@@ -2,13 +2,11 @@ class PSD
   class Group < Node
     include PSD::HasChildren
     attr_reader :top, :left, :bottom, :right
+    alias_method :width, :cols
+    alias_method :height, :rows
 
     def initialize(layers)
-      @children = []
-      layers.each do |layer|
-        layer.parent = self
-        @children << layer
-      end
+      super(layers)
       get_dimensions
     end
 
