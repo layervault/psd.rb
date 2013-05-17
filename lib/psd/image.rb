@@ -36,6 +36,9 @@ class PSD
     end
 
     def parse
+      # Not ready for primetime yet
+      @file.seek @end_pos and return
+
       @compression = parse_compression!
 
       # ZIP not implemented

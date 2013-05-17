@@ -1,5 +1,5 @@
 class PSD
-  class LayerMask
+  class LayerMask < Section
     attr_reader :layers
 
     def initialize(file, header)
@@ -7,8 +7,8 @@ class PSD
       @header = header
 
       @layers = []
-      @mergedAlpha = false
-      @globalMask = {}
+      @merged_alpha = false
+      @global_mask = {}
       @extras = []
     end
 
@@ -18,26 +18,28 @@ class PSD
     end
 
     def parse
+      start_section
+
       mask_size = @file.read_int
       finish = @file.tell + mask_size
 
       return self if mask_size <= 0
 
       layer_info_size = Util.pad2(@file.read_int)
-      pos = @file.tell
 
       if layer_info_size > 0
         layer_count = @file.read_short
 
         if layer_count < 0
           layer_count = layer_count.abs
-          @mergedAlpha = true
+          @merged_alpha = true
         end
 
         if layer_count * (18 + 6 * @header.channels) > layer_info_size
           raise "Unlikely number of layers parsed: #{layer_count}"
         end
 
+        @layer_section_start = @file.tell
         layer_count.times do
           @layers << PSD::Layer.new(@file).parse
         end
@@ -47,6 +49,8 @@ class PSD
 
           layer.parse_channel_image!(@header)
         end
+
+        @layer_section_end = @file.tell
       end
 
       # Layers are parsed in reverse order
@@ -55,8 +59,25 @@ class PSD
 
       # Temporarily seek to the end of this section
       @file.seek finish
+      end_section
 
       return self
+    end
+
+    def export(outfile)
+      if @layers.size == 0
+        # No data, just read whatever's here.
+        return outfile.write @file.read(@section_end - @section_start)
+      end
+
+      # Read the initial mask data since it won't change
+      outfile.write @file.read(@layer_section_start - @file.tell)
+
+      @layers.each do |layer|
+        layer.export(outfile)
+      end
+
+      outfile.write @file.read(@section_end - @file.tell)
     end
 
     private

@@ -1,11 +1,13 @@
 class PSD
-  class Resources
+  class Resources < Section
     def initialize(file)
       @file = file
       @resources = []
     end
 
     def parse
+      start_section
+
       n = @file.read_int
       length = n
       start = @file.tell
@@ -20,7 +22,12 @@ class PSD
         @file.seek start + length
       end
 
+      end_section
       return @resources
+    end
+
+    def data
+      @resources
     end
   end
 end

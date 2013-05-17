@@ -3,6 +3,7 @@ require "narray"
 
 dir_root = File.dirname(File.absolute_path(__FILE__))
 
+require dir_root + '/psd/section'
 require dir_root + '/psd/skip_block'
 require dir_root + '/psd/image_formats/raw'
 require dir_root + '/psd/image_formats/rle'
@@ -19,6 +20,7 @@ class PSD
     @header = nil
     @resources = nil
     @layer_mask = nil
+    @parsed = false
   end
 
   # There is a specific order that must be followed when parsing
@@ -30,7 +32,13 @@ class PSD
     layer_mask
     image
 
+    @parsed = true
+
     return true
+  end
+
+  def parsed?
+    @parsed
   end
 
   def header
@@ -38,7 +46,12 @@ class PSD
   end
 
   def resources
-    @resources ||= Resources.new(@file).parse
+    return @resources.data unless @resources.nil?
+
+    @resources = Resources.new(@file)
+    @resources.parse
+
+    return @resources.data
   end
 
   def layer_mask
@@ -52,5 +65,25 @@ class PSD
     layer_mask
 
     @image ||= Image.new(@file, @header).parse
+  end
+
+  def export(file)
+    parse! unless parsed?
+
+    # Create our file for writing
+    outfile = File.open(file, 'w')
+
+    # Reset the file pointer
+    @file.seek 0
+
+    # Nothing in the header or resources we want to bother with changing
+    # right now. Write it straight to file.
+    outfile.write @file.read(@resources.section_end)
+
+    # Now, the changeable part. Layers and masks.
+    layer_mask.export(outfile)
+
+    # And the rest of the file (merged image data)
+    outfile.write @file.read
   end
 end

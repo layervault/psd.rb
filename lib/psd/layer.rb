@@ -1,12 +1,11 @@
 class PSD
-  class Layer
-    attr_reader :top, :left, :bottom, :right, :channels
-    attr_reader :rows, :cols
+  class Layer < Section
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
-    attr_reader :image
+    attr_reader :channels, :image
 
     attr_accessor :group_layer
+    attr_accessor :top, :left, :bottom, :right, :rows, :cols
 
     SECTION_DIVIDER_TYPES = [
       "other",
@@ -34,6 +33,8 @@ class PSD
     end
 
     def parse(index=nil)
+      start_section
+
       @idx = index
 
       parse_info
@@ -50,8 +51,14 @@ class PSD
       @name = @legacy_name unless @name
 
       @file.seek @layer_end # Skip over any filler zeros
-
+      
+      end_section
       return self
+    end
+
+    def export(outfile)
+      # TEMPORARY
+      outfile.write @file.read(section_end - section_start)
     end
 
     def [](val)
@@ -81,6 +88,7 @@ class PSD
     private
 
     def parse_info
+
       @top = @file.read_int
       @left = @file.read_int
       @bottom = @file.read_int
