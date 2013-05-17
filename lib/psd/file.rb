@@ -1,19 +1,32 @@
 class PSD
   class File < ::File
-    def read_uint
-      read(4).unpack('L>')[0]
-    end
+    FORMATS = {
+      uint: {
+        length: 4,
+        code: 'L>'
+      },
+      int: {
+        length: 4,
+        code: 'l>'
+      },
+      ushort: {
+        length: 2,
+        code: 'S>'
+      },
+      short: {
+        length: 2,
+        code: 's>'
+      }
+    }
 
-    def read_int
-      read(4).unpack('l>')[0]
-    end
+    FORMATS.each do |format, info|
+      define_method "read_#{format}" do
+        read(info[:length]).unpack(info[:code])[0]
+      end
 
-    def read_ushort
-      read(2).unpack('S>')[0]
-    end
-
-    def read_short
-      read(2).unpack('s>')[0]
+      define_method "write_#{format}" do |val|
+        write [val].pack(info[:code])
+      end
     end
   end
 end

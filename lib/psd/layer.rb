@@ -1,7 +1,7 @@
 class PSD
   class Layer
     include Section
-    
+
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
     attr_reader :channels, :image
@@ -96,7 +96,7 @@ class PSD
       @bottom = @file.read_int
       @right = @file.read_int
       @channels = @file.read_short
-      # @top, @left, @bottom, @right, @channels = @file.read(18).unpack('l4s>')
+
       @rows = @bottom - @top
       @cols = @right - @left
 
