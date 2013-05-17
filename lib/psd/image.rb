@@ -3,6 +3,7 @@ class PSD
     include Format::RAW
     include Format::RLE
     include Mode::RGB
+    include Export::PNG
 
     COMPRESSIONS = [
       'Raw',
