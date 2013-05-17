@@ -2,6 +2,8 @@ class PSD::Node
   class Group < PSD::Node
     include PSD::HasChildren
     include PSD::Node::ParseLayers
+    include PSD::Node::LockToOrigin
+
     attr_reader :name, :top, :left, :bottom, :right
 
     def initialize(name, layers)
@@ -19,6 +21,10 @@ class PSD::Node
       @bottom - @top
     end
     alias :width :cols
+
+    def translate(x=0,y=0)
+      @children.each{ |c| c.translate(x,y) }
+    end
 
     def to_hash
       {

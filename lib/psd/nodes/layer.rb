@@ -1,5 +1,7 @@
 class PSD::Node
   class Layer < PSD::Node
+    include PSD::Node::LockToOrigin
+
     PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
 
     def initialize(layer)
@@ -14,6 +16,13 @@ class PSD::Node
       define_method "#{meth}=" do |val|
         @layer.send("#{meth}=", val)
       end
+    end
+
+    def translate(x,y)
+      @layer.left += x
+      @layer.right += x
+      @layer.top += y
+      @layer.bottom += y
     end
 
     def to_hash

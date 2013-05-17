@@ -12,6 +12,7 @@ require dir_root + '/psd/image_exports/png'
 require dir_root + '/psd/has_children'
 require dir_root + '/psd/node'
 require dir_root + '/psd/nodes/parse_layers'
+require dir_root + '/psd/nodes/lock_to_origin'
 Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 
 class PSD
