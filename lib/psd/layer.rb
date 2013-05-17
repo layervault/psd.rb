@@ -53,14 +53,14 @@ class PSD
       @name = @legacy_name unless @name
 
       @file.seek @layer_end # Skip over any filler zeros
-      
+
       end_section
       return self
     end
 
     def export(outfile)
       export_info(outfile)
-      
+
       @blend_mode.write(outfile)
       @file.seek(@blend_mode.num_bytes, IO::SEEK_CUR)
 

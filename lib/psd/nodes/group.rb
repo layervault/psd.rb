@@ -26,6 +26,14 @@ class PSD::Node
       @children.each{ |c| c.translate(x,y) }
     end
 
+    def hide!
+      @children.each{ |c| c.hide! }
+    end
+
+    def show!
+      @children.each{ |c| c.show! }
+    end
+
     def to_hash
       {
         name: name,

@@ -25,6 +25,21 @@ class PSD::Node
       @layer.bottom += y
     end
 
+    def hide!
+      # TODO actually mess with the blend modes instead of
+      # just putting things way off canvas
+      return if @hidden_by_kelly
+      translate(100000, 10000)
+      @hidden_by_kelly = true
+    end
+
+    def show!
+      if @hidden_by_kelly
+        translate(-100000, -10000)
+        @hidden_by_kelly = false
+      end
+    end
+
     def to_hash
       hash = {}
       PROPERTIES.each do |p|
