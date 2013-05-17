@@ -3,7 +3,7 @@ require './lib/psd'
 
 psd = nil
 results = Benchmark.measure "PSD parsing" do
-  psd = PSD.new('examples/images/Features.psd')
+  psd = PSD.new('examples/images/example.psd')
   psd.parse!
 end
 
