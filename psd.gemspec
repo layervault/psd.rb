@@ -5,7 +5,7 @@ require 'psd/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "psd"
-  gem.version       = Psd::VERSION
+  gem.version       = PSD::VERSION
   gem.authors       = ["Ryan LeFevre"]
   gem.email         = ["ryan@layervault.com"]
   gem.description   = %q{Parse Photoshop save files with ease}
@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "bindata"
+  gem.add_dependency "narray"
 end

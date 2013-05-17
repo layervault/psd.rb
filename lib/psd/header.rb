@@ -43,5 +43,13 @@ class PSD
         "(#{mode})"
       end
     end
+
+    def width
+      cols
+    end
+
+    def height
+      rows
+    end
   end
 end
