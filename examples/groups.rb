@@ -1,19 +1,6 @@
 require './lib/psd'
-
-module PSDOutput
-  def self.print_folders(folder, prefix = [])
-    folder[:layers].each do |layer|
-      puts prefix.join("") + layer[:name]
-      if layer.is_a?(Hash)
-        prefix.push "-> "
-        self.print_folders(layer, prefix)
-        prefix.pop
-      end
-    end
-  end
-end
+require 'pp'
 
 psd = PSD.new('examples/images/example.psd')
 psd.parse!
-
-PSDOutput.print_folders psd.layers_with_structure
+pp psd.tree.to_hash
