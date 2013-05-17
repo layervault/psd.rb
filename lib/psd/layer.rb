@@ -2,7 +2,7 @@ class PSD
   class Layer
     attr_reader :top, :left, :bottom, :right, :channels
     attr_reader :rows, :cols
-    attr_reader :name, :mask, :blending_ranges, :adjustments, :channels_info
+    attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
 
     SECTION_DIVIDER_TYPES = [
@@ -157,6 +157,7 @@ class PSD
           # The name seems to be padded with null bytes. This is the easiest solution.
           @file.seek pos + length
         when 'lsct' then read_layer_section_divider
+        when 'lyid' then @id = @file.read_int
         else
           @file.seek length, IO::SEEK_CUR
         end
