@@ -17,4 +17,3 @@ end
 psd = PSD.new('examples/images/example.psd')
 psd.parse!
 pp psd.tree.to_hash
-# PSDOutput.print_folders psd.layers_with_structure
