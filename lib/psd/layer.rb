@@ -1,5 +1,5 @@
 class PSD
-  class Layer
+  class Layer < Node
     include Section
 
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info

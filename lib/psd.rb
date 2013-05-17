@@ -9,7 +9,10 @@ require dir_root + '/psd/image_formats/raw'
 require dir_root + '/psd/image_formats/rle'
 require dir_root + '/psd/image_modes/rgb'
 require dir_root + '/psd/image_exports/png'
-Dir.glob(dir_root + '/psd/*') {|file| require file if File.file?(file)}
+require dir_root + '/psd/has_children'
+require dir_root + '/psd/node'
+require dir_root + '/psd/nodes/parse_layers'
+Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 
 class PSD
   include Helpers
