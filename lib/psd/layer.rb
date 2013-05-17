@@ -5,6 +5,13 @@ class PSD
     attr_reader :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
 
+    SECTION_DIVIDER_TYPES = [
+      "other",
+      "open folder",
+      "closed folder",
+      "bounding section divider"
+    ]
+
     def initialize(file)
       @file = file
       @image = nil
@@ -18,6 +25,8 @@ class PSD
       @blending_mode = 'normal'
       @opacity = 255
       @fill_opacity = 255
+      @is_folder = false
+      @is_hidden = false
     end
 
     def parse(index=nil)
@@ -50,11 +59,11 @@ class PSD
     end
 
     def folder?
-
+      @is_folder
     end
 
     def hidden?
-
+      @is_hidden
     end
 
     private
@@ -147,11 +156,22 @@ class PSD
 
           # The name seems to be padded with null bytes. This is the easiest solution.
           @file.seek pos + length
+        when 'lsct' then read_layer_section_divider
         else
           @file.seek length, IO::SEEK_CUR
         end
 
         @file.seek pos + length if @file.tell != (pos + length)
+      end
+    end
+
+    def read_layer_section_divider
+      code = @file.read_int
+      @layer_type = SECTION_DIVIDER_TYPES[code]
+
+      case code
+      when 1, 2 then @is_folder = true
+      when 3 then @is_hidden = true
       end
     end
   end
