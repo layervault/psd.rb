@@ -21,10 +21,10 @@ class PSD
     private
 
     def get_dimensions
-      @left = (@layers.map(&:left) + @groups.map(&:left)).min
-      @top = (@layers.map(&:top) + @groups.map(&:top)).min
-      @bottom = (@layers.map(&:bottom) + @groups.map(&:bottom)).max
-      @right = (@layers.map(&:right) + @groups.map(&:right)).max
+      @left = @chilren.map(&:left).min
+      @top = @chilren.map(&:top).min
+      @bottom = @chilren.map(&:bottom).max
+      @right = @chilren.map(&:right).max
     end
   end
 end
