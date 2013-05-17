@@ -19,4 +19,5 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "bindata"
   gem.add_dependency "narray"
+  gem.add_dependency "chunky_png"
 end
