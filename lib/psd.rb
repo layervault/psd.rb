@@ -7,7 +7,9 @@ require dir_root + '/psd/skip_block'
 require dir_root + '/psd/image_formats/raw'
 require dir_root + '/psd/image_formats/rle'
 require dir_root + '/psd/image_modes/rgb'
-Dir.glob(dir_root + '/psd/*') {|file| require file if File.file?(file)}
+require dir_root + '/psd/has_children.rb'
+require dir_root + '/psd/node'
+Dir.glob(dir_root + '/psd/*') { |file| require file if File.file?(file) }
 
 class PSD
   include Helpers

@@ -20,7 +20,15 @@ class PSD
       layers.select { |l| l.folder? }
     end
 
+    # constructs a tree of the current document
+    def tree
+      @root ||= PSD::Root.new(layers)
+    end
+
     def layers_with_structure
+      root = PSD::Root.new(layers)
+      puts root.groups
+
       result = {layers: []}
       parseStack = []
       layers.each do |layer|
