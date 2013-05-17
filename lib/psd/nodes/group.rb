@@ -1,23 +1,14 @@
 class PSD::Node
   class Group < PSD::Node
     include PSD::HasChildren
-    attr_reader :top, :left, :bottom, :right
+    include PSD::Node::ParseLayers
+    attr_reader :name, :top, :left, :bottom, :right
     # alias_method :width, :cols
     # alias_method :height, :rows
 
-    def initialize(layers)
-      @children = []
-      layers.each do |layer|
-        if layer.is_a?(Hash)
-          group = PSD::Node::Group.new(layer[:layers])
-          group.parent = self
-          @children << group
-        elsif layer.is_a?(PSD::Layer)
-          layer_node = PSD::Node::Layer.new(layer)
-          layer_node.parent = self
-          @children << layer_node
-        end
-      end
+    def initialize(name, layers)
+      @name = name
+      parse_layers(layers)
       get_dimensions
     end
 
@@ -27,6 +18,13 @@ class PSD::Node
 
     def cols
       @bottom - @top
+    end
+
+    def to_hash
+      {
+        name: name,
+        children: children.map(&:to_hash)
+      }
     end
 
     private

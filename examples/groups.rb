@@ -1,4 +1,5 @@
 require './lib/psd'
+require 'pp'
 
 module PSDOutput
   def self.print_folders(folder, prefix = [])
@@ -15,5 +16,5 @@ end
 
 psd = PSD.new('examples/images/example.psd')
 psd.parse!
-psd.layers_with_structure
+pp psd.tree.to_hash
 # PSDOutput.print_folders psd.layers_with_structure

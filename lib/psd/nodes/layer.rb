@@ -4,6 +4,10 @@ class PSD::Node
       @layer = layer
     end
 
+    def name
+      @layer.name
+    end
+
     def left
       @layer.left
     end
@@ -18,6 +22,13 @@ class PSD::Node
 
     def bottom
       @layer.bottom
+    end
+
+    def to_hash
+      {
+        name: name,
+        # layer: @layer
+      }
     end
   end
 end
