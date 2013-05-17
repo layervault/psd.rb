@@ -6,6 +6,8 @@ class PSD
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
     attr_reader :image
 
+    attr_accessor :group_layer
+
     SECTION_DIVIDER_TYPES = [
       "other",
       "open folder",
@@ -21,6 +23,7 @@ class PSD
       @adjustments = {}
       @channels_info = []
       @blend_mode = {}
+      @group_layer = nil
 
       @layer_type = 'normal'
       @blending_mode = 'normal'
@@ -49,6 +52,10 @@ class PSD
       @file.seek @layer_end # Skip over any filler zeros
 
       return self
+    end
+
+    def [](val)
+      self.send(val)
     end
 
     def parse_channel_image!(header)

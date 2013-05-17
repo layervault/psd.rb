@@ -49,10 +49,29 @@ class PSD
         end
       end
 
+      # Layers are parsed in reverse order
+      layers.reverse!
+      group_layers
+
       # Temporarily seek to the end of this section
       @file.seek finish
 
       return self
+    end
+
+    private
+
+    def group_layers
+      group_layer = nil
+      layers.each do |layer|
+        if layer.folder?
+          group_layer = layer
+        elsif layer.hidden?
+          group_layer = nil
+        else
+          layer.group_layer = layer
+        end
+      end
     end
   end
 end
