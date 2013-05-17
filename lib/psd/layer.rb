@@ -4,6 +4,7 @@ class PSD
     attr_reader :rows, :cols
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
+    attr_reader :image
 
     SECTION_DIVIDER_TYPES = [
       "other",
@@ -48,6 +49,10 @@ class PSD
       @file.seek @layer_end # Skip over any filler zeros
 
       return self
+    end
+
+    def parse_channel_image!(header)
+      # @image = ChannelImage.new(@file, header, self)
     end
 
     def width

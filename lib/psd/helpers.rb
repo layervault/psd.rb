@@ -11,5 +11,13 @@ class PSD
     def layers
       layer_mask.layers
     end
+
+    def actual_layers
+      layers.delete_if { |l| l.folder? || l.hidden? }
+    end
+
+    def folders
+      layers.select { |l| l.folder? }
+    end
   end
 end

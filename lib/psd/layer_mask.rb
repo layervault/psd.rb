@@ -37,11 +37,20 @@ class PSD
         if layer_count * (18 + 6 * @header.channels) > layer_info_size
           raise "Unlikely number of layers parsed: #{layer_count}"
         end
+
+        layer_count.times do
+          @layers << PSD::Layer.new(@file).parse
+        end
+
+        layers.each do |layer|
+          @file.seek 8, IO::SEEK_CUR and next if layer.folder? || layer.hidden?
+
+          layer.parse_channel_image!(@header)
+        end
       end
 
-      layer_count.times do
-        @layers << PSD::Layer.new(@file).parse
-      end
+      # Temporarily seek to the end of this section
+      @file.seek finish
 
       return self
     end

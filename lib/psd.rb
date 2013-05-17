@@ -24,8 +24,6 @@ class PSD
     resources
     layer_mask
 
-    @layers = @layer_mask.layers
-
     return true
   end
 
