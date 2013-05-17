@@ -39,6 +39,10 @@ class PSD
       BLEND_MODES[blend_key.to_sym]
     end
 
+    def mode=(val)
+      blend_key = BLEND_MODES.invert[val.downcase]
+    end
+
     def opacity_percentage
       opacity * 100 / 255
     end
