@@ -1,3 +1,4 @@
+require 'pp'
 class PSD
   class Layer < Node
     include Section
@@ -184,6 +185,8 @@ class PSD
     # This section is a bit tricky to parse because it represents all of the
     # extra data that describes this layer.
     def parse_extra_data
+      extra_data = {}
+
       while @file.tell < @layer_end
         # Signature, don't need
         @file.seek 4, IO::SEEK_CUR
@@ -193,6 +196,9 @@ class PSD
 
         length = Util.pad2 @file.read_int
         pos = @file.tell
+
+        extra_data[key] = @file.read(length)
+        @file.seek pos
 
         case key
         when 'luni' # Unicode layer name
@@ -205,12 +211,15 @@ class PSD
         when 'lyid' then @id = @file.read_int
         when 'vmsk' then parse_vector_mask(length)
         when 'fxrp' then parse_reference_point
+        when 'shmd' then parse_metadata
         else
           @file.seek length, IO::SEEK_CUR
         end
 
         @file.seek pos + length if @file.tell != (pos + length)
       end
+
+      pp extra_data
     end
 
     def read_layer_section_divider
@@ -237,6 +246,19 @@ class PSD
 
     def parse_reference_point
       @ref_x, @ref_y = @file.read_double, @file.read_double
+    end
+
+    def parse_metadata
+      metadata_items = @file.read_uint
+
+      metadata_items.times do
+        @file.seek 4, IO::SEEK_CUR
+        key = @file.read(4).unpack('A4')[0]
+        copy_on_sheet = @file.read(1)
+        padding = @file.read(3)
+        len = @file.read_uint
+        data = @file.read len
+      end
     end
   end
 end
