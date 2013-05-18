@@ -7,7 +7,7 @@ class PSD
     attr_reader :channels, :image
 
     attr_accessor :group_layer
-    attr_accessor :top, :left, :bottom, :right, :rows, :cols
+    attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y
 
     SECTION_DIVIDER_TYPES = [
       "other",
@@ -35,6 +35,7 @@ class PSD
     end
 
     def parse(index=nil)
+      puts "---- beginning layer at #{@file.pos}"
       start_section
 
       @idx = index
@@ -52,9 +53,12 @@ class PSD
 
       @name = @legacy_name unless @name
 
+
       @file.seek @layer_end # Skip over any filler zeros
 
       end_section
+      puts "---- ending layer at #{@file.pos}"
+      puts "^^#{@name}"
       return self
     end
 
@@ -199,6 +203,8 @@ class PSD
           @file.seek pos + length
         when 'lsct' then read_layer_section_divider
         when 'lyid' then @id = @file.read_int
+        when 'vmsk' then parse_vector_mask(length)
+        when 'fxrp' then parse_reference_point
         else
           @file.seek length, IO::SEEK_CUR
         end
@@ -215,6 +221,22 @@ class PSD
       when 1, 2 then @is_folder = true
       when 3 then @is_hidden = true
       end
+    end
+
+    def parse_vector_mask(length)
+      puts 3 == @file.read_int
+      tag = @file.read_int
+      invert = tag & 0x01
+      not_link = (tag & (0x01 << 1)) > 0
+      disable = (tag & (0x01 << 2)) > 0
+      puts "--- #{length - 8}"
+
+      # TODO copy over
+      # https://github.com/alco/psdump/blob/master/libpsd-0.9/src/path.c
+    end
+
+    def parse_reference_point
+      @ref_x, @ref_y = @file.read_double, @file.read_double
     end
   end
 end

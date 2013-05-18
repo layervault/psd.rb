@@ -3,7 +3,9 @@ require './lib/psd'
 
 psd = nil
 results = Benchmark.measure "PSD parsing" do
-  psd = PSD.new('examples/images/example.psd')
+  # psd = PSD.new('spec/files/example.psd')
+  psd = PSD.new('test.psd')
+  # psd = PSD.new('/Users/kelly/Desktop/example_glyph_moved.psd')
   psd.parse!
 end
 
@@ -14,6 +16,8 @@ psd.layers.each do |layer|
   puts "Name: #{layer.name}"
   puts "Position: top = #{layer.top}, left = #{layer.left}"
   puts "Size: width = #{layer.width}, height = #{layer.height}"
+  puts "Mask: width = #{layer.mask.width}, height = #{layer.mask.height}"
+  puts "Reference point: #{layer.ref_x}, #{layer.ref_y}"
 
   puts ""
 end

@@ -1,6 +1,10 @@
 class PSD
   class File < ::File
     FORMATS = {
+      double: {
+        length: 8,
+        code: 'G'
+      },
       uint: {
         length: 4,
         code: 'L>'
