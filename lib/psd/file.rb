@@ -51,10 +51,10 @@ class PSD
       # We first conver the decimal to be a whole number representing a
       # fraction with the denominator of 2^24
       # Next, we write that number as a 24-bit integer to the file
-      binary_numerator = ((num - num.to_i) * 2 ** 24).to_i
-      write [binary_numerator >> 17].pack('C')
-      write [binary_numerator >> 9].pack('C')
-      write [binary_numerator >> 1].pack('C')
+      binary_numerator = ((num - num.to_i).abs * 2 ** 24).to_i
+      write [binary_numerator >> 16].pack('C')
+      write [binary_numerator >> 8].pack('C')
+      write [binary_numerator >> 0].pack('C')
     end
   end
 end
