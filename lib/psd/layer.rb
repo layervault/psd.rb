@@ -70,8 +70,8 @@ class PSD
 
       export_mask_data(outfile)
       export_blending_ranges(outfile)
-      export_legacy_layer_name(outfile)
-      export_extra_data(outfile)
+      # export_legacy_layer_name(outfile)
+      # export_extra_data(outfile)
 
       outfile.write @file.read(end_of_section - @file.tell)
     end
@@ -150,13 +150,14 @@ class PSD
     end
 
     def export_mask_data(outfile)
-      @mask.write(outfile)
+      #@mask.write outfile
+      outfile.write @file.read(@mask_end - @mask_begin + 4)
     end
 
     def export_blending_ranges(outfile)
       length = 4 * 2 # greys
       length += @blending_ranges[:num_channels] * 8
-      outfile.write_int length # skip
+      outfile.write_int length
 
       outfile.write_short @blending_ranges[:grey][:source][:black]
       outfile.write_short @blending_ranges[:grey][:source][:white]
@@ -169,19 +170,25 @@ class PSD
         outfile.write_short @blending_ranges[:channels][i][:dest][:black]
         outfile.write_short @blending_ranges[:channels][i][:dest][:white]
       end
+
+      @file.seek length + 4, IO::SEEK_CUR
     end
 
     def export_legacy_layer_name(outfile)
       if @legacy_name
-        outfile.write(PascalString.new(initial_value: @legacy_name))
+        string = PascalString.new(initial_value: @legacy_name)
+        outfile.write(string)
+        @file.seek string.length, IO::SEEK_CUR
       end
     end
 
     def export_extra_data(outfile)
-      if @vector_mask_begin
-        outfile.seek @vector_mask_begin
-        write_vector_mask(outfile)
-      end
+      # if @path_components && !@path_components.empty?
+      #   outfile.seek @vector_mask_begin
+      #   write_vector_mask(outfile)
+      # end
+      # outfile.seek @extra_data_end
+      # outfile.write @file.read(@extra_data_end - @extra_data_begin)
     end
 
     def parse_blend_modes
@@ -193,7 +200,9 @@ class PSD
     end
 
     def parse_mask_data
+      @mask_begin = @file.tell
       @mask = Mask.read(@file)
+      @mask_end = @file.tell
     end
 
     def parse_blending_ranges
@@ -237,7 +246,7 @@ class PSD
     # This section is a bit tricky to parse because it represents all of the
     # extra data that describes this layer.
     def parse_extra_data
-      extra_data = {}
+      @extra_data_begin = @file.tell
 
       while @file.tell < @layer_end
         # Signature, don't need
@@ -268,7 +277,7 @@ class PSD
         @file.seek pos + length if @file.tell != (pos + length)
       end
 
-      pp extra_data
+      @extra_data_end = @file.tell
     end
 
     def read_layer_section_divider

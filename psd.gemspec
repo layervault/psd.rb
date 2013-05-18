@@ -23,4 +23,6 @@ Gem::Specification.new do |gem|
 
   gem.test_files = Dir.glob("spec/**/*")
   gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'guard'
+  gem.add_development_dependency 'guard-rspec'
 end
