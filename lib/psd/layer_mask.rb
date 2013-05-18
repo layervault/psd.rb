@@ -1,7 +1,7 @@
 class PSD
   class LayerMask
     include Section
-    
+
     attr_reader :layers
 
     def initialize(file, header)
@@ -67,7 +67,7 @@ class PSD
     def export(outfile)
       if @layers.size == 0
         # No data, just read whatever's here.
-        return outfile.write @file.read(@section_end - start_of_section)
+        return outfile.write @file.read(@section_end[:all] - start_of_section)
       end
 
       # Read the initial mask data since it won't change

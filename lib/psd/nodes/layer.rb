@@ -6,6 +6,7 @@ class PSD::Node
 
     def initialize(layer)
       @layer = layer
+      layer.node = self
     end
 
     PROPERTIES.each do |meth|
@@ -19,10 +20,7 @@ class PSD::Node
     end
 
     def translate(x,y)
-      @layer.left += x
-      @layer.right += x
-      @layer.top += y
-      @layer.bottom += y
+      @layer.translate x, y
     end
 
     def hide!
@@ -47,6 +45,10 @@ class PSD::Node
       end
 
       return hash
+    end
+
+    def document_dimensions
+      @parent.document_dimensions
     end
   end
 end

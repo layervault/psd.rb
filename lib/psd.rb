@@ -89,5 +89,6 @@ class PSD
 
     # And the rest of the file (merged image data)
     outfile.write @file.read
+    outfile.flush
   end
 end

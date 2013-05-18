@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Hierarch" do
+describe "Hierarchy" do
   it "should parse tree" do
     psd = PSD.new('spec/files/example.psd')
     psd.parse!

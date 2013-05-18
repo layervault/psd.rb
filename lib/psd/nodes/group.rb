@@ -43,6 +43,10 @@ class PSD::Node
       }
     end
 
+    def document_dimensions
+      @parent.document_dimensions
+    end
+
     private
 
     def get_dimensions

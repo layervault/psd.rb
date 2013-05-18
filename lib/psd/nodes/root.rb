@@ -17,6 +17,10 @@ class PSD::Node
       }
     end
 
+    def document_dimensions
+      [@psd.header.width, @psd.header.height]
+    end
+
     private
 
     def build_hierarchy

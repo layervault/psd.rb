@@ -1,10 +1,11 @@
-require 'pp'
-
 class PSD
   class PathRecord
+    attr_accessor :layer
 
-    def self.read(file)
-      PSD::PathRecord.new(file)
+    def self.read(layer)
+      pr = PSD::PathRecord.new(layer.file)
+      pr.layer = layer
+      pr
     end
 
     def initialize(file)
@@ -27,15 +28,15 @@ class PSD
 
     def write(file)
       case @record_type
-      when 0 then write_path_record
-      when 3 then write_path_record
-      when 1 then write_bezier_point
-      when 2 then write_bezier_point
-      when 4 then write_bezier_point
-      when 5 then write_bezier_point
-      when 7 then write_clipboard_record
-      when 8 then write_initial_fill
-      else @file.seek(24, IO::SEEK_CUR)
+      when 0 then write_path_record(file)
+      when 3 then write_path_record(file)
+      when 1 then write_bezier_point(file)
+      when 2 then write_bezier_point(file)
+      when 4 then write_bezier_point(file)
+      when 5 then write_bezier_point(file)
+      when 7 then write_clipboard_record(file)
+      when 8 then write_initial_fill(file)
+      else (file).seek(24, IO::SEEK_CUR)
       end
     end
 
@@ -61,6 +62,25 @@ class PSD
       end
     end
 
+    def translate(x=0, y=0)
+      return unless is_bezier_point?
+
+      document_width, document_height = @layer.document_dimensions
+      translate_x_ratio = x.to_f / document_width.to_f
+      translate_y_ratio = y.to_f / document_height.to_f
+
+      @preceding_vert += translate_y_ratio
+      @preceding_horiz += translate_x_ratio
+      @anchor_vert += translate_y_ratio
+      @anchor_horiz += translate_x_ratio
+      @leaving_vert += translate_y_ratio
+      @leaving_horiz += translate_x_ratio
+    end
+
+    def is_bezier_point?
+      [1,2,4,5].include? @record_type
+    end
+
     private
 
     def read_path_record
@@ -68,9 +88,9 @@ class PSD
       @file.seek(22, IO::SEEK_CUR)
     end
 
-    def write_path_record
-      @file.write_short @num_points
-      @file.seek(22, IO::SEEK_CUR)
+    def write_path_record(file)
+      file.write_short @num_points
+      file.seek(22, IO::SEEK_CUR)
     end
 
     def read_bezier_point
@@ -86,10 +106,10 @@ class PSD
       @leaving_horiz = @file.read_path_number
     end
 
-    def write_bezier_point
+    def write_bezier_point(file)
       [@preceding_vert, @preceding_horiz, @anchor_vert,
         @anchor_horiz, @leaving_vert, @leaving_horiz].each do |point|
-          @file.write_path_number point
+          file.write_path_number point
       end
     end
 
@@ -102,12 +122,12 @@ class PSD
       @file.seek(4, IO::SEEK_CUR)
     end
 
-    def write_clipboard_record
+    def write_clipboard_record(file)
       [@clipboard_top, @clipboard_left, @clipboard_bottom,
         @clipboard_right, @clipboard_resolution].each do |point|
-          @file.write_path_number point
+          file.write_path_number point
       end
-      @file.seek(4, IO::SEEK_CUR)
+      file.seek(4, IO::SEEK_CUR)
     end
 
     def read_initial_fill
@@ -115,9 +135,9 @@ class PSD
       @file.seek(22, IO::SEEK_CUR)
     end
 
-    def wite_initial_fill
-      @file.write_short @initial_fill
-      @file.seek(22, IO::SEEK_CUR)
+    def write_initial_fill(file)
+      file.write_short @initial_fill
+      file.seek(22, IO::SEEK_CUR)
     end
   end
 end

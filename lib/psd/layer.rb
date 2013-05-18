@@ -8,7 +8,7 @@ class PSD
     attr_reader :channels, :image
 
     attr_accessor :group_layer
-    attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y
+    attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
 
     SECTION_DIVIDER_TYPES = [
       "other",
@@ -54,7 +54,6 @@ class PSD
 
       @name = @legacy_name unless @name
 
-
       @file.seek @layer_end # Skip over any filler zeros
 
       end_section
@@ -68,6 +67,11 @@ class PSD
 
       @blend_mode.write(outfile)
       @file.seek(@blend_mode.num_bytes, IO::SEEK_CUR)
+
+      export_mask_data(outfile)
+      export_blending_ranges(outfile)
+      export_legacy_layer_name(outfile)
+      export_extra_data(outfile)
 
       outfile.write @file.read(end_of_section - @file.tell)
     end
@@ -94,6 +98,19 @@ class PSD
 
     def hidden?
       @is_hidden
+    end
+
+    def translate(x=0, y=0)
+      @left += x
+      @right += x
+      @top += y
+      @bottom += y
+
+      @path_components.each{ |p| p.translate(x,y) }
+    end
+
+    def document_dimensions
+      @node.document_dimensions
     end
 
     private
@@ -130,6 +147,41 @@ class PSD
       end
 
       @file.seek end_of_section(:info)
+    end
+
+    def export_mask_data(outfile)
+      @mask.write(outfile)
+    end
+
+    def export_blending_ranges(outfile)
+      length = 4 * 2 # greys
+      length += @blending_ranges[:num_channels] * 8
+      outfile.write_int length # skip
+
+      outfile.write_short @blending_ranges[:grey][:source][:black]
+      outfile.write_short @blending_ranges[:grey][:source][:white]
+      outfile.write_short @blending_ranges[:grey][:dest][:black]
+      outfile.write_short @blending_ranges[:grey][:dest][:white]
+
+      @blending_ranges[:num_channels].times do |i|
+        outfile.write_short @blending_ranges[:channels][i][:source][:black]
+        outfile.write_short @blending_ranges[:channels][i][:source][:white]
+        outfile.write_short @blending_ranges[:channels][i][:dest][:black]
+        outfile.write_short @blending_ranges[:channels][i][:dest][:white]
+      end
+    end
+
+    def export_legacy_layer_name(outfile)
+      if @legacy_name
+        outfile.write(PascalString.new(initial_value: @legacy_name))
+      end
+    end
+
+    def export_extra_data(outfile)
+      if @vector_mask_begin
+        outfile.seek @vector_mask_begin
+        write_vector_mask(outfile)
+      end
     end
 
     def parse_blend_modes
@@ -230,20 +282,28 @@ class PSD
     end
 
     def parse_vector_mask(length)
+      @vector_mask_begin = @file.tell
       raise "Vector mask malformed" unless 3 == @file.read_int
-      tag = @file.read_int
-      invert = tag & 0x01
-      not_link = (tag & (0x01 << 1)) > 0
-      disable = (tag & (0x01 << 2)) > 0
+      @vector_tag = @file.read_int
+      invert = @vector_tag & 0x01
+      not_link = (@vector_tag & (0x01 << 1)) > 0
+      disable = (@vector_tag & (0x01 << 2)) > 0
 
       num_records = (length - 8) / 26
 
       @path_components = []
       num_records.times do
-        @path_components << PathRecord.read(@file)
+        @path_components << PathRecord.read(self)
       end
 
       @path_components.each{ |p| pp p.to_hash }
+    end
+
+    def write_vector_mask(outfile)
+      outfile.write_int 3
+      outfile.write_int @vector_tag
+
+      @path_components.each{ |pc| pc.write(outfile) }
     end
 
     def parse_reference_point
