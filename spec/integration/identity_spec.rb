@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tempfile'
 
-describe "Identity exports" do
+describe "Identity exports", :focus do
   it "should export the simplest PSD" do
     filepath = 'spec/files/simplest.psd'
     psd = PSD.new(filepath)
@@ -12,11 +12,11 @@ describe "Identity exports" do
     Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))
   end
 
-  it "should export a file with a layer", :focus do
+  it "should export a file with a layer" do
     filepath = 'spec/files/one_layer.psd'
     psd = PSD.new(filepath)
     psd.parse!
-    tmpfile = File.new('/Users/kelly/Desktop/layer_export.psd', 'w+') #Tempfile.new("one_layer_export.psd")
+    tmpfile = Tempfile.new("one_layer_export.psd")
     psd.export tmpfile.path
 
     Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))
@@ -26,7 +26,7 @@ describe "Identity exports" do
     filepath = 'spec/files/path.psd'
     psd = PSD.new(filepath)
     psd.parse!
-    tmpfile = Tempfile.new("path_export.psd")
+    tmpfile = File.new('/Users/kelly/Desktop/path_export.psd', 'w+') #Tempfile.new("path_export.psd")
     psd.export tmpfile.path
 
     Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))

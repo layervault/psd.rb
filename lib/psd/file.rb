@@ -40,20 +40,21 @@ class PSD
     # Adobe's lovely signed 32-bit fixed-point number with 8bits.24bits
     #   http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577409_17587
     def read_path_number
-      read(1).unpack('c*')[0] + # pre-decimal point
-        (read(3).unpack('B*')[0].to_i(2) / (2 ** 24)) # post-decimal point
+      read(1).unpack('c*')[0].to_f +
+        (read(3).unpack('B*')[0].to_i(2).to_f / (2 ** 24)).to_f # pre-decimal point
     end
 
     def write_path_number(num)
-      write BinData::Int8.new num.to_i
+      write [num.to_i].pack('C')
 
       # Now for the fun part.
       # We first conver the decimal to be a whole number representing a
       # fraction with the denominator of 2^24
       # Next, we write that number as a 24-bit integer to the file
-      binary_numerator = ((num - num.to_i) * 2 ** 24).to_i.to_s(2)
-      binary_numerator = "0" * (24 - binary_numerator.size) + binary_numerator
-      write binary_numerator.scan(/\d{8}/).map(&:to_i).pack('C*')
+      binary_numerator = ((num - num.to_i) * 2 ** 24).to_i
+      write [binary_numerator >> 17].pack('C')
+      write [binary_numerator >> 9].pack('C')
+      write [binary_numerator >> 1].pack('C')
     end
   end
 end

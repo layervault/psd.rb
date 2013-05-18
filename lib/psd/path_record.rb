@@ -13,6 +13,7 @@ class PSD
 
       @record_type = @file.read_short
 
+      puts "reading record type #{@record_type} at #{@file.tell}"
       case @record_type
       when 0 then read_path_record
       when 3 then read_path_record
@@ -27,6 +28,8 @@ class PSD
     end
 
     def write(file)
+      puts "writing record type #{@record_type} at #{file.tell}"
+      file.write_short @record_type
       case @record_type
       when 0 then write_path_record(file)
       when 3 then write_path_record(file)
@@ -36,7 +39,7 @@ class PSD
       when 5 then write_bezier_point(file)
       when 7 then write_clipboard_record(file)
       when 8 then write_initial_fill(file)
-      else (file).seek(24, IO::SEEK_CUR)
+      else file.seek(24, IO::SEEK_CUR)
       end
     end
 
@@ -109,6 +112,7 @@ class PSD
     def write_bezier_point(file)
       [@preceding_vert, @preceding_horiz, @anchor_vert,
         @anchor_horiz, @leaving_vert, @leaving_horiz].each do |point|
+          puts "writing #{point} to #{file.pos}"
           file.write_path_number point
       end
     end

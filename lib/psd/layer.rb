@@ -70,8 +70,8 @@ class PSD
 
       export_mask_data(outfile)
       export_blending_ranges(outfile)
-      # export_legacy_layer_name(outfile)
-      # export_extra_data(outfile)
+      export_legacy_layer_name(outfile)
+      export_extra_data(outfile)
 
       outfile.write @file.read(end_of_section - @file.tell)
     end
@@ -175,20 +175,24 @@ class PSD
     end
 
     def export_legacy_layer_name(outfile)
-      if @legacy_name
-        string = PascalString.new(initial_value: @legacy_name)
-        outfile.write(string)
-        @file.seek string.length, IO::SEEK_CUR
-      end
+      # if @legacy_name
+      #   string = PascalString.new(initial_value: @legacy_name)
+      #   string.write outfile
+      #   @file.seek string.num_bytes, IO::SEEK_CUR
+      # end
+      outfile.write @file.read(@legacy_name_end - @legacy_name_start)
     end
 
     def export_extra_data(outfile)
-      # if @path_components && !@path_components.empty?
-      #   outfile.seek @vector_mask_begin
-      #   write_vector_mask(outfile)
-      # end
-      # outfile.seek @extra_data_end
-      # outfile.write @file.read(@extra_data_end - @extra_data_begin)
+      outfile.write @file.read(@extra_data_end - @extra_data_begin)
+      if @path_components && !@path_components.empty?
+        outfile.seek @vector_mask_begin
+        @file.seek @vector_mask_begin
+        puts "----- #{outfile.pos} vs #{file.pos}"
+
+        write_vector_mask(outfile)
+        @file.seek outfile.tell
+      end
     end
 
     def parse_blend_modes
@@ -239,8 +243,10 @@ class PSD
     # The old school layer names are encoded in MacRoman format,
     # not UTF-8. Luckily Ruby kicks ass at character conversion.
     def parse_legacy_layer_name
+      @legacy_name_start = @file.tell
       len = Util.pad4 @file.read(1).unpack('C')[0]
       @legacy_name = @file.read(len).encode('UTF-8', 'MacRoman').delete("\000")
+      @legacy_name_end = @file.tell
     end
 
     # This section is a bit tricky to parse because it represents all of the
@@ -305,14 +311,15 @@ class PSD
         @path_components << PathRecord.read(self)
       end
 
-      @path_components.each{ |p| pp p.to_hash }
+      @vector_mask_end = @file.tell
     end
 
     def write_vector_mask(outfile)
-      outfile.write_int 3
-      outfile.write_int @vector_tag
+      outfile.write @file.read(8)
+      # outfile.write_int 3
+      # outfile.write_int @vector_tag
 
-      @path_components.each{ |pc| pc.write(outfile) }
+      @path_components.each{ |pc| pc.write(outfile); @file.seek(26, IO::SEEK_CUR) }
     end
 
     def parse_reference_point
