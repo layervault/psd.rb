@@ -51,8 +51,9 @@ class PSD
       # We first conver the decimal to be a whole number representing a
       # fraction with the denominator of 2^24
       # Next, we write that number as a 24-bit integer to the file
-      numerator = ((num - num.to_i) * 2 ** 24).to_i
-      write numerator.to_s(2).scan(/\d{8}/).map(&:to_i).pack('C*')
+      binary_numerator = ((num - num.to_i) * 2 ** 24).to_i.to_s(2)
+      binary_numerator = "0" * (24 - binary_numerator.size) + binary_numerator
+      write binary_numerator.scan(/\d{8}/).map(&:to_i).pack('C*')
     end
   end
 end
