@@ -197,9 +197,6 @@ class PSD
         length = Util.pad2 @file.read_int
         pos = @file.tell
 
-        extra_data[key] = @file.read(length)
-        @file.seek pos
-
         case key
         when 'luni' # Unicode layer name
           len = @file.read_int * 2
@@ -233,15 +230,18 @@ class PSD
     end
 
     def parse_vector_mask(length)
-      puts 3 == @file.read_int
+      raise "Vector mask malformed" unless 3 == @file.read_int
       tag = @file.read_int
       invert = tag & 0x01
       not_link = (tag & (0x01 << 1)) > 0
       disable = (tag & (0x01 << 2)) > 0
-      puts "--- #{length - 8}"
 
-      # TODO copy over
-      # https://github.com/alco/psdump/blob/master/libpsd-0.9/src/path.c
+      num_records = (length - 8) / 26
+
+      @path_components = []
+      num_records.times do
+        @path_components << PathRecord.read(@file)
+      end
     end
 
     def parse_reference_point

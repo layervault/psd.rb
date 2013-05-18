@@ -5,7 +5,7 @@ psd = nil
 results = Benchmark.measure "PSD parsing" do
   # psd = PSD.new('spec/files/example.psd')
   # psd = PSD.new('test.psd')
-  psd = PSD.new('/Users/kelly/Desktop/upper_left.psd')
+  psd = PSD.new('/Users/kelly/Desktop/right.psd')
   psd.parse!
 end
 
