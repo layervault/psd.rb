@@ -242,6 +242,8 @@ class PSD
       num_records.times do
         @path_components << PathRecord.read(@file)
       end
+
+      @path_components.each{ |p| pp p.to_hash }
     end
 
     def parse_reference_point

@@ -40,21 +40,25 @@ class PSD
     end
 
     def to_hash
-      {
-        linked: @linked,
-        preceding: {
-          vert: @preceding_vert,
-          horiz: @preceding_horiz
-        },
-        anchor: {
-          vert: @anchor_vert,
-          horiz: @anchor_horiz
-        },
-        leaving: {
-          vert: @leaving_vert,
-          horiz: @leaving_horiz
+      if [1, 2, 4, 5].include? @record_type
+        {
+          linked: @linked,
+          preceding: {
+            vert: @preceding_vert,
+            horiz: @preceding_horiz
+          },
+          anchor: {
+            vert: @anchor_vert,
+            horiz: @anchor_horiz
+          },
+          leaving: {
+            vert: @leaving_vert,
+            horiz: @leaving_horiz
+          }
         }
-      }
+      else
+        {}
+      end
     end
 
     private
@@ -72,36 +76,36 @@ class PSD
     def read_bezier_point
       @linked = [1,4].include? @record_type
 
-      @preceding_vert = @file.read_path_float
-      @preceding_horiz = @file.read_path_float
+      @preceding_vert = @file.read_path_number
+      @preceding_horiz = @file.read_path_number
 
-      @anchor_vert = @file.read_path_float
-      @anchor_horiz = @file.read_path_float
+      @anchor_vert = @file.read_path_number
+      @anchor_horiz = @file.read_path_number
 
-      @leaving_vert = @file.read_path_float
-      @leaving_horiz = @file.read_path_float
+      @leaving_vert = @file.read_path_number
+      @leaving_horiz = @file.read_path_number
     end
 
     def write_bezier_point
       [@preceding_vert, @preceding_horiz, @anchor_vert,
         @anchor_horiz, @leaving_vert, @leaving_horiz].each do |point|
-          @file.write_path_float point
+          @file.write_path_number point
       end
     end
 
     def read_clipboard_record
-      @clipboard_top = @file.read_path_float
-      @clipboard_left = @file.read_path_float
-      @clipboard_bottom = @file.read_path_float
-      @clipboard_right = @file.read_path_float
-      @clipboard_resolution = @file.read_path_float
+      @clipboard_top = @file.read_path_number
+      @clipboard_left = @file.read_path_number
+      @clipboard_bottom = @file.read_path_number
+      @clipboard_right = @file.read_path_number
+      @clipboard_resolution = @file.read_path_number
       @file.seek(4, IO::SEEK_CUR)
     end
 
     def write_clipboard_record
       [@clipboard_top, @clipboard_left, @clipboard_bottom,
         @clipboard_right, @clipboard_resolution].each do |point|
-          @file.write_path_float point
+          @file.write_path_number point
       end
       @file.seek(4, IO::SEEK_CUR)
     end

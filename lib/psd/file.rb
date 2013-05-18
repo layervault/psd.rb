@@ -38,12 +38,19 @@ class PSD
     end
 
     # http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577409_17587
-    def read_path_float
-      read_float / 0x1000000
+    def read_path_number
+      read(1).unpack('c*')[0] + (read(3).unpack('B*')[0].to_i(2) / (2 ** 24))
     end
 
-    def write_path_float
-      write_float * 0x1000000
+    def write_path_number(num)
+      write BinData::Int8.new num.to_i
+
+      # Now for the fun part.
+      # We first conver the decimal to be a whole number representing a
+      # fraction with the denominator of 2^24
+      # Next, we write that number as a 24-bit integer to the file
+      numerator = ((num - num.to_i) * 2 ** 24).to_i
+      write numerator.to_s(2).scan(/\d{8}/).map(&:to_i).pack('C*')
     end
   end
 end
