@@ -37,9 +37,11 @@ class PSD
       end
     end
 
-    # http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577409_17587
+    # Adobe's lovely signed 32-bit fixed-point number with 8bits.24bits
+    #   http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577409_17587
     def read_path_number
-      read(1).unpack('c*')[0] + (read(3).unpack('B*')[0].to_i(2) / (2 ** 24))
+      read(1).unpack('c*')[0] + # pre-decimal point
+        (read(3).unpack('B*')[0].to_i(2) / (2 ** 24)) # post-decimal point
     end
 
     def write_path_number(num)
