@@ -36,7 +36,6 @@ class PSD
     end
 
     def parse(index=nil)
-      puts "---- beginning layer at #{@file.pos}"
       start_section
 
       @idx = index
@@ -57,8 +56,6 @@ class PSD
       @file.seek @layer_end # Skip over any filler zeros
 
       end_section
-      puts "---- ending layer at #{@file.pos}"
-      puts "^^#{@name}"
       return self
     end
 
@@ -188,7 +185,6 @@ class PSD
       if @path_components && !@path_components.empty?
         outfile.seek @vector_mask_begin
         @file.seek @vector_mask_begin
-        puts "----- #{outfile.pos} vs #{file.pos}"
 
         write_vector_mask(outfile)
         @file.seek outfile.tell
