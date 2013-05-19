@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tempfile'
 
-describe "Identity exports", :focus do
+describe "Identity exports" do
   it "should export the simplest PSD" do
     filepath = 'spec/files/simplest.psd'
     psd = PSD.new(filepath)
@@ -26,7 +26,7 @@ describe "Identity exports", :focus do
     filepath = 'spec/files/path.psd'
     psd = PSD.new(filepath)
     psd.parse!
-    tmpfile = File.new('/Users/kelly/Desktop/path_export.psd', 'w+') #Tempfile.new("path_export.psd")
+    tmpfile = Tempfile.new("path_export.psd")
     psd.export tmpfile.path
 
     Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))
