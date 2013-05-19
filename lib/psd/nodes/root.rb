@@ -21,6 +21,10 @@ class PSD::Node
       [@psd.header.width, @psd.header.height]
     end
 
+    def name
+      nil
+    end
+
     private
 
     def build_hierarchy

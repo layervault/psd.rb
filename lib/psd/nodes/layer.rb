@@ -7,6 +7,7 @@ class PSD::Node
     def initialize(layer)
       @layer = layer
       layer.node = self
+      @children = []
     end
 
     PROPERTIES.each do |meth|
@@ -19,7 +20,8 @@ class PSD::Node
       end
     end
 
-    def translate(x,y)
+
+    def translate(x=0, y=0)
       @layer.translate x, y
     end
 
