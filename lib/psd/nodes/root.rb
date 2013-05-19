@@ -17,6 +17,10 @@ class PSD::Node
       }
     end
 
+    def name
+      nil
+    end
+
     private
 
     def build_hierarchy

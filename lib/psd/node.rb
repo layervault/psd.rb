@@ -1,6 +1,10 @@
-# Internal structure to help us build trees of a Photoshop documents
+# Internal structure to help us build trees of a Photoshop documents.
+# A lot of method names borrowed from the Ruby ancestry gem.
 class PSD
   class Node
+    include Ancestry
+    include Search
+
     attr_accessor :parent, :children
 
     def initialize(layers=[])
@@ -8,25 +12,6 @@ class PSD
       layers.each do |layer|
         layer.parent = self
         @children << layer
-      end
-    end
-
-    def children_at_path(path, opts={})
-      path = path.split('/').delete_if { |p| p == "" } unless path.is_a?(Array)
-
-      query = path.shift
-      matches = children.select do |c|
-        if opts[:case_sensitive]
-          c.name == query
-        else
-          c.name.downcase == query.downcase
-        end
-      end
-
-      if path.length == 0
-        return matches
-      else
-        return matches.map { |m| m.children_at_path(path, opts) }.flatten
       end
     end
   end
