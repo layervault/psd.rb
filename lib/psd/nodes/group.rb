@@ -22,7 +22,7 @@ class PSD::Node
     end
     alias :width :cols
 
-    def translate(x=0,y=0)
+    def translate(x=0, y=0)
       @children.each{ |c| c.translate(x,y) }
     end
 
