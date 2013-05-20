@@ -9,6 +9,8 @@ class PSD::Image
       end
 
       def parse_byte_counts!
+        return parse_channel_byte_counts! if is_layer_image?
+
         byte_counts = []
         channels.times do |i|
           height.times do |j|
@@ -19,13 +21,31 @@ class PSD::Image
         return byte_counts
       end
 
+      # For channel images, each channel has it's own byte counts
+      # and compression.
+      def parse_channel_byte_counts!
+        byte_counts = []
+        height.times do |i|
+          byte_counts << @file.read_short
+        end
+
+        return byte_counts
+      end
+
       def parse_channel_data!
+        return parse_layer_channel_data! if is_layer_image?
+        
         chan_pos = 0
         line_index = 0
 
         channels.times do |i|
           chan_pos, line_index = decode_rle_channel(chan_pos, line_index)
         end
+      end
+
+      def parse_layer_channel_data!
+        line_index = 0
+        @chan_pos, line_index = decode_rle_channel(@chan_pos, line_index)
       end
 
       def decode_rle_channel(chan_pos, line_index)

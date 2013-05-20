@@ -12,13 +12,6 @@ class PSD
       'ZIPPrediction'
     ]
 
-    CHANNEL_INFO = [
-      {id: 0},
-      {id: 1},
-      {id: 2},
-      {id: -1}
-    ]
-
     def initialize(file, header)
       @file = file
       @header = header
@@ -28,11 +21,21 @@ class PSD
 
       calculate_length
       @channel_data = NArray.int(@length)
+      @channels_info = [
+        {id: 0},
+        {id: 1},
+        {id: 2},
+        {id: -1}
+      ]
 
       @start_pos = @file.tell
       @end_pos = @start_pos + @length
 
       @pixel_data = []
+    end
+
+    def is_layer_image?
+      false
     end
 
     def parse

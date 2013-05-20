@@ -7,7 +7,7 @@ class PSD::Image::Mode
         index = 0
         pixel = {r: 0, g: 0, b: 0, a: 255}
 
-        PSD::Image::CHANNEL_INFO.each do |chan|
+        @channels_info.each do |chan|
           case chan[:id]
           when -1
             next if channels != 4

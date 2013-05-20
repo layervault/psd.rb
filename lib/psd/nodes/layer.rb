@@ -55,5 +55,13 @@ class PSD::Node
     def document_dimensions
       @parent.document_dimensions
     end
+
+    def method_missing(meth, *args, &block)
+      if @layer.respond_to?(meth)
+        @layer.send(meth)
+      else
+        super
+      end
+    end
   end
 end

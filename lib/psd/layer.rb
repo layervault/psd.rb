@@ -78,7 +78,7 @@ class PSD
     end
 
     def parse_channel_image!(header)
-      # @image = ChannelImage.new(@file, header, self)
+      @image = ChannelImage.new(@file, header, self).parse
     end
 
     def width
