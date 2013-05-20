@@ -36,9 +36,6 @@ class PSD
     end
 
     def parse
-      # Not ready for primetime yet
-      @file.seek @end_pos and return
-
       @compression = parse_compression!
 
       # ZIP not implemented
@@ -47,6 +44,8 @@ class PSD
       end
 
       parse_image_data!
+
+      return self
     end
 
     [:height, :width, :channels, :depth, :mode].each do |attribute|

@@ -35,7 +35,7 @@ class PSD::Image
           start = @file.tell
 
           while @file.tell < start + byte_count
-            len = @file.read(1).unpack('C')[0]
+            len = @file.read(1).bytes.to_a[0]
 
             if len < 128
               len += 1
@@ -52,7 +52,7 @@ class PSD::Image
               len ^= 0xff
               len += 2
 
-              val = @file.read(1).unpack('C')[0]
+              val = @file.read(1).bytes.to_a[0]
               data = []
               len.times { |i| data << val }
 

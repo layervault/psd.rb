@@ -9,8 +9,8 @@ class PSD::Image
         png = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
 
         i = 0
-        width.times do |x|
-          height.times do |y|
+        height.times do |y|
+          width.times do |x|
             png[x,y] = ChunkyPNG::Color.rgba(
               @pixel_data[i],
               @pixel_data[i+1],
