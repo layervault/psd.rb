@@ -20,9 +20,12 @@ class PSD::Node
       end
     end
 
-
     def translate(x=0, y=0)
       @layer.translate x, y
+    end
+
+    def scale_path_components(xr, yr)
+      @layer.scale_path_components(xr, yr)
     end
 
     def hide!

@@ -103,7 +103,13 @@ class PSD
       @top += y
       @bottom += y
 
-      @path_components.each{ |p| p.translate(x,y) }
+      @path_components.each{ |p| p.translate(x,y) } if @path_components
+    end
+
+    def scale_path_components(xr, yr)
+      return unless @path_components
+
+      @path_components.each{ |p| p.scale(xr, yr) }
     end
 
     def document_dimensions

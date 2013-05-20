@@ -78,6 +78,17 @@ class PSD
       @leaving_horiz += translate_x_ratio
     end
 
+    def scale(xr, yr)
+      return unless is_bezier_point?
+
+      @preceding_vert *= yr
+      @preceding_horiz *= xr
+      @anchor_vert *= yr
+      @anchor_horiz *= xr
+      @leaving_vert *= yr
+      @leaving_horiz *= xr
+    end
+
     def is_bezier_point?
       [1,2,4,5].include? @record_type
     end

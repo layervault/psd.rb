@@ -19,6 +19,7 @@ Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 
 class PSD
   include Helpers
+  include NodeExporting
 
   def initialize(file)
     @file = file.is_a?(String) ? PSD::File.open(file) : file
@@ -81,10 +82,12 @@ class PSD
 
     # Reset the file pointer
     @file.seek 0
+    @header.write outfile
+    @file.seek @header.num_bytes, IO::SEEK_CUR
 
     # Nothing in the header or resources we want to bother with changing
     # right now. Write it straight to file.
-    outfile.write @file.read(@resources.end_of_section)
+    outfile.write @file.read(@resources.end_of_section - @file.tell)
 
     # Now, the changeable part. Layers and masks.
     layer_mask.export(outfile)
