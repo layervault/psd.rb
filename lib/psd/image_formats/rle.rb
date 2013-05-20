@@ -34,7 +34,7 @@ class PSD::Image
 
       def parse_channel_data!
         return parse_layer_channel_data! if is_layer_image?
-        
+
         chan_pos = 0
         line_index = 0
 
@@ -62,7 +62,7 @@ class PSD::Image
               data = @file.read(len).bytes.to_a
 
               data_index = 0
-              (chan_pos...chan_pos+len).to_a.each do |k|
+              (chan_pos...chan_pos+len).each do |k|
                 @channel_data[k] = data[data_index]
                 data_index += 1
               end
@@ -77,7 +77,7 @@ class PSD::Image
               len.times { |i| data << val }
 
               data_index = 0
-              (chan_pos...chan_pos+len).to_a.each do |k|
+              (chan_pos...chan_pos+len).each do |k|
                 @channel_data[k] = data[data_index]
                 data_index += 1
               end
