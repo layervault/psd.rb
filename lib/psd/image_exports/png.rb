@@ -29,6 +29,7 @@ class PSD::Image
       def save_as_png(file)
         to_png.save(file)
       end
+      alias :save :save_as_png
     end
   end
 end
