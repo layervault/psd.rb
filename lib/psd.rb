@@ -23,6 +23,7 @@ class PSD
 
   def initialize(file)
     @file = PSD::File.new(file, 'rb')
+    @file.seek 0 # just IN FUCKING CASE
 
     @header = nil
     @resources = nil
