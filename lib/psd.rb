@@ -22,7 +22,7 @@ class PSD
   include NodeExporting
 
   def initialize(file)
-    @file = file.is_a?(String) ? PSD::File.open(file) : file
+    @file = PSD::File.new(file, 'rb')
 
     @header = nil
     @resources = nil
