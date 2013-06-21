@@ -26,11 +26,11 @@ class PSD::Node
     end
 
     def document_width
-      @psd.header.width
+      @psd.header.width.to_i
     end
 
     def document_height
-      @psd.header.height
+      @psd.header.height.to_i
     end
 
     def name
