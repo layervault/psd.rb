@@ -47,7 +47,7 @@ class PSD
         end
 
         layers.each do |layer|
-          @file.seek 8, IO::SEEK_CUR and next if layer.folder? || layer.hidden?
+          @file.seek 8, IO::SEEK_CUR and next if layer.folder? || layer.folder_end?
 
           layer.parse_channel_image!(@header)
         end
@@ -87,7 +87,7 @@ class PSD
       layers.each do |layer|
         if layer.folder?
           group_layer = layer
-        elsif layer.hidden?
+        elsif layer.folder_end?
           group_layer = nil
         else
           layer.group_layer = layer

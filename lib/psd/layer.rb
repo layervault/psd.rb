@@ -93,8 +93,16 @@ class PSD
       @is_folder
     end
 
-    def hidden?
+    def folder_end?
       @is_hidden
+    end
+
+    def visible?
+      @visible
+    end
+
+    def hidden?
+      !@visible
     end
 
     def translate(x=0, y=0)

@@ -2,8 +2,6 @@ class PSD::Node
   class Layer < PSD::Node
     include PSD::Node::LockToOrigin
 
-    PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
-
     def initialize(layer)
       @layer = layer
       layer.node = self
@@ -44,12 +42,9 @@ class PSD::Node
     end
 
     def to_hash
-      hash = {}
-      PROPERTIES.each do |p|
-        hash[p] = self.send(p)
-      end
-
-      return hash
+      super.merge({
+        type: :layer
+      })
     end
 
     def document_dimensions

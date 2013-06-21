@@ -13,7 +13,7 @@ class PSD
     end
 
     def actual_layers
-      layers.delete_if { |l| l.folder? || l.hidden? }
+      layers.delete_if { |l| l.folder? || l.folder_end? }
     end
 
     def folders

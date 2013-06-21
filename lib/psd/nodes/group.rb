@@ -6,9 +6,10 @@ class PSD::Node
 
     attr_reader :name, :top, :left, :bottom, :right
 
-    def initialize(name, layers)
-      @name = name
-      parse_layers(layers)
+    def initialize(folder)
+      @name = folder[:name]
+      @layer = folder[:layer]
+      parse_layers(folder[:layers])
       get_dimensions
     end
 
@@ -35,12 +36,11 @@ class PSD::Node
     end
 
     def to_hash
-      {
-        name: name,
-        height: height,
-        width: width,
+      super.merge({
+        type: :group,
+        visible: visible?,
         children: children.map(&:to_hash)
-      }
+      })
     end
 
     def document_dimensions

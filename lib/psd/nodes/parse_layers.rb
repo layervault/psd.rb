@@ -4,7 +4,7 @@ class PSD::Node
       @children = []
       layers.each do |layer|
         if layer.is_a?(Hash)
-          node = PSD::Node::Group.new(layer[:name], layer[:layers])
+          node = PSD::Node::Group.new(layer)
         elsif layer.is_a?(PSD::Layer)
           node = PSD::Node::Layer.new(layer)
         end

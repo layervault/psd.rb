@@ -13,12 +13,24 @@ class PSD::Node
 
     def to_hash
       {
-        children: children.map(&:to_hash)
+        children: children.map(&:to_hash),
+        document: {
+          width: document_width,
+          height: document_height
+        }
       }
     end
 
     def document_dimensions
       [@psd.header.width, @psd.header.height]
+    end
+
+    def document_width
+      @psd.header.width
+    end
+
+    def document_height
+      @psd.header.height
     end
 
     def name
@@ -36,8 +48,8 @@ class PSD::Node
       @psd.layers.each do |layer|
         if layer.folder?
           parseStack << result
-          result = { name: layer.name, layers: [] }
-        elsif layer.hidden?
+          result = { name: layer.name, layer: layer, layers: [] }
+        elsif layer.folder_end?
           temp = result
           result = parseStack.pop
           result[:layers] << temp
