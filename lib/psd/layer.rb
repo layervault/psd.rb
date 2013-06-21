@@ -5,7 +5,7 @@ class PSD
 
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
-    attr_reader :channels, :image
+    attr_reader :channels, :image, :text_layer
 
     attr_accessor :group_layer
     attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
@@ -286,6 +286,7 @@ class PSD
         when 'vmsk' then parse_vector_mask(length)
         when 'fxrp' then parse_reference_point
         when 'shmd' then parse_metadata
+        when 'TySh' then parse_type_tool
         else
           @file.seek length, IO::SEEK_CUR
         end
@@ -347,6 +348,19 @@ class PSD
         len = @file.read_uint
         data = @file.read len
       end
+    end
+
+    def parse_type_tool
+      @text_layer = true
+      raise "Text layer malformed" unless @file.read_short == 1
+
+      @text_transform_info = 6.times.map{ @file.read_double }
+      raise "Text layer wrong version" unless @file.read_short == 50
+      raise "Wrong text layer descriptor version" unless @file.read_int == 16
+      @file.seek 26, IO::SEEK_CUR
+      raise "Our text parsing sucks" unless @file.read(4).encode('UTF-8', 'MacRoman').delete("\000") == 'TEXT'
+      @text_length = @file.read_int
+      @text_message = @text_length.times.map{ @file.read(2).encode('UTF-8', 'MacRoman').delete("\000") }.join('')
     end
   end
 end

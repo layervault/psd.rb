@@ -38,7 +38,7 @@ class PSD
         hash[p] = self.send(p)
       end
 
-      return hash
+      hash
     end
   end
 end
