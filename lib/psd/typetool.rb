@@ -16,8 +16,16 @@ class PSD
       @data[:text] = Descriptor.new(@file).parse
       @data[:text]['EngineData'].encode!('UTF-8', 'MacRoman').delete("\000")
 
-      puts @data[:text]['EngineData']
-      exit
+      warpVersion = @file.read_short
+      descriptor_version = @file.read_int
+
+      @data[:warp] = Descriptor.new(@file).parse
+      [:left, :top, :right, :bottom].each do |pos|
+        @data[pos] = @file.read_double
+      end
+
+      puts @data.inspect
+      @data
     end
 
     def parse_legacy
