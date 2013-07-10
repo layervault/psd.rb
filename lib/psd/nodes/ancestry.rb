@@ -53,6 +53,21 @@ class PSD
       def depth
         return ancestors.length + 1
       end
+
+      def method_missing(method, *args, &block)
+        test = /^(.+)_(layers|groups)$/.match(method)
+        if test
+          m = self.respond_to?(test[1]) ? test[1] : "#{test[1]}s"
+          self.send(m).select &method("#{test[2]}_only")
+        else
+          super
+        end
+      end
+
+      private
+
+      def layers_only(d); d.is_a?(PSD::Node::Layer); end
+      def groups_only(d); d.is_a?(PSD::Node::Group); end
     end
   end
 end

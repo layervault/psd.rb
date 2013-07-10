@@ -37,6 +37,10 @@ class PSD::Node
       nil
     end
 
+    def depth
+      0
+    end
+
     private
 
     def build_hierarchy
