@@ -91,5 +91,44 @@ describe 'Parsing' do
       @psd.layers.should == @psd.layer_mask.layers
       @psd.layers.each { |l| l.is_a?(PSD::Layer).should be_true }
     end
+
+    it "should have a name" do
+      @psd.layers.first.name.should == 'Version C'
+    end
+
+    it "should properly identify folders" do
+      @psd.layers.first.folder?.should be_true
+      @psd.layers.select { |l| l.name == 'Matte' }.first.folder?.should be_false
+    end
+
+    it "should properly detect visibility" do
+      @psd.layers.first.visible?.should be_false
+      @psd
+        .layers
+        .select { |l| l.name == 'Version A' }.first
+        .visible?
+        .should be_true
+    end
+
+    it "should properly calculate dimensions" do
+      layer = @psd.layers.select { |l| l.name == 'Logo_Glyph' }.last
+      layer.width.should == 142
+      layer.height.should == 179
+    end
+
+    it "should properly calculate coordinates" do
+      layer = @psd.layers.select { |l| l.name == 'Logo_Glyph' }.last
+      layer.left.should == 379
+      layer.top.should == 210
+    end
+
+    it "should have a blend mode" do
+      layer = @psd.layers.select { |l| l.name == 'Version A' }.last
+      layer.blend_mode.should_not be_nil
+      layer.blend_mode.mode.should == 'normal'
+      layer.blend_mode.opacity.should == 255
+      layer.blend_mode.opacity_percentage.should == 100
+      layer.blend_mode.visible.should be_true
+    end
   end
 end

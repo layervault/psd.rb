@@ -10,7 +10,7 @@ class PSD
 
       @layers = []
       @merged_alpha = false
-      @global_mask = {}
+      @global_mask = nil
       @extras = []
     end
 
