@@ -24,7 +24,6 @@ class PSD
         @data[pos] = @file.read_double
       end
 
-      puts @data.inspect
       @data
     end
 
