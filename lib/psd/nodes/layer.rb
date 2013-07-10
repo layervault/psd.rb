@@ -8,7 +8,7 @@ class PSD::Node
       @children = []
     end
 
-    PROPERTIES.each do |meth|
+    (PROPERTIES + [:text, :ref_x, :ref_y]).each do |meth|
       define_method meth do
         @layer.send(meth)
       end

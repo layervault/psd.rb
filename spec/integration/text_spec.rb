@@ -5,7 +5,7 @@ describe 'Text' do
     psd = PSD.new('spec/files/text.psd')
     psd.parse!
 
-    text = psd.tree.to_hash[:children].first[:text]
+    text = psd.tree.children.first.text
     text.should be_an_instance_of(Hash)
     text[:value].should == 'Test'
   end

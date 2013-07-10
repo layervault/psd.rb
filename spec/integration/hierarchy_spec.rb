@@ -65,5 +65,22 @@ describe "Hierarchy" do
       @tree.descendant_layers.last.depth.should == 2
       @tree.children.first.depth.should == 1
     end
+
+    describe "Searching" do
+      it "should find a node given a path" do
+        @tree.children_at_path('Version A/Matte').is_a?(Array).should be_true
+        @tree.children_at_path('Version A/Matte').size.should == 1
+        @tree.children_at_path('Version A/Matte').first.is_a?(PSD::Node::Layer).should be_true
+      end
+
+      it "should ignore leading slashes" do
+        @tree.children_at_path('/Version A/Matte').size.should == 1
+      end
+
+      it "should return an empty array when a node is not found" do
+        @tree.children_at_path('LOLWUTOMGBBQSAUCE').is_a?(Array).should be_true
+        @tree.children_at_path('LOLWUTOMGBBQSAUCE').size.should == 0
+      end
+    end
   end
 end
