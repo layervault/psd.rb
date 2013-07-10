@@ -45,7 +45,8 @@ class PSD
         left:   left,
         top:    top,
         right:  right,
-        bottom: bottom
+        bottom: bottom,
+        transform: transform
       }
     end
 
