@@ -41,12 +41,12 @@ class PSD
 
     def to_hash
       {
-        value:   text_value,
-        left:   left,
-        top:    top,
-        right:  right,
-        bottom: bottom,
-        transform: transform
+        value:      text_value,
+        left:       left,
+        top:        top,
+        right:      right,
+        bottom:     bottom,
+        transform:  transform
       }
     end
 
