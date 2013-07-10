@@ -14,14 +14,16 @@ class PSD
       descriptor_version = @file.read_int
 
       @data[:text] = Descriptor.new(@file).parse
-      @data[:text]['EngineData'].encode!('UTF-8', 'MacRoman').delete!("\000")
+      @data[:text]['EngineData']
+        .encode!('UTF-8', 'MacRoman')
+        .delete!("\000")
 
       warpVersion = @file.read_short
       descriptor_version = @file.read_int
 
       @data[:warp] = Descriptor.new(@file).parse
       [:left, :top, :right, :bottom].each do |pos|
-        @data[pos] = @file.read_double
+        @data[pos] = @file.read_int
       end
 
       return self
@@ -29,7 +31,7 @@ class PSD
 
     # NOTE: This is hacky, gross, and dirty. We need a real PSDShittyMarkup™ parser.
     def text_value
-      /\/Text \(˛ˇ(.*)\r\)$/.match(engine_data)[1]
+      /\/Text \(˛ˇ(.*)\r\)$/.match(engine_data)[1].gsub /\r/, "\n"
     end
     alias :to_s :text_value
 
