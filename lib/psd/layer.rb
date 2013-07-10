@@ -286,7 +286,8 @@ class PSD
         when 'vmsk' then parse_vector_mask(length)
         when 'fxrp' then parse_reference_point
         when 'shmd' then parse_metadata
-        when 'TySh' then parse_type_tool(length)
+        when 'TySh' then TypeTool.new(@file, length).parse
+        when 'tySh' then TypeTool.new(@file, length).parse_legacy
         else
           @file.seek length, IO::SEEK_CUR
         end

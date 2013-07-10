@@ -1,6 +1,14 @@
 class PSD
   class File < ::File
     FORMATS = {
+      ulonglong: {
+        length: 8,
+        code: 'Q>'
+      },
+      longlong: {
+        length: 8,
+        code: 'q>'
+      },
       double: {
         length: 8,
         code: 'G'
@@ -57,9 +65,27 @@ class PSD
       write [binary_numerator >> 0].pack('C')
     end
 
+    def read_string(length)
+      read(length).encode('UTF-8', 'MacRoman').delete("\000")
+    end
+
     def read_unicode_string(length=nil)
       length ||= read_int if length.nil?
       !length.nil? && length > 0 ? read(length * 2).encode('UTF-8', 'MacRoman').delete("\000") : ''
+    end
+
+    def read_boolean
+      read(1)[0] != 0
+    end
+
+    def read_space_color
+      color_space = read_short
+      color_component = []
+      4.times do |i|
+        color_component.push(read_short >> 8)
+      end
+
+      Color.color_space_to_argb(color_space, color_component)
     end
   end
 end
