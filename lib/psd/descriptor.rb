@@ -1,7 +1,5 @@
 class PSD
   class Descriptor
-    attr_reader :klass, :items
-
     def initialize(file)
       @file = file
       @data = {}
