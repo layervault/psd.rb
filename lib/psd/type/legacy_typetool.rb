@@ -1,33 +1,6 @@
 class PSD
-  class TypeTool
-    def initialize(file, length)
-      @file = file
-      @length = length
-      @data = {}
-    end
-
-    def parse
-      version = @file.read_short
-      parse_transform_info
-
-      text_version = @file.read_short
-      descriptor_version = @file.read_int
-
-      @data[:text] = Descriptor.new(@file).parse
-      @data[:text]['EngineData'].encode!('UTF-8', 'MacRoman').delete("\000")
-
-      warpVersion = @file.read_short
-      descriptor_version = @file.read_int
-
-      @data[:warp] = Descriptor.new(@file).parse
-      [:left, :top, :right, :bottom].each do |pos|
-        @data[pos] = @file.read_double
-      end
-
-      @data
-    end
-
-    def parse_legacy
+  class LegacyTypeTool < TypeTool
+    def parse      
       version = @file.read_short
       parse_transform_info
 
@@ -99,16 +72,12 @@ class PSD
       @data[:color] = @file.read_space_color
       @data[:antialias] = @file.read_boolean
 
-      @data
+      return self
     end
 
-    private
-
-    def parse_transform_info
-      @data[:transform] = {}
-      [:xx, :xy, :yx, :yy, :tx, :ty].each do |t|
-        @data[:transform][t] = @file.read_double
-      end
+    # Not sure where this is stored right now
+    def text_value
+      ""
     end
   end
 end

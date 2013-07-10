@@ -44,7 +44,9 @@ class PSD::Node
     def to_hash
       super.merge({
         type: :layer,
-        text: @layer.text_layer
+        text: @layer.text,
+        ref_x: @layer.ref_x,
+        ref_y: @layer.ref_y
       })
     end
 

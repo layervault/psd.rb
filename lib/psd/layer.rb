@@ -5,7 +5,7 @@ class PSD
 
     attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
-    attr_reader :channels, :image, :text_layer
+    attr_reader :channels, :image
 
     attr_accessor :group_layer
     attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
@@ -122,6 +122,11 @@ class PSD
 
     def document_dimensions
       @node.document_dimensions
+    end
+
+    def text
+      return nil unless @adjustments[:type]
+      @adjustments[:type].to_hash
     end
 
     private
@@ -286,8 +291,8 @@ class PSD
         when 'vmsk' then parse_vector_mask(length)
         when 'fxrp' then parse_reference_point
         when 'shmd' then parse_metadata
-        when 'TySh' then TypeTool.new(@file, length).parse
-        when 'tySh' then TypeTool.new(@file, length).parse_legacy
+        when 'TySh' then @adjustments[:type] = TypeTool.new(@file, length).parse
+        when 'tySh' then @adjustments[:type] = LegacyTypeTool.new(@file, length).parse
         else
           @file.seek length, IO::SEEK_CUR
         end
@@ -348,35 +353,6 @@ class PSD
         padding = @file.read(3)
         len = @file.read_uint
         data = @file.read len
-      end
-    end
-
-    # http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577411_21585
-    def parse_type_tool(length)
-      @text_layer = true
-      raise "Text layer malformed" unless @file.read_short == 1
-
-      @text_transform_info = 6.times.map{ @file.read_double }
-      raise "Text layer wrong version" unless @file.read_short == 50
-      raise "Wrong text layer descriptor version" unless @file.read_int == 16
-      @text_descriptor = read_descriptor
-    end
-
-    def read_descriptor
-      len = @file.read_int * 2
-      name_from_class_id = @file.read(len).unpack("A#{len}")[0].encode('UTF-8').delete("\000")
-      puts " ----- #{name_from_class_id}"
-
-      class_id_length = @file.read_int
-      class_id = class_id_length == 0 ? @file.read(4).encode('UTF-8', 'MacRoman').delete("\000") : @file.read(class_id_length).unpack("A#{len}")[0].encode('UTF-8').delete("\000")
-      num_items_in_descriptor = @file.read_int
-
-      puts "num items #{num_items_in_descriptor}"
-
-      num_items_in_descriptor.times do |i|
-        item_length = @file.read_int
-        item_name = item_length == 0 ? @file.read(4).encode('UTF-8', 'MacRoman').delete("\000") : @file.read(item_length).unpack("A#{len}")[0].encode('UTF-8').delete("\000")
-        puts item_name
       end
     end
   end
