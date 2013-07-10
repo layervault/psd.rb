@@ -50,10 +50,10 @@ class PSD::Node
     private
 
     def get_dimensions
-      @left = @children.map(&:left).min
-      @top = @children.map(&:top).min
-      @bottom = @children.map(&:bottom).max
-      @right = @children.map(&:right).max
+      @left = @children.map(&:left).min || 0
+      @top = @children.map(&:top).min || 0
+      @bottom = @children.map(&:bottom).max || 0
+      @right = @children.map(&:right).max || 0
     end
   end
 end
