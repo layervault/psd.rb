@@ -2,7 +2,7 @@ class PSD
   class LayerMask
     include Section
 
-    attr_reader :layers
+    attr_reader :layers, :global_mask
 
     def initialize(file, header)
       @file = file

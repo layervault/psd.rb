@@ -59,4 +59,37 @@ describe 'Parsing' do
       end
     end
   end
+
+  describe 'Layer Mask' do
+    before(:each) do
+      @psd.parse!
+    end
+
+    it "should contain data" do
+      @psd.layer_mask.should_not be_nil
+      @psd.layer_mask.is_a?(PSD::LayerMask).should be_true
+    end
+
+    it "should contain layers" do
+      @psd.layer_mask.layers.size.should > 0
+    end
+
+    it "should contain the global layer mask data" do
+      pending "Not implemented yet"
+
+      @psd.layer_mask.global_mask.should_not be_nil
+    end
+  end
+
+  describe 'Layers' do
+    before(:each) do
+      @psd.parse!
+    end
+
+    it "should contain each layer" do
+      @psd.layer_mask.layers.size.should == 15
+      @psd.layers.should == @psd.layer_mask.layers
+      @psd.layers.each { |l| l.is_a?(PSD::Layer).should be_true }
+    end
+  end
 end
