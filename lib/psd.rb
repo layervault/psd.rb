@@ -1,5 +1,4 @@
 require "bindata"
-require "narray"
 
 dir_root = File.dirname(File.absolute_path(__FILE__))
 
