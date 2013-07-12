@@ -65,7 +65,7 @@ class PSD
       return [] if engine_data.nil?
       engine_data.EngineDict.StyleRun.RunArray.map do |r|
         r.StyleSheet.StyleSheetData.FontSize
-      end
+      end.uniq
     end
 
     def colors
@@ -74,7 +74,7 @@ class PSD
         r.StyleSheet.StyleSheetData.FillColor.Values.map do |v|
           (v * 255).round
         end
-      end
+      end.uniq
     end
 
     def engine_data
