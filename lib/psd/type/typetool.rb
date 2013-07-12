@@ -71,6 +71,7 @@ class PSD
     def colors
       return [] if engine_data.nil?
       engine_data.EngineDict.StyleRun.RunArray.map do |r|
+        next [255, 0, 0, 0] unless r.StyleSheet.StyleSheetData.key?('FillColor')
         r.StyleSheet.StyleSheetData.FillColor.Values.map do |v|
           (v * 255).round
         end
