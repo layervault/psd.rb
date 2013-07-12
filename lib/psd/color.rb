@@ -1,8 +1,8 @@
 class PSD
   class Color
-    class_eval do
+    instance_eval do
       def color_space_to_argb(color_space, color_component)
-        case color_space
+        color = case color_space
         when 0
           rgb_to_color *color_component
         when 1
@@ -17,6 +17,17 @@ class PSD
         else
           0x00FFFFFF
         end
+
+        color_to_argb(color)
+      end
+
+      def color_to_argb(color)
+        [
+          (color) >> 24,
+          ((color) & 0x00FF0000) >> 16,
+          ((color) & 0x0000FF00) >> 8,
+          (color) & 0x000000FF
+        ]
       end
 
       def rgb_to_color(*args)
@@ -32,8 +43,8 @@ class PSD
       end
 
       def ahsb_to_color(alpha, hue, saturation, brightness)
-        if saturation == 0
-          b = g = r = 255 * brightness
+        if saturation == 0.0
+          b = g = r = (255 * brightness).to_i
         else
           if brightness <= 0.5
             m2 = brightness * (1 + saturation)
@@ -51,7 +62,7 @@ class PSD
       end
 
       def hue_to_color(hue, m1, m2)
-        hue = hue % 360
+        hue = (hue % 360).to_i
         if hue < 60
           v = m1 + (m2 - m1) * hue / 60
         elsif hue < 180
@@ -62,7 +73,7 @@ class PSD
           v = m1
         end
 
-        v * 255
+        (v * 255).to_i
       end
 
       def cmyk_to_color(c, m, y, k)

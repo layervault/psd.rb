@@ -2,6 +2,8 @@ class PSD::Node
   class Layer < PSD::Node
     include PSD::Node::LockToOrigin
 
+    attr_reader :layer
+
     def initialize(layer)
       @layer = layer
       layer.node = self

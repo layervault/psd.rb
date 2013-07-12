@@ -18,6 +18,15 @@ class PSD
         .encode!('UTF-8', 'MacRoman')
         .delete!("\000")
 
+      @data[:engine_data] = nil
+      begin
+        parser = PSD::EngineData.new(@data[:text]['EngineData'])
+        parser.parse!
+        @data[:engine_data] = parser.result
+      rescue Exception => e
+        puts e.message
+      end
+
       warpVersion = @file.read_short
       descriptor_version = @file.read_int
 
@@ -29,19 +38,53 @@ class PSD
       return self
     end
 
-    # NOTE: This is hacky, gross, and dirty. We need a real PSDShittyMarkup™ parser.
     def text_value
-      /\/Text \(˛ˇ(.*)\r\)$/.match(engine_data)[1].gsub /\r/, "\n"
+      if engine_data.nil?
+        # Something went wrong, lets hack our way through.
+        /\/Text \(˛ˇ(.*)\)$/.match(@data[:text]['EngineData'])[1].gsub /\r/, "\n"
+      else
+        engine_data.EngineDict.Editor.Text
+      end
     end
     alias :to_s :text_value
 
+    def font
+      {
+        name: fonts.first,
+        sizes: sizes,
+        colors: colors
+      }
+    end
+
+    def fonts
+      return [] if engine_data.nil?
+      engine_data.ResourceDict.FontSet.map(&:Name)
+    end
+
+    def sizes
+      return [] if engine_data.nil?
+      engine_data.EngineDict.StyleRun.RunArray.map do |r|
+        r.StyleSheet.StyleSheetData.FontSize
+      end
+    end
+
+    def colors
+      return [] if engine_data.nil?
+      engine_data.EngineDict.StyleRun.RunArray.map do |r|
+        r.StyleSheet.StyleSheetData.FillColor.Values.map do |v|
+          (v * 255).round
+        end
+      end
+    end
+
     def engine_data
-      @data[:text]['EngineData']
+      @data[:engine_data]
     end
 
     def to_hash
       {
         value:      text_value,
+        font:       font,
         left:       left,
         top:        top,
         right:      right,
