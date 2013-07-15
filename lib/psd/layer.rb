@@ -1,4 +1,3 @@
-require 'pp'
 class PSD
   class Layer
     include Section
