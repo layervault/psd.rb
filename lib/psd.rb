@@ -15,8 +15,8 @@ require dir_root + '/psd/nodes/search'
 require dir_root + '/psd/node'
 require dir_root + '/psd/nodes/parse_layers'
 require dir_root + '/psd/nodes/lock_to_origin'
-require dir_root + '/psd/layer_adjustment'
-require dir_root + '/psd/layer_info/type/typetool'
+require dir_root + '/psd/layer_info'
+require dir_root + '/psd/layer_info/typetool'
 
 Dir.glob(dir_root + '/psd/layer_info/**/*') { |file| require file if File.file?(file) }
 Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
@@ -24,6 +24,10 @@ Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 class PSD
   include Helpers
   include NodeExporting
+
+  @@keys = []
+
+  def self.keys; @@keys; end
 
   def initialize(file)
     @file = PSD::File.new(file, 'rb')

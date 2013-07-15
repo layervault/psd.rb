@@ -1,5 +1,7 @@
 class PSD
-  class TypeTool < LayerAdjustment
+  class TypeTool < LayerInfo
+    @key = 'TySh'
+    
     def parse
       version = @file.read_short
       parse_transform_info

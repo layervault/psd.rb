@@ -1,21 +1,24 @@
 require 'pp'
 class PSD
-  class Layer < Node
+  class Layer
     include Section
 
-    attr_reader :id, :name, :mask, :blending_ranges, :adjustments, :channels_info
+    attr_reader :id, :mask, :blending_ranges, :adjustments, :channels_info
     attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
     attr_reader :channels, :image
 
     attr_accessor :group_layer
     attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
 
-    SECTION_DIVIDER_TYPES = [
-      "other",
-      "open folder",
-      "closed folder",
-      "bounding section divider"
-    ]
+    LAYER_INFO = {
+      type: TypeTool,
+      legacy_type: LegacyTypeTool,
+      layer_name_source: LayerNameSource,
+      object_effects: ObjectEffects,
+      name: UnicodeName,
+      section_divider: LayerSectionDivider,
+      reference_point: ReferencePoint
+    }
 
     def initialize(file)
       @file = file
@@ -31,8 +34,6 @@ class PSD
       @blending_mode = 'normal'
       @opacity = 255
       @fill_opacity = 255
-      @is_folder = false
-      @is_hidden = false
     end
 
     def parse(index=nil)
@@ -50,8 +51,6 @@ class PSD
       parse_blending_ranges
       parse_legacy_layer_name
       parse_extra_data
-
-      @name = @legacy_name unless @name
 
       @file.seek @layer_end # Skip over any filler zeros
 
@@ -90,11 +89,13 @@ class PSD
     end
 
     def folder?
-      @is_folder
+      return false unless @adjustments.has_key?(:section_divider)
+      @adjustments[:section_divider].is_folder
     end
 
     def folder_end?
-      @is_hidden
+      return false unless @adjustments.has_key?(:section_divider)
+      @adjustments[:section_divider].is_hidden
     end
 
     def visible?
@@ -127,6 +128,20 @@ class PSD
     def text
       return nil unless @adjustments[:type]
       @adjustments[:type].to_hash
+    end
+
+    def name
+      if @adjustments.has_key?(:name)
+        return @adjustments[:name].data
+      end
+
+      return @legacy_name
+    end
+
+    def method_missing(method, *args, &block)
+      return @adjustments[method] if @adjustments.has_key?(method)
+
+      super
     end
 
     private
@@ -279,24 +294,34 @@ class PSD
         length = Util.pad2 @file.read_int
         pos = @file.tell
 
-        case key
-        when 'luni' # Unicode layer name
-          len = @file.read_int * 2
-          @name = @file.read(len).unpack("A#{len}")[0].encode('UTF-8').delete("\000")
+        info_parsed = false
+        LAYER_INFO.each do |name, info|
+          next unless info.key == key
+          
+          @adjustments[name] = info.new(@file, length).parse
+          info_parsed = true
+          break
+        end
 
-          # The name seems to be padded with null bytes. This is the easiest solution.
-          @file.seek pos + length
-        when 'lsct' then read_layer_section_divider
-        when 'lyid' then @id = @file.read_int
-        when 'vmsk' then parse_vector_mask(length)
-        when 'fxrp' then parse_reference_point
-        when 'shmd' then parse_metadata
-        when 'TySh' then @adjustments[:type] = TypeTool.new(@file, length).parse
-        when 'tySh' then @adjustments[:type] = LegacyTypeTool.new(@file, length).parse
-        when 'lfx2' then @adjustments[:effects_layer] = ObjectEffects.new(@file, length).parse
-        else
+        if !info_parsed
+          PSD.keys << key
           @file.seek length, IO::SEEK_CUR
         end
+
+        # case key
+        # when 'luni' # Unicode layer name
+          
+        # when 'lsct' then read_layer_section_divider
+        # when 'lyid' then @id = @file.read_int
+        # when 'vmsk' then parse_vector_mask(length)
+        # when 'fxrp' then parse_reference_point
+        # when 'TySh' then @adjustments[:type] = TypeTool.new(@file, length).parse
+        # when 'tySh' then @adjustments[:type] = LegacyTypeTool.new(@file, length).parse
+        # when 'lfx2' then @adjustments[:effects_layer] = ObjectEffects.new(@file, length).parse
+        # else
+        #   PSD.keys << key
+        #   @file.seek length, IO::SEEK_CUR
+        # end
 
         @file.seek pos + length if @file.tell != (pos + length)
       end
@@ -304,33 +329,23 @@ class PSD
       @extra_data_end = @file.tell
     end
 
-    def read_layer_section_divider
-      code = @file.read_int
-      @layer_type = SECTION_DIVIDER_TYPES[code]
+    # def parse_vector_mask(length)
+    #   @vector_mask_begin = @file.tell
+    #   raise "Vector mask malformed" unless 3 == @file.read_int
+    #   @vector_tag = @file.read_int
+    #   invert = @vector_tag & 0x01
+    #   not_link = (@vector_tag & (0x01 << 1)) > 0
+    #   disable = (@vector_tag & (0x01 << 2)) > 0
 
-      case code
-      when 1, 2 then @is_folder = true
-      when 3 then @is_hidden = true
-      end
-    end
+    #   num_records = (length - 8) / 26
 
-    def parse_vector_mask(length)
-      @vector_mask_begin = @file.tell
-      raise "Vector mask malformed" unless 3 == @file.read_int
-      @vector_tag = @file.read_int
-      invert = @vector_tag & 0x01
-      not_link = (@vector_tag & (0x01 << 1)) > 0
-      disable = (@vector_tag & (0x01 << 2)) > 0
+    #   @path_components = []
+    #   num_records.times do
+    #     @path_components << PathRecord.read(self)
+    #   end
 
-      num_records = (length - 8) / 26
-
-      @path_components = []
-      num_records.times do
-        @path_components << PathRecord.read(self)
-      end
-
-      @vector_mask_end = @file.tell
-    end
+    #   @vector_mask_end = @file.tell
+    # end
 
     def write_vector_mask(outfile)
       outfile.write @file.read(8)
@@ -338,23 +353,6 @@ class PSD
       # outfile.write_int @vector_tag
 
       @path_components.each{ |pc| pc.write(outfile); @file.seek(26, IO::SEEK_CUR) }
-    end
-
-    def parse_reference_point
-      @ref_x, @ref_y = @file.read_double, @file.read_double
-    end
-
-    def parse_metadata
-      metadata_items = @file.read_uint
-
-      metadata_items.times do
-        @file.seek 4, IO::SEEK_CUR
-        key = @file.read(4).unpack('A4')[0]
-        copy_on_sheet = @file.read(1)
-        padding = @file.read(3)
-        len = @file.read_uint
-        data = @file.read len
-      end
     end
   end
 end

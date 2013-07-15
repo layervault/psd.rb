@@ -1,7 +1,10 @@
 class PSD
-  class LayerAdjustment
+  class LayerInfo
     attr_reader :data
-    
+
+    class << self; attr_accessor :key; end
+    @key = ""
+
     def initialize(file, length)
       @file = file
       @length = length

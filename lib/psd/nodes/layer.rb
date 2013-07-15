@@ -47,8 +47,8 @@ class PSD::Node
       super.merge({
         type: :layer,
         text: @layer.text,
-        ref_x: @layer.ref_x,
-        ref_y: @layer.ref_y
+        ref_x: @layer.reference_point.x,
+        ref_y: @layer.reference_point.y
       })
     end
 

@@ -1,5 +1,7 @@
 class PSD
   class LegacyTypeTool < TypeTool
+    @key = 'tySh'
+    
     def parse      
       version = @file.read_short
       parse_transform_info

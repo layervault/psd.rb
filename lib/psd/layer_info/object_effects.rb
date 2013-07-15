@@ -1,5 +1,7 @@
 class PSD
-  class ObjectEffects < LayerAdjustment
+  class ObjectEffects < LayerInfo
+    @key = 'lfx2'
+    
     def parse
       version = @file.read_int
       descriptor_version = @file.read_int
