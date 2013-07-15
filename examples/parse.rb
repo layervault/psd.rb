@@ -2,10 +2,9 @@ require 'benchmark'
 require './lib/psd'
 
 psd = nil
+file = ARGV[0] || 'examples/images/example.psd'
 results = Benchmark.measure "PSD parsing" do
-  # psd = PSD.new('spec/files/example.psd')
-  # psd = PSD.new('test.psd')
-  psd = PSD.new(File.new('./examples/images/example.psd'))
+  psd = PSD.new(file)
   psd.parse!
 end
 

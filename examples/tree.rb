@@ -1,7 +1,8 @@
 require './lib/psd'
 require 'pp'
 
-psd = PSD.new('examples/images/example.psd')
+file = ARGV[0] || 'examples/images/example.psd'
+psd = PSD.new(file)
 psd.parse!
 
 pp psd.tree.to_hash
