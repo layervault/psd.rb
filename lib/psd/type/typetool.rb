@@ -20,7 +20,6 @@ class PSD
 
       @data[:engine_data] = nil
       begin
-        parser = PSD::EngineData.new(@data[:text]['EngineData'])
         parser.parse!
         @data[:engine_data] = parser.result
       rescue Exception => e
@@ -52,7 +51,8 @@ class PSD
       {
         name: fonts.first,
         sizes: sizes,
-        colors: colors
+        colors: colors,
+        css: parser.to_css
       }
     end
 
@@ -80,6 +80,10 @@ class PSD
 
     def engine_data
       @data[:engine_data]
+    end
+
+    def parser
+      @parser ||= PSD::EngineData.new(@data[:text]['EngineData'])
     end
 
     def to_hash
