@@ -293,6 +293,7 @@ class PSD
         when 'shmd' then parse_metadata
         when 'TySh' then @adjustments[:type] = TypeTool.new(@file, length).parse
         when 'tySh' then @adjustments[:type] = LegacyTypeTool.new(@file, length).parse
+        when 'lfx2' then @adjustments[:effects_layer] = ObjectEffects.new(@file, length).parse
         else
           @file.seek length, IO::SEEK_CUR
         end

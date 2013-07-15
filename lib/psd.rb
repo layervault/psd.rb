@@ -15,8 +15,10 @@ require dir_root + '/psd/nodes/search'
 require dir_root + '/psd/node'
 require dir_root + '/psd/nodes/parse_layers'
 require dir_root + '/psd/nodes/lock_to_origin'
-require dir_root + '/psd/type/typetool'
-require dir_root + '/psd/type/legacy_typetool'
+require dir_root + '/psd/layer_adjustment'
+require dir_root + '/psd/layer_info/type/typetool'
+
+Dir.glob(dir_root + '/psd/layer_info/**/*') { |file| require file if File.file?(file) }
 Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 
 class PSD

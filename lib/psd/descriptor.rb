@@ -33,12 +33,12 @@ class PSD
 
     def parse_key_item
       id = parse_id
-      value = parse_item(id)
+      value = parse_item
 
       return id, value
     end
 
-    def parse_item(id, type = nil)
+    def parse_item(type = nil)
       type = @file.read_string(4) if type.nil?
 
       value = case type

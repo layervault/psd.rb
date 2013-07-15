@@ -1,11 +1,5 @@
 class PSD
-  class TypeTool
-    def initialize(file, length)
-      @file = file
-      @length = length
-      @data = {}
-    end
-
+  class TypeTool < LayerAdjustment
     def parse
       version = @file.read_short
       parse_transform_info
