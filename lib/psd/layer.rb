@@ -140,7 +140,6 @@ class PSD
 
     def method_missing(method, *args, &block)
       return @adjustments[method] if @adjustments.has_key?(method)
-
       super
     end
 
