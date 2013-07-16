@@ -9,6 +9,8 @@ class PSD
     attr_accessor :group_layer
     attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
 
+    alias :info :adjustments
+
     LAYER_INFO = {
       type: TypeTool,
       legacy_type: LegacyTypeTool,

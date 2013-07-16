@@ -14,12 +14,8 @@ class PSD
       @record_type = @file.read_short
 
       case @record_type
-      when 0 then read_path_record
-      when 3 then read_path_record
-      when 1 then read_bezier_point
-      when 2 then read_bezier_point
-      when 4 then read_bezier_point
-      when 5 then read_bezier_point
+      when 0, 3 then read_path_record
+      when 1, 2, 4, 5 then read_bezier_point
       when 7 then read_clipboard_record
       when 8 then read_initial_fill
       else @file.seek(24, IO::SEEK_CUR)
@@ -42,7 +38,12 @@ class PSD
     end
 
     def to_hash
-      if [1, 2, 4, 5].include? @record_type
+      case @record_type
+      when 0, 3
+        {
+          num_points: @num_points
+        }
+      when 1, 2, 4, 5
         {
           linked: @linked,
           preceding: {
@@ -58,9 +59,23 @@ class PSD
             horiz: @leaving_horiz
           }
         }
+      when 7
+        {
+          clipboard: {
+            top: @clipboard_top,
+            left: @clipboard_left,
+            bottom: @clipboard_bottom,
+            right: @clipboard_right,
+            resolution: @clipboard_resolution
+          }
+        }
+      when 8
+        {
+          initial_fill: @initial_fill
+        }
       else
         {}
-      end
+      end.merge({ record_type: @record_type })
     end
 
     def translate(x=0, y=0)

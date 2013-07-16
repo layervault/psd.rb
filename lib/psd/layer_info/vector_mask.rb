@@ -2,6 +2,8 @@ class PSD
   class VectorMask < LayerInfo
     @key = 'vmsk'
 
+    attr_reader :invert, :not_link, :disable, :paths
+
     def parse
       version = @file.read_int
       tag = @file.read_int
