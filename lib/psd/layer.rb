@@ -16,7 +16,11 @@ class PSD
       object_effects: ObjectEffects,
       name: UnicodeName,
       section_divider: LayerSectionDivider,
-      reference_point: ReferencePoint
+      reference_point: ReferencePoint,
+      layer_id: LayerID,
+      fill_opacity: FillOpacity,
+      placed_layer: PlacedLayer,
+      vector_mask: VectorMask
     }
 
     def initialize(file)
@@ -296,30 +300,19 @@ class PSD
         LAYER_INFO.each do |name, info|
           next unless info.key == key
           
-          @adjustments[name] = info.new(@file, length).parse
+          i = info.new(@file, length)
+          i.parse
+
+          @adjustments[name] = i
           info_parsed = true
           break
         end
 
         if !info_parsed
           PSD.keys << key
+          # puts "SKIPPING #{key}, length = #{length}"
           @file.seek length, IO::SEEK_CUR
         end
-
-        # case key
-        # when 'luni' # Unicode layer name
-          
-        # when 'lsct' then read_layer_section_divider
-        # when 'lyid' then @id = @file.read_int
-        # when 'vmsk' then parse_vector_mask(length)
-        # when 'fxrp' then parse_reference_point
-        # when 'TySh' then @adjustments[:type] = TypeTool.new(@file, length).parse
-        # when 'tySh' then @adjustments[:type] = LegacyTypeTool.new(@file, length).parse
-        # when 'lfx2' then @adjustments[:effects_layer] = ObjectEffects.new(@file, length).parse
-        # else
-        #   PSD.keys << key
-        #   @file.seek length, IO::SEEK_CUR
-        # end
 
         @file.seek pos + length if @file.tell != (pos + length)
       end
