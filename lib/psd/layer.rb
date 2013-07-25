@@ -39,6 +39,10 @@ class PSD
       @blending_mode = 'normal'
       @opacity = 255
       @fill_opacity = 255
+
+      # Just used for tracking which layer adjustments we're parsing.
+      # Not essential.
+      @info_keys = []
     end
 
     def parse(index=nil)
@@ -185,7 +189,6 @@ class PSD
     end
 
     def export_mask_data(outfile)
-      #@mask.write outfile
       outfile.write @file.read(@mask_end - @mask_begin + 4)
     end
 
@@ -210,11 +213,6 @@ class PSD
     end
 
     def export_legacy_layer_name(outfile)
-      # if @legacy_name
-      #   string = PascalString.new(initial_value: @legacy_name)
-      #   string.write outfile
-      #   @file.seek string.num_bytes, IO::SEEK_CUR
-      # end
       outfile.write @file.read(@legacy_name_end - @legacy_name_start)
     end
 
@@ -294,6 +292,7 @@ class PSD
 
         # Key, very important
         key = @file.read(4).unpack('A4')[0]
+        @info_keys << key
 
         length = Util.pad2 @file.read_int
         pos = @file.tell
@@ -319,26 +318,9 @@ class PSD
         @file.seek pos + length if @file.tell != (pos + length)
       end
 
+      # puts "Layer = #{name}, Parsed = #{@info_keys - PSD.keys.uniq}, Unparsed = #{PSD.keys.uniq - @info_keys}"
       @extra_data_end = @file.tell
     end
-
-    # def parse_vector_mask(length)
-    #   @vector_mask_begin = @file.tell
-    #   raise "Vector mask malformed" unless 3 == @file.read_int
-    #   @vector_tag = @file.read_int
-    #   invert = @vector_tag & 0x01
-    #   not_link = (@vector_tag & (0x01 << 1)) > 0
-    #   disable = (@vector_tag & (0x01 << 2)) > 0
-
-    #   num_records = (length - 8) / 26
-
-    #   @path_components = []
-    #   num_records.times do
-    #     @path_components << PathRecord.read(self)
-    #   end
-
-    #   @vector_mask_end = @file.tell
-    # end
 
     def write_vector_mask(outfile)
       outfile.write @file.read(8)

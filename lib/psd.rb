@@ -29,6 +29,8 @@ class PSD
 
   def self.keys; @@keys; end
 
+  attr_reader :file
+
   def initialize(file)
     @file = PSD::File.new(file, 'rb')
     @file.seek 0 # just IN FUCKING CASE
@@ -47,7 +49,7 @@ class PSD
     resources
     layer_mask
     image
-
+    
     @parsed = true
 
     return true
