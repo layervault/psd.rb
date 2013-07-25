@@ -20,6 +20,10 @@ class PSD::Node
       end
     end
 
+    def method_missing(method, *args, &block)
+      layer.send(method, *args, &block)
+    end
+
     def translate(x=0, y=0)
       @layer.translate x, y
     end
