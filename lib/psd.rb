@@ -1,23 +1,22 @@
 require "bindata"
 require "psd/enginedata"
 
+require_relative 'psd/section'
+require_relative 'psd/skip_block'
+require_relative 'psd/image_formats/raw'
+require_relative 'psd/image_formats/rle'
+require_relative 'psd/image_modes/rgb'
+require_relative 'psd/image_exports/png'
+require_relative 'psd/has_children'
+require_relative 'psd/nodes/ancestry'
+require_relative 'psd/nodes/search'
+require_relative 'psd/node'
+require_relative 'psd/nodes/parse_layers'
+require_relative 'psd/nodes/lock_to_origin'
+require_relative 'psd/layer_info'
+require_relative 'psd/layer_info/typetool'
+
 dir_root = File.dirname(File.absolute_path(__FILE__))
-
-require dir_root + '/psd/section'
-require dir_root + '/psd/skip_block'
-require dir_root + '/psd/image_formats/raw'
-require dir_root + '/psd/image_formats/rle'
-require dir_root + '/psd/image_modes/rgb'
-require dir_root + '/psd/image_exports/png'
-require dir_root + '/psd/has_children'
-require dir_root + '/psd/nodes/ancestry'
-require dir_root + '/psd/nodes/search'
-require dir_root + '/psd/node'
-require dir_root + '/psd/nodes/parse_layers'
-require dir_root + '/psd/nodes/lock_to_origin'
-require dir_root + '/psd/layer_info'
-require dir_root + '/psd/layer_info/typetool'
-
 Dir.glob(dir_root + '/psd/layer_info/**/*') { |file| require file if File.file?(file) }
 Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 
