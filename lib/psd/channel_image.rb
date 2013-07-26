@@ -1,4 +1,4 @@
-require File.dirname(File.absolute_path(__FILE__)) + "/image"
+require_relative 'image'
 
 class PSD
   class ChannelImage < Image
