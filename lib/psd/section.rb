@@ -1,4 +1,7 @@
 class PSD
+  # Helper that lets us track the beginning and ending locations
+  # of each section. This is for debug and error catching purposes,
+  # primarily.
   module Section
     attr_reader :section_start, :section_end
 

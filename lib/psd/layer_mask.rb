@@ -1,9 +1,12 @@
 class PSD
+  # Covers parsing the global mask and controls parsing of all the
+  # layers/folders in the document.
   class LayerMask
     include Section
 
     attr_reader :layers, :global_mask
 
+    # Store a reference to the file and the header and initialize the defaults.
     def initialize(file, header)
       @file = file
       @header = header
@@ -14,11 +17,15 @@ class PSD
       @extras = []
     end
 
+    # Allows us to skip this section because it starts with the length of the section
+    # stored as an integer.
     def skip
       @file.seek @file.read_int, IO::SEEK_CUR
       return self
     end
 
+    # Parse this section, including all of the layers and folders. Once implemented, this
+    # will also trigger parsing of the channel images for each layer.
     def parse
       start_section
 
@@ -64,6 +71,7 @@ class PSD
       return self
     end
 
+    # Export the mask and all the children layers to a file.
     def export(outfile)
       if @layers.size == 0
         # No data, just read whatever's here.

@@ -1,5 +1,5 @@
 class PSD
-  module NodeExporting
+  module NodeExporting #:nodoc:
     def export_node(node, path)
       hide_all_nodes
       node.show!

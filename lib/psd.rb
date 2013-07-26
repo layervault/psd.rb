@@ -2,7 +2,6 @@ require "bindata"
 require "psd/enginedata"
 
 require_relative 'psd/section'
-require_relative 'psd/skip_block'
 require_relative 'psd/image_formats/raw'
 require_relative 'psd/image_formats/rle'
 require_relative 'psd/image_modes/rgb'

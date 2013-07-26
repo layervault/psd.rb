@@ -1,4 +1,5 @@
 class PSD
+  # Represents the mask for a single layer
   class Mask < BinData::Record
     endian :big
 
@@ -14,14 +15,17 @@ class PSD
     skip length: 2,   onlyif: lambda { mask_size == 20 }
     skip length: 18,  onlyif: lambda { mask_size > 0 && mask_size != 20}
 
+    # Is there a mask defined?
     def has_data?
       mask_size > 0
     end
 
+    # Width of the mask
     def width
       right - left
     end
 
+    # Height of the mask
     def height
       bottom - top
     end

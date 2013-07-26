@@ -1,13 +1,16 @@
 class PSD
+  # Parses a vector path
   class PathRecord
     attr_accessor :layer
 
+    # Facade to make it easier to parse the path record.
     def self.read(layer)
       pr = PSD::PathRecord.new(layer.file)
       pr.layer = layer
       pr
     end
 
+    # Reads the record type and begins parsing accordingly.
     def initialize(file)
       @file = file
 
@@ -22,6 +25,7 @@ class PSD
       end
     end
 
+    # Writes out the path to file.
     def write(outfile)
       outfile.write_short @record_type
       case @record_type
@@ -37,6 +41,7 @@ class PSD
       end
     end
 
+    # Exports the path record to an easier to work with hash.
     def to_hash
       case @record_type
       when 0, 3
@@ -78,6 +83,7 @@ class PSD
       end.merge({ record_type: @record_type })
     end
 
+    # Attempts to translate the path
     def translate(x=0, y=0)
       return unless is_bezier_point?
 
@@ -93,6 +99,7 @@ class PSD
       @leaving_horiz += translate_x_ratio
     end
 
+    # Attempts to scale the path
     def scale(xr, yr)
       return unless is_bezier_point?
 
@@ -104,6 +111,7 @@ class PSD
       @leaving_horiz *= xr
     end
 
+    # Is this record a bezier point?
     def is_bezier_point?
       [1,2,4,5].include? @record_type
     end

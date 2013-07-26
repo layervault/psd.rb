@@ -1,12 +1,17 @@
 class PSD
+  # Parses and reads all of the Resource records in the document.
   class Resources
     include Section
+
+    attr_reader :resources
+    alias :data :resources
     
     def initialize(file)
       @file = file
       @resources = []
     end
 
+    # Parses each Resource and stores them.
     def parse
       start_section
 
@@ -26,10 +31,6 @@ class PSD
 
       end_section
       return @resources
-    end
-
-    def data
-      @resources
     end
   end
 end
