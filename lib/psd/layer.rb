@@ -10,6 +10,8 @@ class PSD
     attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
 
     alias :info :adjustments
+    alias :width :cols
+    alias :height :rows
 
     LAYER_INFO = {
       type: TypeTool,
@@ -87,14 +89,6 @@ class PSD
 
     def parse_channel_image!(header)
       # @image = ChannelImage.new(@file, header, self)
-    end
-
-    def width
-      cols
-    end
-
-    def height
-      rows
     end
 
     def folder?

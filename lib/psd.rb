@@ -20,19 +20,23 @@ dir_root = File.dirname(File.absolute_path(__FILE__))
 Dir.glob(dir_root + '/psd/layer_info/**/*') { |file| require file if File.file?(file) }
 Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
 
+# A general purpose parser for Photoshop files. PSDs are broken up in to 4 logical sections:
+# the header, resources, the layer mask (including layers), and the preview image. We parse
+# each of these sections in order.
 class PSD
   include Helpers
   include NodeExporting
 
-  @@keys = []
-
+  # Just used to track what layer info keys we didn't parse in this file for development purposes.
   def self.keys; @@keys; end
+  @@keys = []
 
   attr_reader :file
 
+  # Create and store a reference to our PSD file
   def initialize(file)
     @file = PSD::File.new(file, 'rb')
-    @file.seek 0 # just IN FUCKING CASE
+    @file.seek 0 # If the file was previously used and not closed
 
     @header = nil
     @resources = nil
@@ -54,14 +58,17 @@ class PSD
     return true
   end
 
+  # Has our PSD been parsed yet?
   def parsed?
     @parsed
   end
 
+  # Get the Header, parsing it if needed.
   def header
     @header ||= Header.read(@file)
   end
 
+  # Get the Resources section, parsing if needed.
   def resources
     return @resources.data unless @resources.nil?
 
@@ -71,6 +78,8 @@ class PSD
     return @resources.data
   end
 
+  # Get the LayerMask section. Ensures the header and resources
+  # have been parsed first since they are required.
   def layer_mask
     header
     resources
@@ -78,12 +87,15 @@ class PSD
     @layer_mask ||= LayerMask.new(@file, @header).parse
   end
 
+  # Get the full size flattened preview Image.
+  # *This is currently broken.*
   def image
     layer_mask
 
     @image ||= Image.new(@file, @header).parse
   end
 
+  # Export the current file to a new PSD. This may or may not work.
   def export(file)
     parse! unless parsed?
 

@@ -1,4 +1,5 @@
 class PSD
+  # Describes the blend mode for a single layer or folder.
   class BlendMode < BinData::Record
     endian  :big
 
@@ -9,6 +10,8 @@ class PSD
     bit8    :flags
     skip    length: 1
 
+    # All of the blend modes are stored in the PSD file with a specific key.
+    # This is the mapping of that key to its readable name.
     BLEND_MODES = {
       norm: 'normal',
       dark: 'darken',
@@ -35,14 +38,18 @@ class PSD
       hMix: 'hard mix'
     }
 
+    # Get the readable name for this blend mode.
     def mode
       BLEND_MODES[blend_key.to_sym]
     end
 
+    # Set the blend mode with the readable name.
     def mode=(val)
       blend_key = BLEND_MODES.invert[val.downcase]
     end
 
+    # Opacity is stored as an integer between 0-255. This converts the opacity
+    # to a percentage value to match the Photoshop interface.
     def opacity_percentage
       opacity * 100 / 255
     end
@@ -51,6 +58,7 @@ class PSD
       flags & 0x01
     end
 
+    # Is this layer/folder visible?
     def visible
       !((flags & (0x01 << 1)) > 0)
     end
