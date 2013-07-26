@@ -1,4 +1,5 @@
 class PSD
+  # Describes the Header for the PSD file, which is the first section of the file.
   class Header < BinData::Record
     endian :big
 
@@ -17,6 +18,8 @@ class PSD
     uint32  :color_data_len
     skip    length: :color_data_len
 
+    # All of the color modes are stored internally as a short from 0-15.
+    # This is a mapping of that value to a human-readable name.
     MODES = [
       'Bitmap',
       'GrayScale',
@@ -36,6 +39,7 @@ class PSD
       'Duotone16'
     ]
 
+    # Get the human-readable color mode name.
     def mode_name
       if mode >= 0 && mode <= 15
         MODES[mode]
@@ -44,10 +48,12 @@ class PSD
       end
     end
 
+    # Width of the entire document in pixels.
     def width
       cols
     end
 
+    # Height of the entire document in pixels.
     def height
       rows
     end
