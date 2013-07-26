@@ -1,4 +1,6 @@
 class PSD
+  # Represents a single layer and all of the data associated with
+  # that layer.
   class Layer
     include Section
 
@@ -13,6 +15,7 @@ class PSD
     alias :width :cols
     alias :height :rows
 
+    # All of the extra layer info sections that we know how to parse.
     LAYER_INFO = {
       type: TypeTool,
       legacy_type: LegacyTypeTool,
@@ -27,6 +30,7 @@ class PSD
       vector_mask: VectorMask
     }
 
+    # Initializes all of the defaults for the layer.
     def initialize(file)
       @file = file
       @image = nil
@@ -47,6 +51,7 @@ class PSD
       @info_keys = []
     end
 
+    # Parse the layer and all of it's sub-sections.
     def parse(index=nil)
       start_section
 
@@ -69,6 +74,7 @@ class PSD
       return self
     end
 
+    # Export the layer to file. May or may not work.
     def export(outfile)
       export_info(outfile)
 
@@ -83,32 +89,38 @@ class PSD
       outfile.write @file.read(end_of_section - @file.tell)
     end
 
+    # We just delegate this to a normal method call.
     def [](val)
       self.send(val)
     end
 
-    def parse_channel_image!(header)
+    def parse_channel_image!(header) #:nodoc:
       # @image = ChannelImage.new(@file, header, self)
     end
 
+    # Does this layer represent the start of a folder section?
     def folder?
       return false unless @adjustments.has_key?(:section_divider)
       @adjustments[:section_divider].is_folder
     end
 
+    # Does this layer represent the end of a folder section?
     def folder_end?
       return false unless @adjustments.has_key?(:section_divider)
       @adjustments[:section_divider].is_hidden
     end
 
+    # Is this layer visible?
     def visible?
       @visible
     end
 
+    # Is this layer hidden?
     def hidden?
       !@visible
     end
 
+    # Attempt to translate this layer and modify the document.
     def translate(x=0, y=0)
       @left += x
       @right += x
@@ -118,21 +130,22 @@ class PSD
       @path_components.each{ |p| p.translate(x,y) } if @path_components
     end
 
+    # Attempt to scale the path components within this layer.
     def scale_path_components(xr, yr)
       return unless @path_components
 
       @path_components.each{ |p| p.scale(xr, yr) }
     end
 
-    def document_dimensions
-      @node.document_dimensions
-    end
-
+    # Helper that exports the text data in this layer, if any.
     def text
       return nil unless @adjustments[:type]
       @adjustments[:type].to_hash
     end
 
+    # Gets the name of this layer. If the PSD file is from an even remotely
+    # recent version of Photoshop, this data is stored as extra layer info and
+    # as a UTF-16 name. Otherwise, it's stored in a legacy block.
     def name
       if @adjustments.has_key?(:name)
         return @adjustments[:name].data
@@ -141,6 +154,8 @@ class PSD
       return @legacy_name
     end
 
+    # We delegate all missing method calls to the extra layer info to make it easier
+    # to access that data.
     def method_missing(method, *args, &block)
       return @adjustments[method] if @adjustments.has_key?(method)
       super

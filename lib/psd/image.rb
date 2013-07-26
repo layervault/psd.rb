@@ -1,5 +1,6 @@
 class PSD
-  class Image
+  # Parses the full preview image at the end of the PSD document.
+  class Image #:nodoc:
     include Format::RAW
     include Format::RLE
     include Mode::RGB
