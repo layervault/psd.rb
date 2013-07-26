@@ -1,6 +1,12 @@
 class PSD
+  # Various color conversion methods. All color values are stored in the PSD
+  # document in the color space as defined by the user instead of a normalized
+  # value of some kind. This means that we have to do all the conversion ourselves
+  # for each color space.
   class Color
     instance_eval do
+      # This is a relic of libpsd that will likely go away in a future version. It
+      # stored the entire color value in a 32-bit address space for speed.
       def color_space_to_argb(color_space, color_component)
         color = case color_space
         when 0

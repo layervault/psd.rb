@@ -1,10 +1,17 @@
 class PSD
+  # A descriptor is a block of data that describes a complex data structure of some kind.
+  # It was added sometime around Photoshop 5.0 and it superceded a few legacy things such
+  # as layer names and type data.
   class Descriptor
+    # Store a reference to our file and initialize our data structure.
     def initialize(file)
       @file = file
       @data = {}
     end
 
+    # Parse the descriptor. Descriptors always start with a class identifier, followed by
+    # a variable number of items in the descriptor. We return the Hash that represents
+    # the full data structure.
     def parse
       @data[:class] = parse_class
 

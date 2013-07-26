@@ -1,5 +1,9 @@
 class PSD
+  # An extension of the built-in Ruby File class that adds numerous helpers for
+  # reading/writing binary data.
   class File < ::File
+    # All of the formats and their pack codes that we want to be able to convert into
+    # methods for easy reading/writing.
     FORMATS = {
       ulonglong: {
         length: 8,
@@ -56,7 +60,7 @@ class PSD
       write [num.to_i].pack('C')
 
       # Now for the fun part.
-      # We first conver the decimal to be a whole number representing a
+      # We first convert the decimal to be a whole number representing a
       # fraction with the denominator of 2^24
       # Next, we write that number as a 24-bit integer to the file
       binary_numerator = ((num - num.to_i).abs * 2 ** 24).to_i
@@ -65,19 +69,23 @@ class PSD
       write [binary_numerator >> 0].pack('C')
     end
 
+    # Reads a string of the given length and converts it to UTF-8 from the internally used MacRoman encoding.
     def read_string(length)
       read(length).encode('UTF-8', 'MacRoman').delete("\000")
     end
 
+    # Reads a unicode string, which is double the length of a normal string and encoded as UTF-16.
     def read_unicode_string(length=nil)
       length ||= read_int if length.nil?
-      !length.nil? && length > 0 ? read(length * 2).encode('UTF-8', 'MacRoman').delete("\000") : ''
+      !length.nil? && length > 0 ? read(length * 2).encode('UTF-8', 'UTF-16BE').delete("\000") : ''
     end
 
+    # Reads a boolean value.
     def read_boolean
       read(1)[0] != 0
     end
 
+    # Reads a 32-bit color space value.
     def read_space_color
       color_space = read_short
       color_component = []
