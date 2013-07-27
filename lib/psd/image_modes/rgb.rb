@@ -5,10 +5,9 @@ class PSD::Image::Mode
 
     def combine_rgb8_channel
       @num_pixels.times do |i|
-        index = 0
         pixel = {r: 0, g: 0, b: 0, a: 255}
 
-        PSD::Image::CHANNEL_INFO.each do |chan|
+        PSD::Image::CHANNEL_INFO.each_with_index do |chan, index|
           case chan[:id]
           when -1
             next if channels != 4
@@ -17,14 +16,9 @@ class PSD::Image::Mode
           when 1 then pixel[:g] = @channel_data[i + (@channel_length * index)]
           when 2 then pixel[:b] = @channel_data[i + (@channel_length * index)]
           end
-
-          index += 1
         end
 
-        @pixel_data << pixel[:r]
-        @pixel_data << pixel[:g]
-        @pixel_data << pixel[:b]
-        @pixel_data << pixel[:a]
+        @pixel_data.push *pixel.values
       end
     end
 
