@@ -1,16 +1,17 @@
 require 'chunky_png'
 
-# PNG image export
-# This also happens to be the default
 class PSD::Image
   module Export
+    # PNG image export. This is the default export format.
     module PNG
+      # Load the image pixels into a PNG file and return a reference to the
+      # data.
       def to_png
         png = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
 
         i = 0
-        width.times do |x|
-          height.times do |y|
+        height.times do |y|
+          width.times do |x|
             png[x,y] = ChunkyPNG::Color.rgba(
               @pixel_data[i],
               @pixel_data[i+1],
@@ -26,6 +27,7 @@ class PSD::Image
       end
       alias :export :to_png
 
+      # Saves the PNG data to disk.
       def save_as_png(file)
         to_png.save(file)
       end

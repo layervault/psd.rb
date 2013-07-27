@@ -1,4 +1,5 @@
 class PSD::Image::Mode
+  # Combines the channel data from the image into RGB pixel values
   module RGB
     private
 

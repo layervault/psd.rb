@@ -1,7 +1,10 @@
 class PSD
+  # Parses and provides information about text areas within layers in
+  # the document.
   class TypeTool < LayerInfo
     @key = 'TySh'
     
+    # Parse all of the text data in the layer.
     def parse
       version = @file.read_short
       parse_transform_info
@@ -33,6 +36,8 @@ class PSD
       return self
     end
 
+    # Extracts the text within the text area. In the event that psd-enginedata fails
+    # for some reason, we attempt to extract the text using some rough regex.
     def text_value
       if engine_data.nil?
         # Something went wrong, lets hack our way through.
@@ -43,6 +48,8 @@ class PSD
     end
     alias :to_s :text_value
 
+    # Gets all of the basic font information for this text area. This assumes that
+    # the first font is the only one you want.
     def font
       {
         name: fonts.first,
@@ -52,11 +59,14 @@ class PSD
       }
     end
 
+    # Returns all fonts listed for this layer, since fonts are defined on a 
+    # per-character basis.
     def fonts
       return [] if engine_data.nil?
       engine_data.ResourceDict.FontSet.map(&:Name)
     end
 
+    # Return all font sizes for this layer.
     def sizes
       return [] if engine_data.nil?
       engine_data.EngineDict.StyleRun.RunArray.map do |r|
@@ -64,6 +74,10 @@ class PSD
       end.uniq
     end
 
+    # Return all colors used for text in this layer. The colors are returned in RGB
+    # format as an array of arrays.
+    #
+    # => [[255, 0, 0], [0, 0, 255]]
     def colors
       return [] if engine_data.nil?
       engine_data.EngineDict.StyleRun.RunArray.map do |r|

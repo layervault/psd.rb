@@ -1,5 +1,6 @@
 class PSD::Image
   module Format
+    # Parses an RLE image
     module RLE
       private
 
@@ -24,7 +25,8 @@ class PSD::Image
         line_index = 0
 
         channels.times do |i|
-          chan_pos, line_index = decode_rle_channel(chan_pos, line_index)
+          chan_pos = decode_rle_channel(chan_pos, line_index)
+          line_index += height
         end
       end
 
@@ -35,16 +37,12 @@ class PSD::Image
           start = @file.tell
 
           while @file.tell < start + byte_count
-            len = @file.read(1).unpack('C')[0]
+            len = @file.read(1).bytes.to_a[0]
 
             if len < 128
               len += 1
-              data = @file.read(len).bytes.to_a
-
-              data_index = 0
-              (chan_pos...chan_pos+len).to_a.each do |k|
-                @channel_data[k] = data[data_index]
-                data_index += 1
+              (chan_pos...chan_pos+len).each do |k|
+                @channel_data[k] = @file.read(1).bytes.to_a[0]
               end
 
               chan_pos += len
@@ -52,14 +50,9 @@ class PSD::Image
               len ^= 0xff
               len += 2
 
-              val = @file.read(1).unpack('C')[0]
-              data = []
-              len.times { |i| data << val }
-
-              data_index = 0
-              (chan_pos...chan_pos+len).to_a.each do |k|
-                @channel_data[k] = data[data_index]
-                data_index += 1
+              val = @file.read(1).bytes.to_a[0]
+              (chan_pos...chan_pos+len).each do |k|
+                @channel_data[k] = val
               end
 
               chan_pos += len
@@ -67,7 +60,7 @@ class PSD::Image
           end
         end
 
-        return chan_pos, line_index
+        return chan_pos
       end
     end
   end
