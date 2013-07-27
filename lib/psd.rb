@@ -2,22 +2,20 @@ require "bindata"
 require "psd/enginedata"
 
 require_relative 'psd/section'
-require_relative 'psd/image_formats/raw'
-require_relative 'psd/image_formats/rle'
-require_relative 'psd/image_modes/rgb'
-require_relative 'psd/image_exports/png'
-require_relative 'psd/nodes/has_children'
-require_relative 'psd/nodes/ancestry'
-require_relative 'psd/nodes/search'
-require_relative 'psd/nodes/node'
-require_relative 'psd/nodes/parse_layers'
-require_relative 'psd/nodes/lock_to_origin'
 require_relative 'psd/layer_info'
 require_relative 'psd/layer_info/typetool'
 
-dir_root = File.dirname(File.absolute_path(__FILE__))
-Dir.glob(dir_root + '/psd/layer_info/**/*') { |file| require file if File.file?(file) }
-Dir.glob(dir_root + '/psd/**/*') { |file| require file if File.file?(file) }
+dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
+[
+  '/image_formats/*',
+  '/image_modes/*',
+  '/image_exports/*',
+  '/nodes/*',
+  '/layer_info/**/*',
+  '/**/*'
+].each do |path|
+  Dir.glob(dir_root + path) { |file| require file if File.file?(file) }
+end
 
 # A general purpose parser for Photoshop files. PSDs are broken up in to 4 logical sections:
 # the header, resources, the layer mask (including layers), and the preview image. We parse

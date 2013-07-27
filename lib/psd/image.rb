@@ -4,6 +4,7 @@ class PSD
     include Format::RAW
     include Format::RLE
     include Mode::RGB
+    include Mode::Greyscale
     include Export::PNG
 
     COMPRESSIONS = [
@@ -85,9 +86,8 @@ class PSD
 
     def process_image_data
       case mode
-      when 3
-        combine_rgb8_channel if depth == 8
-        combine_rgb16_channel if depth == 16
+      when 1 then send("combine_greyscale#{depth}_channel")
+      when 3 then send("combine_rgb#{depth}_channel")
       end
     end
   end
