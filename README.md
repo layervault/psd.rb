@@ -15,6 +15,7 @@ A general purpose Photoshop file parser written in Ruby. It allows you to work w
   * Font sizes
 * Color mode and bit-depth
 * Vector mask data
+* Flattened image data
 
 ## Installation
 
@@ -135,12 +136,20 @@ Which produces something like:
 :document=>{:width=>900, :height=>600}}
 ```
 
+You can also export the PSD to a flattened image. Please note that, at this time, not all image modes + depths are supported.
+
+``` ruby
+png = psd.image.to_png # reference to PNG data
+psd.image.save_as_png 'path/to/output.png' # writes PNG to disk
+```
+
 ## To-do
 
 There are a few features that are currently missing from PSD.rb.
 
 * Global layer mask
-* Image parsing and export (incomplete/broken)
+* Individual layer image exporting
+* More image modes + depths for image exporting
 * A few layer info blocks
 
 ## Contributing
