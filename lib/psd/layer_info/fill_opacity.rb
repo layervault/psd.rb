@@ -1,3 +1,5 @@
+require_relative '../layer_info'
+
 class PSD
   class FillOpacity < LayerInfo
     @key = 'iOpa'

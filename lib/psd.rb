@@ -2,8 +2,6 @@ require "bindata"
 require "psd/enginedata"
 
 require_relative 'psd/section'
-require_relative 'psd/layer_info'
-require_relative 'psd/layer_info/typetool'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [

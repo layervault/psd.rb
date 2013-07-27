@@ -1,3 +1,6 @@
+require_relative 'nodes/ancestry'
+require_relative 'nodes/search'
+
 # Internal structure to help us build trees of a Photoshop documents.
 # A lot of method names borrowed from the Ruby ancestry gem.
 class PSD

@@ -1,3 +1,6 @@
+require_relative '../layer_info'
+require_relative 'typetool'
+
 class PSD
   class LegacyTypeTool < TypeTool
     @key = 'tySh'

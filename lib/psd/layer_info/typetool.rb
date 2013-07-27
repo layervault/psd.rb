@@ -1,3 +1,5 @@
+require_relative '../layer_info'
+
 class PSD
   # Parses and provides information about text areas within layers in
   # the document.
