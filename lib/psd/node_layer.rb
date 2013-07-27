@@ -1,3 +1,5 @@
+require_relative 'node'
+
 class PSD::Node
   class Layer < PSD::Node
     include PSD::Node::LockToOrigin

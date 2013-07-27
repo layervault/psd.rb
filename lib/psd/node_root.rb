@@ -1,3 +1,5 @@
+require_relative 'node'
+
 # Represents the root node of a Photoshop document
 class PSD::Node
   class Root < PSD::Node

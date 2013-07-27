@@ -1,3 +1,5 @@
+require_relative 'node'
+
 class PSD::Node
   class Group < PSD::Node
     include PSD::HasChildren
