@@ -30,13 +30,19 @@ class PSD
   def self.keys; @@keys; end
   @@keys = []
 
+  DEFAULTS = {
+    parse_image: false,
+    parse_layer_images: false
+  }
+
   attr_reader :file
 
   # Create and store a reference to our PSD file
-  def initialize(file)
+  def initialize(file, opts={})
     @file = PSD::File.new(file, 'rb')
     @file.seek 0 # If the file was previously used and not closed
 
+    @opts = DEFAULTS.merge(opts)
     @header = nil
     @resources = nil
     @layer_mask = nil
@@ -50,7 +56,7 @@ class PSD
     header
     resources
     layer_mask
-    image
+    image if @opts[:parse_image]
     
     @parsed = true
 
@@ -71,6 +77,8 @@ class PSD
   def resources
     return @resources.data unless @resources.nil?
 
+    ensure_header
+
     @resources = Resources.new(@file)
     @resources.parse
 
@@ -80,16 +88,17 @@ class PSD
   # Get the LayerMask section. Ensures the header and resources
   # have been parsed first since they are required.
   def layer_mask
-    header
-    resources
+    ensure_header
+    ensure_resources
 
     @layer_mask ||= LayerMask.new(@file, @header).parse
   end
 
   # Get the full size flattened preview Image.
-  # *This is currently broken.*
   def image
-    layer_mask
+    ensure_header
+    ensure_resources
+    ensure_layer_mask
 
     @image ||= Image.new(@file, @header).parse
   end
@@ -116,5 +125,25 @@ class PSD
     # And the rest of the file (merged image data)
     outfile.write @file.read
     outfile.flush
+  end
+
+  private
+
+  def ensure_header
+    header # Header is always required
+  end
+
+  def ensure_resources
+    return unless @resources.nil?
+    
+    @resources = Resources.new(@file)
+    @resources.skip
+  end
+
+  def ensure_layer_mask
+    return unless @layer_mask.nil?
+
+    @layer_mask = LayerMask.new(@file, @header)
+    @layer_mask.skip
   end
 end

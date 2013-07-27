@@ -9,14 +9,14 @@ class PSD
     def initialize(file)
       @file = file
       @resources = []
+      @length = nil
     end
 
     # Parses each Resource and stores them.
     def parse
       start_section
 
-      n = @file.read_int
-      length = n
+      n = length
       start = @file.tell
 
       while n > 0
@@ -31,6 +31,17 @@ class PSD
 
       end_section
       return @resources
+    end
+
+    def skip
+      @file.seek length, IO::SEEK_CUR
+    end
+
+    private
+
+    def length
+      return @length unless @length.nil?
+      @length = @file.read_int
     end
   end
 end
