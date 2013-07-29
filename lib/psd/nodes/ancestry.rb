@@ -1,5 +1,6 @@
 class PSD
   class Node
+    # Collection of methods to help in traversing the PSD tree structure.
     module Ancestry
       # Returns the root node
       def root
@@ -20,31 +21,39 @@ class PSD
         return parent.ancestors + [parent]
       end
 
+      # Does this node have any children nodes?
       def has_children?
         children.length > 0
       end
 
+      # Inverse of has_children?
       def is_childless?
         !has_children?
       end
 
+      # Returns all sibling nodes including the current node. Can also
+      # be thought of as all children of the parent of this node.
       def siblings
         return [] if parent.nil?
         parent.children
       end
 
+      # Does this node have any siblings?
       def has_siblings?
-        siblings.length > 0
+        siblings.length > 1
       end
 
+      # Is this node the only descendant of its parent?
       def is_only_child?
         siblings.length == 1
       end
 
+      # Recursively get all descendant nodes, not including this node.
       def descendants
         children + children.map(&:children).flatten
       end
 
+      # Same as descendants, except it includes this node.
       def subtree
         [self] + descendants
       end

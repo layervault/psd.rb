@@ -43,5 +43,9 @@ class PSD
 
       hash
     end
+
+    def document_dimensions
+      @parent.document_dimensions
+    end
   end
 end

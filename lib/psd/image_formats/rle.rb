@@ -1,6 +1,6 @@
 class PSD::Image
   module Format
-    # Parses an RLE image
+    # Parses an RLE compressed image
     module RLE
       private
 

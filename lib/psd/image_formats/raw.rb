@@ -1,6 +1,6 @@
 class PSD::Image
   module Format
-    # Parses a RAW formatted image
+    # Parses a RAW uncompressed image
     module RAW
       private
 

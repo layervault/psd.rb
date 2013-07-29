@@ -1,12 +1,13 @@
 class PSD
   # Parses the full preview image at the end of the PSD document.
-  class Image #:nodoc:
+  class Image
     include Format::RAW
     include Format::RLE
     include Mode::RGB
     include Mode::Greyscale
     include Export::PNG
 
+    # All of the possible compression formats Photoshop uses.
     COMPRESSIONS = [
       'Raw',
       'RLE',
@@ -14,6 +15,7 @@ class PSD
       'ZIPPrediction'
     ]
 
+    # Each color channel is represented by a unique ID
     CHANNEL_INFO = [
       {id: 0},
       {id: 1},
@@ -21,6 +23,8 @@ class PSD
       {id: -1}
     ]
 
+    # Store a reference to the file and the header. We also do a few simple calculations
+    # to figure out the number of pixels in the image and the length of each channel.
     def initialize(file, header)
       @file = file
       @header = header
@@ -37,6 +41,8 @@ class PSD
       @pixel_data = []
     end
 
+    # Begins parsing the image by first figuring out the compression format used, and then
+    # by reading the image data.
     def parse
       @compression = parse_compression!
 
@@ -50,6 +56,7 @@ class PSD
       return self
     end
 
+    # We delegate a few useful methods to the header.
     [:height, :width, :channels, :depth, :mode].each do |attribute|
       define_method attribute do
         @header.send(attribute)

@@ -1,5 +1,6 @@
 class PSD::Node
   module ParseLayers
+    # Organizes the flat layer structure into tree nodes.
     def parse_layers(layers)
       @children = []
       layers.each do |layer|

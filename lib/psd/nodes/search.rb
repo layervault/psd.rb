@@ -1,6 +1,10 @@
 class PSD
   class Node
     module Search
+      # Searches the tree structure for a node at the given path. The path is
+      # defined by the layer/folder names. Because the PSD format does not
+      # require unique layer/folder names, we always return an array of all
+      # found nodes.
       def children_at_path(path, opts={})
         path = path.split('/').delete_if { |p| p == "" } unless path.is_a?(Array)
 
