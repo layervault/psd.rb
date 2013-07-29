@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "bindata"
   gem.add_dependency "chunky_png"
+  gem.add_dependency 'psd-enginedata'
 
   gem.test_files = Dir.glob("spec/**/*")
   gem.add_development_dependency 'rspec'
