@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Parse Photoshop save files with ease}
   gem.summary       = %q{General purpose library for parsing Photoshop save files}
   gem.homepage      = "http://cosmos.layervault.com/psdrb.html"
+  gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
