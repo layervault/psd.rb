@@ -11,8 +11,7 @@ A general purpose Photoshop file parser written in Ruby. It allows you to work w
 * Layer/folder visibility and opacity
 * Font data (via [psd-enginedata](https://github.com/layervault/psd-enginedata))
   * Text area contents
-  * Font names
-  * Font sizes
+  * Font names, sizes, and colors
 * Color mode and bit-depth
 * Vector mask data
 * Flattened image data
