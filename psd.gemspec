@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = PSD::VERSION
   gem.authors       = ["Ryan LeFevre", "Kelly Sutton"]
   gem.email         = ["ryan@layervault.com", "kelly@layervault.com"]
-  gem.description   = %q{Parse Photoshop save files with ease}
-  gem.summary       = %q{General purpose library for parsing Photoshop save files}
+  gem.description   = %q{Parse Photoshop PSD files with ease}
+  gem.summary       = %q{General purpose library for parsing Photoshop files}
   gem.homepage      = "http://cosmos.layervault.com/psdrb.html"
   gem.license       = 'MIT'
 
