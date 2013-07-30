@@ -9,5 +9,9 @@ class PSD
     def self.pad4(i)
       i - (i.modulo(4)) + 3
     end
+
+    def self.clamp(num, min, max)
+      [min, num, max].sort[1]
+    end
   end
 end

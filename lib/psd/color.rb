@@ -112,6 +112,14 @@ class PSD
           n**3 > 0.008856 ? n**3 : (n - 16 / 116) / 7.787
         end
       end
+
+      def cmyk_to_rgb(c, m, y, k)
+        Hash[{
+          r: (65535 - (c * (255 - k) + (k << 8))) >> 8,
+          g: (65535 - (m * (255 - k) + (k << 8))) >> 8,
+          b: (65535 - (y * (255 - k) + (k << 8))) >> 8
+        }.map { |k, v| [k, Util.clamp(v, 0, 255)] }]
+      end
     end
   end
 end

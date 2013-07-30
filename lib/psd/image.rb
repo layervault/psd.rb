@@ -3,8 +3,9 @@ class PSD
   class Image
     include Format::RAW
     include Format::RLE
-    include Mode::RGB
+    include Mode::CMYK
     include Mode::Greyscale
+    include Mode::RGB
     include Export::PNG
 
     # All of the possible compression formats Photoshop uses.
@@ -93,9 +94,14 @@ class PSD
 
     def process_image_data
       case mode
-      when 1 then send("combine_greyscale#{depth}_channel")
-      when 3 then send("combine_rgb#{depth}_channel")
+      when 1 then combine_greyscale_channel
+      when 3 then combine_rgb_channel
+      when 4 then combine_cmyk_channel
       end
+    end
+
+    def pixel_step
+      depth == 8 ? 1 : 2
     end
   end
 end
