@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require_relative '../layer_info'
 
 class PSD
