@@ -1,4 +1,4 @@
-Copyright (c) 2013 Ryan LeFevre
+Copyright (c) 2013 LayerVault
 
 MIT License
 

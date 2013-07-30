@@ -6,11 +6,11 @@ require 'psd/version'
 Gem::Specification.new do |gem|
   gem.name          = "psd"
   gem.version       = PSD::VERSION
-  gem.authors       = ["Ryan LeFevre"]
-  gem.email         = ["ryan@layervault.com"]
+  gem.authors       = ["Ryan LeFevre", "Kelly Sutton"]
+  gem.email         = ["ryan@layervault.com", "kelly@layervault.com"]
   gem.description   = %q{Parse Photoshop save files with ease}
   gem.summary       = %q{General purpose library for parsing Photoshop save files}
-  gem.homepage      = "http://github.com/layervault/psd.rb"
+  gem.homepage      = "http://cosmos.layervault.com/psdrb.html"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
