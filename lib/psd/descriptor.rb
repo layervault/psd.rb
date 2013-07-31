@@ -64,6 +64,7 @@ class PSD
       when 'obj '         then parse_reference
       when 'TEXT'         then @file.read_unicode_string
       when 'UntF'         then parse_unit_double
+      when 'UnFl'         then parse_unit_float
       end
 
       return value
@@ -115,18 +116,21 @@ class PSD
     end
 
     def parse_object_array
+      raise NotImplementedError.new("Object array not implemented yet")
       count = @file.read_int
-      klass = parse_class
       items_in_obj = @file.read_int
+      wat = @file.read_short
+      
+      puts count
+      puts items_in_obj
+      puts wat
 
-      obj = []
+      obj = {}
       count.times do |i|
         item = []
-        items_in_obj.times do |j|
-          item << parse_object_array
-        end
-
-        obj << item
+        name = @file.read_string(@file.read_int)
+        puts name
+        obj[name] = parse_list
       end
 
       return obj
@@ -166,6 +170,23 @@ class PSD
       end
 
       value = @file.read_double
+      {id: unit_id, unit: unit, value: value}
+    end
+
+    def parse_unit_float
+      unit_id = @file.read_string(4)
+      unit = case unit_id
+      when '#Ang' then 'Angle'
+      when '#Rsl' then 'Density'
+      when '#Rlt' then 'Distance'
+      when '#Nne' then 'None'
+      when '#Prc' then 'Percent'
+      when '#Pxl' then 'Pixels'
+      when '#Mlm' then 'Millimeters'
+      when '#Pnt' then 'Points'
+      end
+
+      value = @file.read_float
       {id: unit_id, unit: unit, value: value}
     end
   end

@@ -309,19 +309,23 @@ class PSD
         info_parsed = false
         LAYER_INFO.each do |name, info|
           next unless info.key == key
-          
-          i = info.new(@file, length)
-          i.parse
 
-          @adjustments[name] = i
-          info_parsed = true
+          begin
+            i = info.new(@file, length)
+            i.parse
+
+            @adjustments[name] = i
+            info_parsed = true
+          rescue Exception
+          end
+
           break
         end
 
         if !info_parsed
           PSD.keys << key
           # puts "SKIPPING #{key}, length = #{length}"
-          @file.seek length, IO::SEEK_CUR
+          @file.seek pos + length
         end
 
         @file.seek pos + length if @file.tell != (pos + length)
