@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://cosmos.layervault.com/psdrb.html"
   gem.license       = 'MIT'
 
-  gem.files         = `git ls-files`.split($/)
+  gem.files         = `git ls-files`.split($/).delete_if { |f| f.include?('examples/') }
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
