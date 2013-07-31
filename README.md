@@ -52,7 +52,7 @@ To access the document as a tree structure, use `psd.tree` to get the root node.
 * `subtree`: same as descendants but starts with the current node
 * `depth`: calculate the depth of the current node
 
-For any of the traversal methods, you can also retrieves folder or layer nodes only by appending `_layers` or `_groups` to the method. For example:
+For any of the traversal methods, you can also retrieve folder or layer nodes only by appending `_layers` or `_groups` to the method. For example:
 
 ``` ruby
 psd.tree.descendant_layers
