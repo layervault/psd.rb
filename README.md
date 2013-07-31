@@ -1,6 +1,6 @@
 # PSD.rb
 
-![](https://circleci.com/gh/layervault/psd.rb.png?circle-token=ad8a75fdd86f595e0926a963179a3a621d564c6e)
+[![Circle CI](https://circleci.com/gh/layervault/psd.rb.png?circle-token=ad8a75fdd86f595e0926a963179a3a621d564c6e)](https://circleci.com/gh/layervault/psd.rb)
 
 A general purpose Photoshop file parser written in Ruby. It allows you to work with a Photoshop document in a manageable tree structure and find out important data such as:
 
@@ -52,7 +52,7 @@ To access the document as a tree structure, use `psd.tree` to get the root node.
 * `subtree`: same as descendants but starts with the current node
 * `depth`: calculate the depth of the current node
 
-For any of the traversal methods, you can also retrieves folder or layer nodes only by appending `_layers` or `_groups` to the method. For example:
+For any of the traversal methods, you can also retrieve folder or layer nodes only by appending `_layers` or `_groups` to the method. For example:
 
 ``` ruby
 psd.tree.descendant_layers
