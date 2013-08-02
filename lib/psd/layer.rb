@@ -68,6 +68,8 @@ class PSD
       parse_legacy_layer_name
       parse_extra_data
 
+      PSD.logger.debug "Layer name = #{name}"
+
       @file.seek @layer_end # Skip over any filler zeros
 
       end_section

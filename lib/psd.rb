@@ -19,6 +19,7 @@ end
 # the header, resources, the layer mask (including layers), and the preview image. We parse
 # each of these sections in order.
 class PSD
+  include Logger
   include Helpers
   include NodeExporting
 
@@ -50,6 +51,8 @@ class PSD
   # parse all sections of the PSD.
   def parse!
     header
+    PSD.logger.debug header.inspect
+    
     resources
     layer_mask
     image if @opts[:parse_image]
