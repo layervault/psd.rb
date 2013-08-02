@@ -7,6 +7,7 @@ class PSD::Image
       # Load the image pixels into a PNG file and return a reference to the
       # data.
       def to_png
+        PSD.logger.debug "Beginning PNG export"
         png = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
 
         i = 0

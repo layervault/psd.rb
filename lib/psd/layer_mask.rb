@@ -66,7 +66,7 @@ class PSD
 
       parse_global_mask
 
-      # Temporarily seek to the end of this section
+      # Ensure we're at the end of this section
       @file.seek finish
       end_section
 
