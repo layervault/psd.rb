@@ -23,10 +23,6 @@ class PSD
   include Helpers
   include NodeExporting
 
-  # Just used to track what layer info keys we didn't parse in this file for development purposes.
-  def self.keys; @@keys; end
-  @@keys = []
-
   DEFAULTS = {
     parse_image: false,
     parse_layer_images: false

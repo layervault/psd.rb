@@ -312,21 +312,24 @@ class PSD
         LAYER_INFO.each do |name, info|
           next unless info.key == key
 
+          PSD.logger.debug "Layer Info: key = #{key}, start = #{pos}, length = #{length}"
+
           begin
             i = info.new(@file, length)
             i.parse
 
             @adjustments[name] = i
             info_parsed = true
-          rescue Exception
+          rescue Exception => e
+            PSD.logger.error "Parsing error: key = #{key}, message = #{e.message}"
+            PSD.logger.error e.backtrace.join("\n")
           end
 
           break
         end
 
         if !info_parsed
-          PSD.keys << key
-          # puts "SKIPPING #{key}, length = #{length}"
+          PSD.logger.debug "SKIPPING: key = #{key}, length = #{length}"
           @file.seek pos + length
         end
 
