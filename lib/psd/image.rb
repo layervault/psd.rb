@@ -40,6 +40,8 @@ class PSD
       @end_pos = @start_pos + @length
 
       @pixel_data = []
+
+      PSD.logger.debug "Image: #{width}x#{height}, length = #{@length}, mode = #{@header.mode_name}, position = #{@start_pos}"
     end
 
     # Begins parsing the image by first figuring out the compression format used, and then
@@ -49,8 +51,11 @@ class PSD
 
       # ZIP not implemented
       if [2, 3].include?(@compression)
+        PSD.logger.debug "Warning: ZIP image compression not supported yet. Skipping."
         @file.seek @end_pos and return
       end
+
+      PSD.logger.debug "Compression: id = #{@compression}, name = #{COMPRESSIONS[@compression]}"
 
       parse_image_data!
 

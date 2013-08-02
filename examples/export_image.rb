@@ -1,7 +1,8 @@
 require 'benchmark'
 require './lib/psd'
 
-psd = PSD.new('examples/images/example.psd')
+file = ARGV[0] || 'examples/images/example.psd'
+psd = PSD.new(file)
 
 results = Benchmark.measure "Image exporting" do
   psd.image.save_as_png 'output.png'

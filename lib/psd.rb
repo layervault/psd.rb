@@ -47,8 +47,6 @@ class PSD
   # parse all sections of the PSD.
   def parse!
     header
-    PSD.logger.debug header.inspect
-    
     resources
     layer_mask
     image if @opts[:parse_image]
@@ -65,7 +63,10 @@ class PSD
 
   # Get the Header, parsing it if needed.
   def header
-    @header ||= Header.read(@file)
+    return @header if @header
+
+    @header = Header.read(@file)
+    PSD.logger.debug @header.inspect
   end
 
   # Get the Resources section, parsing if needed.
@@ -76,6 +77,8 @@ class PSD
 
     @resources = Resources.new(@file)
     @resources.parse
+
+    PSD.logger.debug @resources.inspect
 
     return @resources.data
   end
