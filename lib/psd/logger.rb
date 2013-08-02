@@ -7,12 +7,12 @@ class PSD
     end
 
     module ClassMethods
-      @@debug = false
+      attr_accessor :debug
 
       def logger
         return @logger if @logger
 
-        if @@debug || ENV['PSD_DEBUG']
+        if debug || ENV['PSD_DEBUG']
           @logger = ::Logger.new(debug_output)
           @logger.formatter = proc do |severity, datetime, progname, msg|
             "#{severity}: #{msg}\n"

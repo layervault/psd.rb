@@ -150,7 +150,11 @@ If you run into any problems parsing a PSD, you can enable debug logging via the
 PSD_DEBUG=STDOUT bundle exec examples/parse.rb
 ```
 
-You can also give a path to a file instead.
+You can also give a path to a file instead. If you need to enable debugging programatically:
+
+``` ruby
+PSD.debug = true
+```
 
 ## To-do
 
