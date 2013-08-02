@@ -35,9 +35,9 @@ class PSD::Image
         height.times do |j|
           byte_count = @byte_counts[line_index]
           line_index += 1
-          start = @file.tell
+          finish = @file.tell + byte_count
 
-          while @file.tell < start + byte_count
+          while @file.tell < finish
             len = @file.read(1).bytes.to_a[0]
 
             if len < 128
