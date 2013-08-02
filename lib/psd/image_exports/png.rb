@@ -30,7 +30,7 @@ class PSD::Image
 
       # Saves the PNG data to disk.
       def save_as_png(file)
-        to_png.save(file)
+        to_png.save(file, :fast_rgba)
       end
     end
   end

@@ -7,7 +7,8 @@ class PSD::Image::Mode
       PSD.logger.debug "Beginning RGB processing"
 
       (0...@num_pixels).step(pixel_step) do |i|
-        r = g = b = a = 0
+        r = g = b = 0
+        a = 255
 
         PSD::Image::CHANNEL_INFO[0...channels].each_with_index do |chan, index|
           val = @channel_data[i + (@channel_length * index)]
