@@ -41,6 +41,28 @@ psd = PSD.new('/path/to/file.psd')
 psd.parse!
 ```
 
+Or, if you prefer the File.open way of doing things, you can do that too.
+
+``` ruby
+require 'psd'
+
+PSD.open('path/to/file.psd') do |psd|
+  p psd.tree.to_hash
+end
+```
+
+As you can see, `open` calls `parse!` for you, so that you can get down to business right away.
+
+If you happen to prefer things DSL-style, the `open` method will also let you operate on the PSD object directly. Again, the call to `parse!` is handled for you.
+
+``` ruby
+require 'psd'
+
+PSD.open('path/to/file.psd') do
+  p tree.to_hash
+end
+```
+
 **Traversing the Document**
 
 To access the document as a tree structure, use `psd.tree` to get the root node. From there, you can traverse the tree using any of these methods:
