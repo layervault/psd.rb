@@ -30,6 +30,24 @@ class PSD
 
   attr_reader :file
 
+  # Opens the named file, parses it, and makes it available for reading. Then, closes it after you're finished.
+  # @param filename [String]  the name of the file to open
+  # @return [PSD] the {PSD} object if no block was given, otherwise the value of the block
+  def self.open(filename, &block)
+    psd = PSD.new(filename)
+    psd.parse!
+
+    return psd unless block_given?
+
+    if 0 == block.arity
+      psd.instance_eval(&block)
+    else
+      yield psd
+    end
+  ensure
+    psd.close if psd
+  end
+
   # Create and store a reference to our PSD file
   def initialize(file, opts={})
     @file = PSD::File.new(file, 'rb')
@@ -40,6 +58,11 @@ class PSD
     @resources = nil
     @layer_mask = nil
     @parsed = false
+  end
+
+  # Close the PSD file
+  def close
+    file.close unless file.closed?
   end
 
   # There is a specific order that must be followed when parsing
