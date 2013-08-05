@@ -13,9 +13,13 @@ class PSD
     # a variable number of items in the descriptor. We return the Hash that represents
     # the full data structure.
     def parse
-      @data[:class] = parse_class
+      PSD.logger.debug "Descriptor: pos = #{@file.tell}"
 
+      @data[:class] = parse_class
       num_items = @file.read_int
+
+      PSD.logger.debug "Class = #{@data[:class]}, Item count = #{num_items}"
+
       num_items.times do |i|
         id, value = parse_key_item
         @data[id] = value
@@ -35,11 +39,13 @@ class PSD
 
     def parse_id
       len = @file.read_int
-      len == 0 ? @file.read_int : @file.read_string(len)
+      len == 0 ? @file.read_string(4) : @file.read_string(len)
     end
 
     def parse_key_item
       id = parse_id
+      PSD.logger.debug "Key = #{id}"
+
       value = parse_item
 
       return id, value
@@ -47,11 +53,12 @@ class PSD
 
     def parse_item(type = nil)
       type = @file.read_string(4) if type.nil?
+      PSD.logger.debug "Type = #{type}"
 
       value = case type
       when 'bool'         then parse_boolean
       when 'type', 'GlbC' then parse_class
-      when 'Objc', 'GlbO' then parse
+      when 'Objc', 'GlbO' then Descriptor.new(@file).parse
       when 'doub'         then parse_double
       when 'enum'         then parse_enum
       when 'alis'         then parse_alias

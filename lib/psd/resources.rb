@@ -8,7 +8,7 @@ class PSD
     
     def initialize(file)
       @file = file
-      @resources = []
+      @resources = {}
       @length = nil
     end
 
@@ -21,7 +21,16 @@ class PSD
 
       while n > 0
         pos = @file.tell
-        @resources << PSD::Resource.read(@file)
+
+        resource = Resource.new(@file)
+        resource.parse
+
+        resource_end = @file.tell + resource.size
+
+        Resource::Section.factory(@file, resource)
+        @resources[resource.id] = resource
+
+        @file.seek resource_end
         n -= @file.tell - pos
       end
 
@@ -35,6 +44,10 @@ class PSD
 
     def skip
       @file.seek length, IO::SEEK_CUR
+    end
+
+    def [](id)
+      @resources[id]
     end
 
     private

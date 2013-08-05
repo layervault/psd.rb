@@ -3,25 +3,23 @@ class PSD
   #
   # Most of the resources are options/preferences set by the user
   # or automatically by Photoshop.
-  class Resource < BinData::Record
-    endian  :big
+  class Resource
+    attr_reader :id, :name, :size
+    attr_accessor :data
 
-    string  :type, read_length: 4
-    uint16  :id
-    uint8   :name_len
-    stringz :name, read_length: :name_length
-    uint32  :res_size
-
-    skip    length: :resource_size
-
-    #---
-    # Really weird padding business
-    def name_length
-      Util.pad2(name_len + 1) - 1
+    def initialize(file)
+      @file = file
+      @data = {}
     end
 
-    def resource_size
-      Util.pad2(res_size)
+    def parse
+      @file.seek 4, IO::SEEK_CUR # Type, always 8BIM
+      @id = @file.read_short
+
+      name_length = Util.pad2(@file.read(1).bytes.to_a[0] + 1) - 1
+      @name = @file.read_string(name_length)
+
+      @size = Util.pad2(@file.read_int)
     end
   end
 end
