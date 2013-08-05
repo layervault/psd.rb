@@ -19,9 +19,9 @@ class PSD
         @data[:face][i] = {}
         @data[:face][i][:mark] = @file.read_short
         @data[:face][i][:font_type] = @file.read_int
-        @data[:face][i][:font_name] = PascalString.read(@file)
-        @data[:face][i][:font_family_name] = PascalString.read(@file)
-        @data[:face][i][:font_style_name] = PascalString.read(@file)
+        @data[:face][i][:font_name] = @file.read_string
+        @data[:face][i][:font_family_name] = @file.read_string
+        @data[:face][i][:font_style_name] = @file.read_string
         @data[:face][i][:script] = @file.read_short
         @data[:face][i][:number_axes_vector] = @file.read_int
         @data[:face][i][:vector] = []
