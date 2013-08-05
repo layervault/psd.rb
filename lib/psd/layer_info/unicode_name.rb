@@ -6,8 +6,7 @@ class PSD
 
     def parse
       pos = @file.tell
-      len = @file.read_int * 2
-      @data = @file.read(len).unpack("A#{len}")[0].encode('UTF-8').delete("\000")
+      @data = @file.read_unicode_string
 
       # The name seems to be padded with null bytes. This is the easiest solution.
       @file.seek pos + @length
