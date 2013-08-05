@@ -6,8 +6,12 @@ class PSD
           section = Section.const_get(c)
           next unless section.id == resource.id
 
-          section.new(file, resource).parse
-          return section.name
+          begin
+            section.new(file, resource).parse
+            return section.name
+          rescue Exception
+            return nil
+          end
         end
 
         return nil
