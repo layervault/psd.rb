@@ -23,7 +23,7 @@ end
 
 puts "\nPSD Info:\n===================="
 puts "#{psd.width}x#{psd.height} #{psd.header.mode_name}"
-puts "#{psd.resources.size} resources parsed"
+puts "#{psd.resources.data.size} resources parsed"
 puts "#{psd.layers.size} layers, #{psd.folders.size} folders"
 
 puts "\nBenchmark Results (seconds):\n===================="
