@@ -33,8 +33,8 @@ class PSD
   # Opens the named file, parses it, and makes it available for reading. Then, closes it after you're finished.
   # @param filename [String]  the name of the file to open
   # @return [PSD] the {PSD} object if no block was given, otherwise the value of the block
-  def self.open(filename, &block)
-    psd = PSD.new(filename)
+  def self.open(filename, opts={}, &block)
+    psd = PSD.new(filename, opts)
     psd.parse!
 
     return psd unless block_given?
