@@ -9,6 +9,7 @@ class PSD
     def initialize(file)
       @file = file
       @resources = {}
+      @type_index = {}
       @length = nil
     end
 
@@ -27,8 +28,9 @@ class PSD
 
         resource_end = @file.tell + resource.size
 
-        Resource::Section.factory(@file, resource)
+        name = Resource::Section.factory(@file, resource)
         @resources[resource.id] = resource
+        @type_index[name] = resource.id unless name.nil?
 
         @file.seek resource_end
         n -= @file.tell - pos
@@ -39,7 +41,6 @@ class PSD
       end
 
       end_section
-      return @resources
     end
 
     def skip
@@ -47,7 +48,15 @@ class PSD
     end
 
     def [](id)
-      @resources[id]
+      if id.is_a?(Symbol)
+        by_type(id)
+      else
+        @resources[id]
+      end
+    end
+
+    def by_type(id)
+      @resources[@type_index[id]]
     end
 
     private

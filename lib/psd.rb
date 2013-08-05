@@ -94,16 +94,16 @@ class PSD
 
   # Get the Resources section, parsing if needed.
   def resources
-    return @resources.data unless @resources.nil?
+    return @resources unless @resources.nil?
 
     ensure_header
 
     @resources = Resources.new(@file)
     @resources.parse
 
-    PSD.logger.debug @resources.inspect
+    PSD.logger.debug @resources.data.inspect
 
-    return @resources.data
+    return @resources
   end
 
   # Get the LayerMask section. Ensures the header and resources

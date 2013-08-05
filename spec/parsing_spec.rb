@@ -45,16 +45,16 @@ describe 'Parsing' do
 
     it "should contain data" do
       @psd.resources.should_not be_nil
-      @psd.resources.is_a?(Array).should be_true
-      @psd.resources.size.should >= 1
+      @psd.resources.data.is_a?(Hash).should be_true
+      @psd.resources.data.size.should >= 1
     end
 
     it "should be of type 8BIM" do
-      @psd.resources.each { |r| r.type.should == '8BIM' }
+      @psd.resources.data.each { |id, r| r.type.should == '8BIM' }
     end
 
     it "should have an ID" do
-      @psd.resources.each do |r|
+      @psd.resources.data.each do |id, r|
         r.id.should_not be_nil
       end
     end

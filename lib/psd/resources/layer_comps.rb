@@ -3,6 +3,7 @@ class PSD
     class Section
       class LayerComps < Section
         def self.id; 1065; end
+        def self.name; :layer_comps; end
 
         def parse
           # Descriptor version

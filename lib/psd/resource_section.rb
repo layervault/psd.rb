@@ -6,12 +6,13 @@ class PSD
           section = Section.const_get(c)
           next unless section.id == resource.id
 
-          return section.new(file, resource).parse
+          section.new(file, resource).parse
+          return section.name
         end
 
         return nil
       end
-      
+
       def initialize(file, resource)
         @file = file
         @resource = resource
