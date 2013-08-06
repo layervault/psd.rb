@@ -19,6 +19,7 @@ class PSD
     LAYER_INFO = {
       type: TypeTool,
       legacy_type: LegacyTypeTool,
+      metadata: MetadataSetting,
       layer_name_source: LayerNameSource,
       object_effects: ObjectEffects,
       name: UnicodeName,
