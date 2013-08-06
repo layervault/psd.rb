@@ -32,6 +32,8 @@ Or install it yourself as:
 
 ## Usage
 
+The [full source code documentation](http://rubydoc.info/gems/psd/frames) is available, but here are some common ways to use and access the PSD data:
+
 **Loading a PSD**
 
 ``` ruby
