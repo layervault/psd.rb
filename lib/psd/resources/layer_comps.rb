@@ -8,7 +8,17 @@ class PSD
         def parse
           # Descriptor version
           @file.seek 4, IO::SEEK_CUR
-          @resource.data = Descriptor.new(@file).parse
+          
+          @data = Descriptor.new(@file).parse
+          @resource.data = self
+        end
+
+        def names
+          @data['list'].map { |c| c['Nm  '] }
+        end
+
+        def [](val)
+          @data[val]
         end
       end
     end

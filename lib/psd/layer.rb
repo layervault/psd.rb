@@ -287,8 +287,10 @@ class PSD
     # not UTF-8. Luckily Ruby kicks ass at character conversion.
     def parse_legacy_layer_name
       @legacy_name_start = @file.tell
-      len = Util.pad4 @file.read(1).unpack('C')[0]
-      @legacy_name = @file.read(len).encode('UTF-8', 'MacRoman').delete("\000")
+
+      len = Util.pad4 @file.read(1).bytes.to_a[0]
+      @legacy_name = @file.read_string(len)
+
       @legacy_name_end = @file.tell
     end
 
@@ -302,7 +304,7 @@ class PSD
         @file.seek 4, IO::SEEK_CUR
 
         # Key, very important
-        key = @file.read(4).unpack('A4')[0]
+        key = @file.read_string(4)
         @info_keys << key
 
         length = Util.pad2 @file.read_int
@@ -329,14 +331,13 @@ class PSD
         end
 
         if !info_parsed
-          PSD.logger.debug "SKIPPING: key = #{key}, length = #{length}"
+          PSD.logger.debug "Skipping: key = #{key}, pos = #{@file.tell}, length = #{length}"
           @file.seek pos + length
         end
 
         @file.seek pos + length if @file.tell != (pos + length)
       end
 
-      # puts "Layer = #{name}, Parsed = #{@info_keys - PSD.keys.uniq}, Unparsed = #{PSD.keys.uniq - @info_keys}"
       @extra_data_end = @file.tell
     end
 
