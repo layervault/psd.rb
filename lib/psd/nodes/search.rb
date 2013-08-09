@@ -24,6 +24,8 @@ class PSD
         end
       end
 
+      # Given a layer comp ID, name, or :last for last document state, create a new
+      # tree based on the layers/groups that belong to the comp only.
       def filter_by_comp(id)
         if id.is_a?(String)
           comp = psd.layer_comps.select { |c| c[:name] == id }.first

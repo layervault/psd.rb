@@ -6,7 +6,7 @@ class PSD::Node
     include PSD::HasChildren
     include PSD::Node::ParseLayers
 
-    attr_reader :children
+    attr_accessor :children
 
     # Stores a reference to the parsed PSD and builds the
     # tree hierarchy.
