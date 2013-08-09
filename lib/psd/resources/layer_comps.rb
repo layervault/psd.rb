@@ -20,6 +20,10 @@ class PSD
         def [](val)
           @data[val]
         end
+
+        def to_a
+          @data['list'].map { |c| {id: c['compID'], name: c['Nm  ']} }
+        end
       end
     end
   end

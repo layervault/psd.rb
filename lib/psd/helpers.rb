@@ -31,5 +31,9 @@ class PSD
     def tree
       @root ||= PSD::Node::Root.new(self)
     end
+
+    def layer_comps
+      @resources[:layer_comps].data.to_a
+    end
   end
 end

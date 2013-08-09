@@ -25,12 +25,6 @@ class PSD::Node
       end
     end
 
-    # If the method is missing, we blindly send it to the layer.
-    # The layer handles the case in which the method doesn't exist.
-    def method_missing(method, *args, &block)
-      layer.send(method, *args, &block)
-    end
-
     # Attempt to translate the layer.
     def translate(x=0, y=0)
       @layer.translate x, y
@@ -66,6 +60,12 @@ class PSD::Node
         ref_x: @layer.reference_point.x,
         ref_y: @layer.reference_point.y
       })
+    end
+
+    # If the method is missing, we blindly send it to the layer.
+    # The layer handles the case in which the method doesn't exist.
+    def method_missing(method, *args, &block)
+      @layer.send(method, *args, &block)
     end
   end
 end

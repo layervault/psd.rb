@@ -23,6 +23,31 @@ class PSD
           return matches.map { |m| m.children_at_path(path, opts) }.flatten
         end
       end
+
+      def filter_by_comp(id)
+        if id.is_a?(String)
+          comp = psd.layer_comps.select { |c| c[:name] == id }.first
+          raise "Layer comp not found" if comp.nil?
+
+          id = comp[:id]
+        elsif id == :last
+          id = 0
+        end
+
+        root = PSD::Node::Root.new(psd)
+        root.children = root
+          .descendants
+          .select { |l|
+            l.adjustments[:metadata].data[:layer_comp]['layerSettings'].select { |s|
+              next(false) unless s.has_key?('compList')
+              next(false) unless s.has_key?('enab') && s['enab'] == true
+
+              s['compList'].include?(id)
+            }.size > 0
+          }
+
+        return root
+      end
     end
   end
 end

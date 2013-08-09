@@ -11,7 +11,7 @@ class PSD
     # Default properties that all nodes contain
     PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
 
-    attr_accessor :parent, :children
+    attr_accessor :parent, :children, :layer
 
     def initialize(layers=[])
       @children = []
@@ -27,6 +27,10 @@ class PSD
 
     def visible?
       @layer.visible?
+    end
+
+    def psd
+      parent.psd
     end
 
     def to_hash

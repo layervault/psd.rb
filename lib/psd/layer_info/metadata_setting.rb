@@ -19,9 +19,7 @@ class PSD
 
         PSD.logger.debug "Layer metadata: key = #{key}, length = #{len}"
 
-        if key == 'cmls'
-          parse_layer_comp_setting
-        end
+        parse_layer_comp_setting if key == 'cmls'
 
         @file.seek data_end
       end

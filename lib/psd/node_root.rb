@@ -51,6 +51,8 @@ class PSD::Node
       0
     end
 
+    def psd; @psd; end
+
     private
 
     def build_hierarchy
