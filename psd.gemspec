@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "bindata"
-  gem.add_dependency "chunky_png"
+  gem.add_dependency "oily_png"
   gem.add_dependency 'psd-enginedata'
 
   gem.test_files = Dir.glob("spec/**/*")
