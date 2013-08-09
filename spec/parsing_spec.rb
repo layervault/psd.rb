@@ -130,5 +130,18 @@ describe 'Parsing' do
       layer.blend_mode.opacity_percentage.should == 100
       layer.blend_mode.visible.should be_true
     end
+
+    it "should parse all layer comps" do
+      expect(@psd.layer_comps.size).to eq(3)
+      expect(@psd.layer_comps.map { |c| c[:name] }).to eq([
+        'Version A',
+        'Version B',
+        'Version C'
+      ])
+
+      @psd.layer_comps.each do |c|
+        expect(c[:id]).to be > 0
+      end
+    end
   end
 end
