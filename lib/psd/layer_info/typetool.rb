@@ -72,27 +72,41 @@ class PSD
     # Return all font sizes for this layer.
     def sizes
       return [] if engine_data.nil?
-      engine_data.EngineDict.StyleRun.RunArray.map do |r|
-        r.StyleSheet.StyleSheetData.FontSize
-      end.uniq
+      styles['FontSize'].uniq
     end
 
-    # Return all colors used for text in this layer. The colors are returned in RGB
+    # Return all colors used for text in this layer. The colors are returned in RGBA
     # format as an array of arrays.
     #
-    # => [[255, 0, 0], [0, 0, 255]]
+    # => [[255, 0, 0, 255], [0, 0, 255, 255]]
     def colors
-      return [] if engine_data.nil?
-      engine_data.EngineDict.StyleRun.RunArray.map do |r|
-        next unless r.StyleSheet.StyleSheetData.key?('FillColor')
-        r.StyleSheet.StyleSheetData.FillColor.Values.map do |v|
-          (v * 255).round
-        end
-      end.uniq
+      return [] if engine_data.nil? || !styles.has_key?('FillColor')
+      styles['FillColor'].map { |s|
+        values = s['Values'].map { |v| (v * 255).round }
+        values << values.shift # Change ARGB -> RGBA for consistency
+      }.uniq
     end
 
     def engine_data
       @data[:engine_data]
+    end
+
+    def styles
+      return {} if engine_data.nil?
+
+      data = engine_data.EngineDict.StyleRun.RunArray.map do |r|
+        r.StyleSheet.StyleSheetData
+      end
+
+      Hash[data.reduce({}) { |m, o|
+        o.each do |k, v|
+          (m[k] ||= []) << v
+        end
+
+        m
+      }.map { |k, v|
+        [k, v.uniq]
+      }]
     end
 
     def parser
