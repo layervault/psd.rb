@@ -37,18 +37,29 @@ class PSD
         end
 
         root = PSD::Node::Root.new(psd)
-        root.children = root
-          .descendants
-          .select { |l|
-            l.adjustments[:metadata].data[:layer_comp]['layerSettings'].select { |s|
-              next(false) unless s.has_key?('compList')
-              next(false) unless s.has_key?('enab') && s['enab'] == true
-
-              s['compList'].include?(id)
-            }.size > 0
-          }
+        puts psd.layer_comps.inspect
+        filter_for_comp!(id, root)
 
         return root
+      end
+
+      private
+
+      def filter_for_comp!(id, node)
+        node.children.select! do |c|
+          puts c.name
+          c.adjustments[:metadata].data[:layer_comp]['layerSettings'].select { |s|
+            next(false) unless s.has_key?('compList')
+            # next(false) unless s.has_key?('enab') && s['enab'] == true
+
+            puts s.inspect
+            s['compList'].include?(id)
+          }.size > 0
+        end
+
+        node.children.each do |c|
+          filter_for_comp!(id, c) if c.is_a?(PSD::Node::Group)
+        end
       end
     end
   end

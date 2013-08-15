@@ -81,6 +81,17 @@ describe "Hierarchy" do
         @tree.children_at_path('LOLWUTOMGBBQSAUCE').is_a?(Array).should be_true
         @tree.children_at_path('LOLWUTOMGBBQSAUCE').size.should == 0
       end
+
+      it "should throw an error if filtering by a non-existant layer comp" do
+        expect { @tree.filter_by_comp('WAT') }.to raise_error("Layer comp not found")
+      end
+
+      it "should correctly filter and produce a new tree when filtering by layer comp" do
+        tree = @tree.filter_by_comp('Version A')
+        expect(tree).to be_an_instance_of(PSD::Node::Root)
+        pp tree.to_hash
+        expect(tree.children.size).to eq(1)
+      end
     end
   end
 end
