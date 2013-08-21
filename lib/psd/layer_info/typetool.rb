@@ -71,7 +71,7 @@ class PSD
 
     # Return all font sizes for this layer.
     def sizes
-      return [] if engine_data.nil?
+      return [] if engine_data.nil? || !styles.has_key?('FontSize')
       styles['FontSize'].uniq
     end
 
@@ -94,19 +94,21 @@ class PSD
     def styles
       return {} if engine_data.nil?
 
-      data = engine_data.EngineDict.StyleRun.RunArray.map do |r|
-        r.StyleSheet.StyleSheetData
-      end
-
-      Hash[data.reduce({}) { |m, o|
-        o.each do |k, v|
-          (m[k] ||= []) << v
+      @styles ||= (
+        data = engine_data.EngineDict.StyleRun.RunArray.map do |r|
+          r.StyleSheet.StyleSheetData
         end
 
-        m
-      }.map { |k, v|
-        [k, v.uniq]
-      }]
+        Hash[data.reduce({}) { |m, o|
+          o.each do |k, v|
+            (m[k] ||= []) << v
+          end
+
+          m
+        }.map { |k, v|
+          [k, v.uniq]
+        }]
+      )
     end
 
     def parser
