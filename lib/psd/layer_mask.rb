@@ -107,7 +107,7 @@ class PSD
 
     def parse_global_mask
       length = @file.read_int
-      return if length == 0
+      return if length <= 0
 
       mask_end = @file.tell + length
       PSD.logger.debug "Global Mask: length = #{length}"
