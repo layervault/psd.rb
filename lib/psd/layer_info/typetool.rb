@@ -58,7 +58,7 @@ class PSD
         name: fonts.first,
         sizes: sizes,
         colors: colors,
-        css: parser.to_css
+        css: to_css
       }
     end
 
@@ -80,7 +80,8 @@ class PSD
     #
     # => [[255, 0, 0, 255], [0, 0, 255, 255]]
     def colors
-      return [] if engine_data.nil? || !styles.has_key?('FillColor')
+      # If the color is opaque black, this field is sometimes omitted.
+      return [[0, 0, 0, 255]] if engine_data.nil? || !styles.has_key?('FillColor')
       styles['FillColor'].map { |s|
         values = s['Values'].map { |v| (v * 255).round }
         values << values.shift # Change ARGB -> RGBA for consistency
@@ -113,6 +114,26 @@ class PSD
 
     def parser
       @parser ||= PSD::EngineData.new(@data[:text]['EngineData'])
+    end
+
+    # Creates the CSS string and returns it. Each property is newline separated
+    # and not all properties may be present depending on the document.
+    #
+    # Colors are returned in rgba() format and fonts may include some internal
+    # Photoshop fonts.
+    def to_css      
+      definition = {
+        'font-family' => fonts.join(', '),
+        'font-size' => "#{sizes.first}pt",
+        'color' => "rgba(#{colors.first.join(', ')})"
+      }
+
+      css = []
+      definition.each do |k, v|
+        css << "#{k}: #{v};"
+      end
+
+      css.join("\n")
     end
 
     def to_hash
