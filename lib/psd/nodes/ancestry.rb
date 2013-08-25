@@ -27,7 +27,7 @@ class PSD
       end
 
       # Inverse of has_children?
-      def is_childless?
+      def childless?
         !has_children?
       end
 
@@ -44,7 +44,7 @@ class PSD
       end
 
       # Is this node the only descendant of its parent?
-      def is_only_child?
+      def only_child?
         siblings.length == 1
       end
 

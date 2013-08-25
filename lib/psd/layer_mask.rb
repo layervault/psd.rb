@@ -115,7 +115,7 @@ class PSD
       @global_mask = {}
       @global_mask[:overlay_color_space] = @file.read_short
       @global_mask[:color_components] = 4.times.map { |i| @file.read_short >> 8 }
-      @global_mask[:opacity] = @file.read_short
+      @global_mask[:opacity] = @file.read_short / 16.0
 
       # 0 = color selected, 1 = color protected, 128 = use value per layer
       @global_mask[:kind] = @file.read(1).bytes.to_a[0]
