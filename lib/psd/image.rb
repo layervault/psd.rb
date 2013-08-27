@@ -1,11 +1,11 @@
 class PSD
   # Parses the full preview image at the end of the PSD document.
   class Image
-    include Format::RAW
-    include Format::RLE
-    include Mode::CMYK
-    include Mode::Greyscale
-    include Mode::RGB
+    include ImageFormat::RAW
+    include ImageFormat::RLE
+    include ImageMode::CMYK
+    include ImageMode::Greyscale
+    include ImageMode::RGB
     include Export::PNG
 
     # All of the possible compression formats Photoshop uses.

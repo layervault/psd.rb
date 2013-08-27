@@ -164,7 +164,7 @@ class PSD
   def ensure_layer_mask
     return unless @layer_mask.nil?
 
-    @layer_mask = LayerMask.new(@file, @header)
+    @layer_mask = LayerMask.new(@file, @header, @opts)
     @layer_mask.skip
   end
 end
