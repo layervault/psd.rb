@@ -7,9 +7,10 @@ class PSD
     attr_reader :layers, :global_mask
 
     # Store a reference to the file and the header and initialize the defaults.
-    def initialize(file, header)
+    def initialize(file, header, options)
       @file = file
       @header = header
+      @options = options
 
       @layers = []
       @merged_alpha = false
@@ -56,7 +57,7 @@ class PSD
         layers.each do |layer|
           @file.seek 8, IO::SEEK_CUR and next if layer.folder? || layer.folder_end?
 
-          layer.parse_channel_image!(@header)
+          layer.parse_channel_image!(@header, @options[:parse_layer_images])
         end
       end
 

@@ -112,7 +112,7 @@ class PSD
     ensure_header
     ensure_resources
 
-    @layer_mask ||= LayerMask.new(@file, @header).parse
+    @layer_mask ||= LayerMask.new(@file, @header, @opts).parse
   end
 
   # Get the full size flattened preview Image.

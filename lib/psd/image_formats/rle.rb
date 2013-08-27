@@ -2,22 +2,49 @@ class PSD::Image
   module Format
     # Parses an RLE compressed image
     module RLE
+      def self.included(base)
+        if base.class == PSD::ChannelImage
+          base.send :include, ChannelMethods
+        else
+          base.send :include, FullPreviewMethods
+        end
+      end
+
+      # Methods that apply to layer images only.
+      module ChannelMethods
+        private
+
+        def parse_byte_counts!
+          byte_counts = []
+          height.times do
+            byte_counts << @file.read_short
+          end
+
+          return byte_counts
+        end
+      end
+
+      # Methods that apply to the full preview image only.
+      module FullPreviewMethods
+        private
+
+        def parse_byte_counts!
+          byte_counts = []
+          channels.times do |i|
+            height.times do |j|
+              byte_counts << @file.read_short
+            end
+          end
+
+          return byte_counts
+        end
+      end
+
       private
 
       def parse_rle!
         @byte_counts = parse_byte_counts!
         parse_channel_data!
-      end
-
-      def parse_byte_counts!
-        byte_counts = []
-        channels.times do |i|
-          height.times do |j|
-            byte_counts << @file.read_short
-          end
-        end
-
-        return byte_counts
       end
 
       def parse_channel_data!
