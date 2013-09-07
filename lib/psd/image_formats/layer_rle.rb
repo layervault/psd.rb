@@ -14,13 +14,8 @@ class PSD
       end
 
       def parse_channel_data!
-        line_index = 0
-
-        channels.times do |i|
-          PSD.logger.debug "Parsing layer RLE channel ##{i}: position = #{@chan_pos}, line = #{line_index}"
-          @chan_pos = decode_rle_channel(@chan_pos, line_index)
-          line_index += height
-        end
+        PSD.logger.debug "Parsing layer RLE channel ##{@ch_info[:id]}: position = #{@chan_pos}"
+        @chan_pos = decode_rle_channel(@chan_pos, 0)
       end
     end
   end

@@ -35,8 +35,8 @@ class PSD
 
       @chan_pos = 0
 
-      channels.times do |i|
-        @ch_info = @channels_info[i]
+      @channels_info.each do |ch_info|
+        @ch_info = ch_info
         if @ch_info[:length] <= 0
           parse_compression! and next
         end

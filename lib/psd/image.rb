@@ -17,7 +17,7 @@ class PSD
     ]
 
     # Each color channel is represented by a unique ID
-    CHANNEL_INFO = [
+    @channels_info = [
       {id: 0},
       {id: 1},
       {id: 2},
