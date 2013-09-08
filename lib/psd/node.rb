@@ -29,6 +29,14 @@ class PSD
       @layer.visible?
     end
 
+    def layer?
+      is_a?(PSD::Node::Layer)
+    end
+
+    def group?
+      is_a?(PSD::Node::Group)
+    end
+
     def to_hash
       hash = {
         type: nil,
