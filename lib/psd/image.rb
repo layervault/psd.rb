@@ -16,14 +16,6 @@ class PSD
       'ZIPPrediction'
     ]
 
-    # Each color channel is represented by a unique ID
-    @channels_info = [
-      {id: 0},
-      {id: 1},
-      {id: 2},
-      {id: -1}
-    ]
-
     # Store a reference to the file and the header. We also do a few simple calculations
     # to figure out the number of pixels in the image and the length of each channel.
     def initialize(file, header)
@@ -42,6 +34,14 @@ class PSD
       @pixel_data = []
 
       PSD.logger.debug "Image: #{width}x#{height}, length = #{@length}, mode = #{@header.mode_name}, position = #{@start_pos}"
+
+      # Each color channel is represented by a unique ID
+      @channels_info = [
+        {id: 0},
+        {id: 1},
+        {id: 2},
+        {id: -1}
+      ]
     end
 
     # Begins parsing the image by first figuring out the compression format used, and then
