@@ -40,4 +40,13 @@ describe 'Image Exporting' do
       end
     end
   end
+
+  describe "layer images" do
+    it "should successfully parse the image data" do
+      @psd.options[:parse_layer_images] = true
+      @psd.parse!
+
+      # expect(@psd.tree.children.first.image).to be_an_instance_of(PSD::ChannelImage)
+    end
+  end
 end

@@ -28,7 +28,8 @@ class PSD
     parse_layer_images: false
   }
 
-  attr_reader :file
+  attr_reader :file, :opts
+  alias :options :opts
 
   # Opens the named file, parses it, and makes it available for reading. Then, closes it after you're finished.
   # @param filename [String]  the name of the file to open
