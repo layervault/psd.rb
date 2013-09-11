@@ -63,6 +63,10 @@ class PSD
         return ancestors.length + 1
       end
 
+      def path
+        (ancestors.map(&:name) + [name]).join('/')
+      end
+
       def method_missing(method, *args, &block)
         test = /^(.+)_(layers|groups)$/.match(method)
         if test

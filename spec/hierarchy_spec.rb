@@ -66,6 +66,11 @@ describe "Hierarchy" do
       expect(@tree.children.first.depth).to eq(1)
     end
 
+    it "should be able to generate a path to a node" do
+      node = @tree.children_at_path('Version A/Matte').first
+      expect(node.path).to eq('Version A/Matte')
+    end
+
     describe "Searching" do
       it "should find a node given a path" do
         expect(@tree.children_at_path('Version A/Matte')).to be_an_instance_of(Array)
