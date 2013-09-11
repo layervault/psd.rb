@@ -1,4 +1,4 @@
-require 'oily_png'
+require RUBY_ENGINE =~ /jruby/ ? 'chunky_png' : 'oily_png'
 
 class PSD::Image
   module Export

@@ -18,9 +18,16 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "bindata"
-  gem.add_dependency "oily_png"
+  gem.add_dependency 'bindata'
+
+  if RUBY_ENGINE =~ /jruby/
+    gem.add_dependency 'chunky_png'
+  else
+    gem.add_dependency 'oily_png'
+  end
+  
   gem.add_dependency 'psd-enginedata', '~> 1.0'
+  gem.add_dependency 'facter'
 
   gem.test_files = Dir.glob("spec/**/*")
   gem.add_development_dependency 'rspec'

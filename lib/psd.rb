@@ -1,4 +1,5 @@
 require "bindata"
+require "facter"
 require "psd/enginedata"
 
 require_relative 'psd/section'

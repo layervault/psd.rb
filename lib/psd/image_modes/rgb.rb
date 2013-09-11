@@ -5,26 +5,48 @@ class PSD
       private
 
       def combine_rgb_channel
-        PSD.logger.debug "Beginning RGB processing"
+        threads = []
+        mutex = Mutex.new
 
-        (0...@num_pixels).step(pixel_step) do |i|
-          r = g = b = 0
-          a = 255
+        blocks = [Facter.processorcount.to_i, @num_pixels].min
+        blockN = (@num_pixels / blocks).floor
+        lastBlockN = blockN + (@num_pixels % blocks) * 4
 
-          @channels_info.each_with_index do |chan, index|
-            next if channels == 3 && chan[:id] == -1
-            val = @channel_data[i + (@channel_length * index)]
+        PSD.logger.debug "Beginning RGB processing with #{blocks} threads"
 
-            case chan[:id]
-            when -1 then  a = val
-            when 0 then   r = val
-            when 1 then   g = val
-            when 2 then   b = val
+        (0...blocks).each do |b|
+          start = b * blockN
+          finish = start + (b == (blocks - 1) ? lastBlockN : blockN)
+
+          threads << Thread.new(start, finish) do |tstart, tfinish|
+            PSD.logger.debug "Thread #{b} processing #{tstart} - #{tfinish}"
+            (tstart...tfinish).step(pixel_step) do |i|
+              r = g = b = 0
+              a = 255
+
+              @channels_info.each_with_index do |chan, index|
+                next if channels == 3 && chan[:id] == -1
+                val = @channel_data[i + (@channel_length * index)]
+
+                case chan[:id]
+                when -1 then  a = val
+                when 0 then   r = val
+                when 1 then   g = val
+                when 2 then   b = val
+                end
+              end
+
+              mutex.synchronize do
+                @pixel_data[i*4]    = r
+                @pixel_data[i*4+1]  = g
+                @pixel_data[i*4+2]  = b
+                @pixel_data[i*4+3]  = a
+              end
             end
           end
-
-          @pixel_data.push r, g, b, a
         end
+
+        threads.each { |t| t.join }
       end
     end
   end
