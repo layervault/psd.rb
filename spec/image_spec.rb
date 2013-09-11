@@ -46,7 +46,27 @@ describe 'Image Exporting' do
       @psd.options[:parse_layer_images] = true
       @psd.parse!
 
-      # expect(@psd.tree.children.first.image).to be_an_instance_of(PSD::ChannelImage)
+      image = @psd.tree.children.first.image
+      expect(image).to be_an_instance_of(PSD::ChannelImage)
+      expect(image.width).to eq(1)
+      expect(image.height).to eq(1)
+
+      expect(image.pixel_data).to eq([0, 100, 200, 255])
+    end
+
+    describe "as PNG" do
+      it "should produce a valid PNG object" do
+        @psd.options[:parse_layer_images] = true
+        @psd.parse!
+
+        png = @psd.tree.children.first.image.to_png
+        expect(png).to be_an_instance_of(ChunkyPNG::Image)
+        expect(png.width).to eq(1)
+        expect(png.height).to eq(1)
+        expect(
+          ChunkyPNG::Color.to_truecolor_alpha_bytes(png[0,0])
+        ).to eq([0, 100, 200, 255])
+      end
     end
   end
 end
