@@ -50,7 +50,7 @@ class PSD
 
       # Recursively get all descendant nodes, not including this node.
       def descendants
-        children + children.map(&:children).flatten
+        children.map(&:subtree).flatten
       end
 
       # Same as descendants, except it includes this node.
