@@ -26,12 +26,11 @@ class PSD
       @num_pixels *= 2 if depth == 16
 
       calculate_length
-      @channel_data = {} # Using a Hash over an NArray, because NArray has problems w/ Ruby 2.0. Hashes are faster than Arrays
+      @channel_data = []
+      @pixel_data = []
 
       @start_pos = @file.tell
       @end_pos = @start_pos + @length
-
-      @pixel_data = []
 
       PSD.logger.debug "Image: #{width}x#{height}, length = #{@length}, mode = #{@header.mode_name}, position = #{@start_pos}"
 
