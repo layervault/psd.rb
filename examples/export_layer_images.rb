@@ -15,4 +15,5 @@ psd.tree.descendant_layers.each do |layer|
   layer.image.save_as_png "output/#{layer.path}.png"
 end
 
+puts Benchmark::CAPTION
 puts results.to_s

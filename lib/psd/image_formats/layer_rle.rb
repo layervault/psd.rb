@@ -14,8 +14,10 @@ class PSD
       end
 
       def parse_channel_data!
+        @line_index = 0
+
         PSD.logger.debug "Parsing layer RLE channel ##{@ch_info[:id]}: position = #{@chan_pos}"
-        @chan_pos = decode_rle_channel(@chan_pos, 0)
+        decode_rle_channel
       end
     end
   end
