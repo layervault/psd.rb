@@ -7,20 +7,18 @@ class PSD::Image
       # Load the image pixels into a PNG file and return a reference to the
       # data.
       def to_png
-        @png ||= (
-          PSD.logger.debug "Beginning PNG export"
-          png = ChunkyPNG::Image.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
+        PSD.logger.debug "Beginning PNG export"
+        png = ChunkyPNG::Image.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
 
-          i = 0
-          height.times do |y|
-            width.times do |x|
-              png[x,y] = @pixel_data[i]
-              i += 1
-            end
+        i = 0
+        height.times do |y|
+          width.times do |x|
+            png[x,y] = @pixel_data[i]
+            i += 1
           end
+        end
 
-          png
-        )
+        png
       end
       alias :export :to_png
 

@@ -30,8 +30,6 @@ describe 'Image Exporting' do
       it "should produce a valid PNG object" do
         expect(@psd.image.to_png).to be_an_instance_of(ChunkyPNG::Image)
 
-        # Ensure it's cached
-        expect(@psd.image.to_png).to be @psd.image.to_png
         expect(@psd.image.to_png.width).to eq(1)
         expect(@psd.image.to_png.height).to eq(1)
         expect(

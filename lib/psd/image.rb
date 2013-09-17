@@ -103,6 +103,8 @@ class PSD
       when 3 then combine_rgb_channel
       when 4 then combine_cmyk_channel
       end
+
+      @channel_data = nil
     end
 
     def pixel_step
