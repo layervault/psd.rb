@@ -12,7 +12,6 @@ class PSD
           a = 255
 
           @channels_info.each_with_index do |chan, index|
-            next if channels == 3 && chan[:id] == -1
             val = @channel_data[i + (@channel_length * index)]
 
             case chan[:id]
