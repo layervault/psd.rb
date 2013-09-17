@@ -66,7 +66,7 @@ class PSD
       end
 
       if @channel_data.length != @length
-        PSD.logger.error "#{channel_data.length} read; expected #{@length}"
+        PSD.logger.error "#{@channel_data.length} read; expected #{@length}"
       end
 
       process_image_data
