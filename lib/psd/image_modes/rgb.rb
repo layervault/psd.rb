@@ -23,7 +23,7 @@ class PSD
             end
           end
 
-          @pixel_data.push r, g, b, a
+          @pixel_data.push ChunkyPNG::Color.rgba(r, g, b, a)
         end
       end
     end

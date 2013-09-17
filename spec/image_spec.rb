@@ -16,14 +16,14 @@ describe 'Image Exporting' do
       expect(@psd.image).to_not be_nil
       expect(@psd.image.width).to eq(1)
       expect(@psd.image.height).to eq(1)
-      expect(@psd.image.pixel_data).to eq([0, 100, 200, 255])
+      expect(@psd.image.pixel_data).to eq([ChunkyPNG::Color.rgba(0, 100, 200, 255)])
     end
 
     it "should be able to skip to the image" do
       expect(@psd).to_not be_parsed
       expect(@psd.image.width).to eq(1)
       expect(@psd.image.height).to eq(1)
-      expect(@psd.image.pixel_data).to eq([0, 100, 200, 255])
+      expect(@psd.image.pixel_data).to eq([ChunkyPNG::Color.rgba(0, 100, 200, 255)])
     end
 
     describe "as PNG" do
@@ -51,7 +51,7 @@ describe 'Image Exporting' do
       expect(image.width).to eq(1)
       expect(image.height).to eq(1)
 
-      expect(image.pixel_data).to eq([0, 100, 200, 255])
+      expect(image.pixel_data).to eq([ChunkyPNG::Color.rgba(0, 100, 200, 255)])
     end
 
     describe "as PNG" do
