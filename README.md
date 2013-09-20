@@ -94,7 +94,7 @@ psd.tree.descendant_layers.first.width
 PSD files also store various pieces of information in "layer info" blocks. Which blocks a layer has varies from layer-to-layer, but to access them you can do:
 
 ``` ruby
-psd.tree.descendant_layers.first.type.font
+psd.tree.descendant_layers.first.text[:font]
 
 # Returns
 {:name=>"HelveticaNeue-Light",
