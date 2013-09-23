@@ -21,7 +21,7 @@ class PSD
 
           rgb = PSD::Color.cmyk_to_rgb(255 - c, 255 - m, 255 - y, 255 - k)
 
-          @pixel_data.push ChunkyPNG::rgba(*rgb.values, a)
+          @pixel_data.push ChunkyPNG::Color.rgba(*rgb.values, a)
         end
       end
     end
