@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "rake"
   gem.add_dependency "bindata"
   gem.add_dependency 'psd-enginedata', '~> 1.0'
 

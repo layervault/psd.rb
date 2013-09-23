@@ -16,6 +16,14 @@ A general purpose Photoshop file parser written in Ruby. It allows you to work w
 * Vector mask data
 * Flattened image data
 
+PSD.rb is tested against:
+
+* MRI 1.9.3 & 2.0.0
+* JRuby (1.9.3 mode)
+* Rubinius (1.9.3 mode)
+
+If you use MRI Ruby and are interested in significantly speeding up PSD.rb with native code, check out [psd_native](https://github.com/layervault/psd_native).
+
 ## Installation
 
 Add this line to your application's Gemfile:
