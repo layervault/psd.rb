@@ -30,6 +30,8 @@ class PSD
     def parse_layer_comp_setting
       @file.seek 4, IO::SEEK_CUR # Version
       @data[:layer_comp] = Descriptor.new(@file).parse
+
+      # pp @data[:layer_comp]
     end
   end
 end

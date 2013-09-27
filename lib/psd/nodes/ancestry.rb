@@ -27,7 +27,7 @@ class PSD
       end
 
       # Inverse of has_children?
-      def is_childless?
+      def childless?
         !has_children?
       end
 
@@ -44,13 +44,13 @@ class PSD
       end
 
       # Is this node the only descendant of its parent?
-      def is_only_child?
+      def only_child?
         siblings.length == 1
       end
 
       # Recursively get all descendant nodes, not including this node.
       def descendants
-        children + children.map(&:children).flatten
+        children.map(&:subtree).flatten
       end
 
       # Same as descendants, except it includes this node.
@@ -61,6 +61,10 @@ class PSD
       # Depth from the root node. Root depth is 0.
       def depth
         return ancestors.length + 1
+      end
+
+      def path
+        (ancestors.map(&:name) + [name]).join('/')
       end
 
       def method_missing(method, *args, &block)

@@ -97,8 +97,9 @@ class PSD
       self.send(val)
     end
 
-    def parse_channel_image!(header) #:nodoc:
-      # @image = ChannelImage.new(@file, header, self)
+    def parse_channel_image!(header, parse)
+      @image = ChannelImage.new(@file, header, self)
+      parse ? @image.parse : @image.skip
     end
 
     # Does this layer represent the start of a folder section?

@@ -28,7 +28,8 @@ class PSD
     parse_layer_images: false
   }
 
-  attr_reader :file
+  attr_reader :file, :opts
+  alias :options :opts
 
   # Opens the named file, parses it, and makes it available for reading. Then, closes it after you're finished.
   # @param filename [String]  the name of the file to open
@@ -112,7 +113,7 @@ class PSD
     ensure_header
     ensure_resources
 
-    @layer_mask ||= LayerMask.new(@file, @header).parse
+    @layer_mask ||= LayerMask.new(@file, @header, @opts).parse
   end
 
   # Get the full size flattened preview Image.
@@ -164,7 +165,7 @@ class PSD
   def ensure_layer_mask
     return unless @layer_mask.nil?
 
-    @layer_mask = LayerMask.new(@file, @header)
+    @layer_mask = LayerMask.new(@file, @header, @opts)
     @layer_mask.skip
   end
 end

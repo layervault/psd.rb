@@ -1,4 +1,4 @@
-require 'oily_png'
+require RUBY_ENGINE =~ /jruby/ ? 'chunky_png' : 'oily_png'
 
 class PSD::Image
   module Export
@@ -13,14 +13,8 @@ class PSD::Image
         i = 0
         height.times do |y|
           width.times do |x|
-            png[x,y] = ChunkyPNG::Color.rgba(
-              @pixel_data[i],
-              @pixel_data[i+1],
-              @pixel_data[i+2],
-              @pixel_data[i+3]
-            )
-
-            i += 4
+            png[x,y] = @pixel_data[i]
+            i += 1
           end
         end
 

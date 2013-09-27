@@ -48,13 +48,23 @@ class PSD
       def filter_for_comp!(id, node)
         node.children.select! do |c|
           puts c.name
-          c.adjustments[:metadata].data[:layer_comp]['layerSettings'].select { |s|
-            next(false) unless s.has_key?('compList')
-            # next(false) unless s.has_key?('enab') && s['enab'] == true
+          # c.adjustments[:metadata].data[:layer_comp]['layerSettings'].select { |s|
+          #   next(false) if s.has_key?('layerSpecific')
+          #   # next(false) unless s.has_key?('enab') && s['enab'] == true
 
-            puts s.inspect
-            s['compList'].include?(id)
-          }.size > 0
+          #   puts s['compList'].inspect
+          #   s['compList'].include?(id)
+          # }.size > 0
+
+          pp c.adjustments.keys
+          # puts c.adjustments[:metadata].data[:layer_comp]['layerSettings'][0]['compList'].inspect
+          # puts puts c.adjustments[:metadata].data[:layer_comp]['layerSettings'][0]['enab'].inspect
+          # puts c.adjustments[:metadata].data[:layer_comp]['layerSettings'][1]['compList'].inspect
+          # puts puts c.adjustments[:metadata].data[:layer_comp]['layerSettings'][1]['enab'].inspect
+          # puts c.adjustments[:metadata].data[:layer_comp]['layerSettings'][2]['compList'].inspect
+          # puts puts c.adjustments[:metadata].data[:layer_comp]['layerSettings'][2]['enab'].inspect
+
+          c.adjustments[:metadata].data[:layer_comp]['layerSettings'][1]['compList'].include?(id)
         end
 
         node.children.each do |c|

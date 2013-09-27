@@ -7,9 +7,10 @@ class PSD
     attr_reader :layers, :global_mask
 
     # Store a reference to the file and the header and initialize the defaults.
-    def initialize(file, header)
+    def initialize(file, header, options)
       @file = file
       @header = header
+      @options = options
 
       @layers = []
       @merged_alpha = false
@@ -55,8 +56,7 @@ class PSD
 
         layers.each do |layer|
           @file.seek 8, IO::SEEK_CUR and next if layer.folder? || layer.folder_end?
-
-          layer.parse_channel_image!(@header)
+          layer.parse_channel_image!(@header, @options[:parse_layer_images])
         end
       end
 
@@ -107,7 +107,7 @@ class PSD
 
     def parse_global_mask
       length = @file.read_int
-      return if length == 0
+      return if length <= 0
 
       mask_end = @file.tell + length
       PSD.logger.debug "Global Mask: length = #{length}"
@@ -115,7 +115,7 @@ class PSD
       @global_mask = {}
       @global_mask[:overlay_color_space] = @file.read_short
       @global_mask[:color_components] = 4.times.map { |i| @file.read_short >> 8 }
-      @global_mask[:opacity] = @file.read_short
+      @global_mask[:opacity] = @file.read_short / 16.0
 
       # 0 = color selected, 1 = color protected, 128 = use value per layer
       @global_mask[:kind] = @file.read(1).bytes.to_a[0]

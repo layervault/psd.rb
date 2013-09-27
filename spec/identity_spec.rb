@@ -9,7 +9,7 @@ describe "Identity exports" do
     tmpfile = Tempfile.new("simplest_export.psd")
     psd.export tmpfile.path
 
-    Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))
+    expect(Digest::MD5.hexdigest(tmpfile.read)).to eq(Digest::MD5.hexdigest(File.read(filepath)))
   end
 
   it "should export a file with a layer" do
@@ -19,7 +19,7 @@ describe "Identity exports" do
     tmpfile = Tempfile.new("one_layer_export.psd")
     psd.export tmpfile.path
 
-    Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))
+    expect(Digest::MD5.hexdigest(tmpfile.read)).to eq(Digest::MD5.hexdigest(File.read(filepath)))
   end
 
   it "should export a PSD with vector paths" do
@@ -29,6 +29,6 @@ describe "Identity exports" do
     tmpfile = Tempfile.new("path_export.psd")
     psd.export tmpfile.path
 
-    Digest::MD5.hexdigest(tmpfile.read).should == Digest::MD5.hexdigest(File.read(filepath))
+    expect(Digest::MD5.hexdigest(tmpfile.read)).to eq(Digest::MD5.hexdigest(File.read(filepath)))
   end
 end

@@ -1,11 +1,11 @@
 class PSD
   # Parses the full preview image at the end of the PSD document.
   class Image
-    include Format::RAW
-    include Format::RLE
-    include Mode::CMYK
-    include Mode::Greyscale
-    include Mode::RGB
+    include ImageFormat::RAW
+    include ImageFormat::RLE
+    include ImageMode::CMYK
+    include ImageMode::Greyscale
+    include ImageMode::RGB
     include Export::PNG
 
     # All of the possible compression formats Photoshop uses.
@@ -14,14 +14,6 @@ class PSD
       'RLE',
       'ZIP',
       'ZIPPrediction'
-    ]
-
-    # Each color channel is represented by a unique ID
-    CHANNEL_INFO = [
-      {id: 0},
-      {id: 1},
-      {id: 2},
-      {id: -1}
     ]
 
     # Store a reference to the file and the header. We also do a few simple calculations
@@ -34,14 +26,22 @@ class PSD
       @num_pixels *= 2 if depth == 16
 
       calculate_length
-      @channel_data = {} # Using a Hash over an NArray, because NArray has problems w/ Ruby 2.0. Hashes are faster than Arrays
+      @channel_data = []
+      @pixel_data = []
 
       @start_pos = @file.tell
       @end_pos = @start_pos + @length
 
-      @pixel_data = []
-
       PSD.logger.debug "Image: #{width}x#{height}, length = #{@length}, mode = #{@header.mode_name}, position = #{@start_pos}"
+
+      # Each color channel is represented by a unique ID
+      @channels_info = [
+        {id: 0},
+        {id: 1},
+        {id: 2}
+      ]
+
+      @channels_info << {id: -1} if channels == 4
     end
 
     # Begins parsing the image by first figuring out the compression format used, and then
@@ -103,6 +103,8 @@ class PSD
       when 3 then combine_rgb_channel
       when 4 then combine_cmyk_channel
       end
+
+      @channel_data = nil
     end
 
     def pixel_step

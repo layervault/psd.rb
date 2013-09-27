@@ -22,7 +22,7 @@ class PSD
         end
 
         def to_a
-          @data['list'].map { |c| {id: c['compID'], name: c['Nm  ']} }
+          @data['list'].map { |c| {id: c['compID'], name: c['Nm  '], captured_info: c['capturedInfo']} }
         end
       end
     end

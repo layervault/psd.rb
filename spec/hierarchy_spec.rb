@@ -9,8 +9,8 @@ describe "Hierarchy" do
     @psd.parse!
     
     tree = @psd.tree.to_hash
-    tree.should include :children
-    tree[:children].length.should == 3
+    expect(tree).to include :children
+    expect(tree[:children].length).to eq(3)
   end
 
   describe "Ancestry" do
@@ -20,66 +20,71 @@ describe "Hierarchy" do
     end
 
     it "should provide tree traversal methods" do
-      @tree.respond_to?(:root).should be_true
-      @tree.respond_to?(:siblings).should be_true
-      @tree.respond_to?(:descendants).should be_true
-      @tree.respond_to?(:subtree).should be_true
+      expect(@tree).to respond_to(:root)
+      expect(@tree).to respond_to(:siblings)
+      expect(@tree).to respond_to(:descendants)
+      expect(@tree).to respond_to(:subtree)
     end
 
     it "should properly identify the root node" do
-      @tree.root?.should be_true
-      @tree.root.should == @tree
-      @tree.children.last.root.should == @tree
+      expect(@tree.root?).to be_true
+      expect(@tree.root).to be @tree
+      expect(@tree.children.last.root).to be @tree
     end
 
     it "should retrieve all descendants of a node" do
-      @tree.descendants.size.should == 12
-      @tree.descendant_layers.size.should == 9
-      @tree.descendant_groups.size.should == 3
-      @tree.descendants.first.should_not == @tree
+      expect(@tree.descendants.size).to eq(12)
+      expect(@tree.descendant_layers.size).to eq(9)
+      expect(@tree.descendant_groups.size).to eq(3)
+      expect(@tree.descendants.first).not_to be @tree
     end
 
     it "should retreive the entire subtree of a node" do
-      @tree.subtree.size.should == 13
-      @tree.subtree_layers.size.should == 9
-      @tree.subtree_groups.size.should == 3
-      @tree.subtree.first.should == @tree
+      expect(@tree.subtree.size).to eq(13)
+      expect(@tree.subtree_layers.size).to eq(9)
+      expect(@tree.subtree_groups.size).to eq(3)
+      expect(@tree.subtree.first).to be @tree
     end
 
     it "should properly identify the existence of children" do
-      @tree.has_children?.should be_true
-      @tree.is_childless?.should be_false
-      @tree.descendant_layers.first.has_children?.should be_false
-      @tree.descendant_layers.first.is_childless?.should be_true
+      expect(@tree).to have_children
+      expect(@tree).to_not be_childless
+      expect(@tree.descendant_layers.first).to_not have_children
+      expect(@tree.descendant_layers.first).to be_childless
     end
 
     it "should retrieve all siblings of a node" do
-      @tree.children.first.siblings.should == @tree.children
-      @tree.children.first.siblings.should include @tree.children.first
-      @tree.children.first.has_siblings?.should be_true
-      @tree.children.first.is_only_child?.should be_false
+      expect(@tree.children.first.siblings).to be @tree.children
+      expect(@tree.children.first.siblings).to include @tree.children.first
+      expect(@tree.children.first).to have_siblings
+      expect(@tree.children.first).to_not be_only_child
     end
 
     it "should properly calculate node depth" do
-      @tree.depth.should == 0
-      @tree.descendant_layers.last.depth.should == 2
-      @tree.children.first.depth.should == 1
+      expect(@tree.depth).to eq(0)
+      expect(@tree.descendant_layers.last.depth).to eq(2)
+      expect(@tree.children.first.depth).to eq(1)
+    end
+
+    it "should be able to generate a path to a node" do
+      node = @tree.children_at_path('Version A/Matte').first
+      expect(node.path).to eq('Version A/Matte')
     end
 
     describe "Searching" do
       it "should find a node given a path" do
-        @tree.children_at_path('Version A/Matte').is_a?(Array).should be_true
-        @tree.children_at_path('Version A/Matte').size.should == 1
-        @tree.children_at_path('Version A/Matte').first.is_a?(PSD::Node::Layer).should be_true
+        expect(@tree.children_at_path('Version A/Matte')).to be_an_instance_of(Array)
+        expect(@tree.children_at_path('Version A/Matte').size).to eq(1)
+        expect(@tree.children_at_path('Version A/Matte').first).to be_an_instance_of(PSD::Node::Layer)
       end
 
       it "should ignore leading slashes" do
-        @tree.children_at_path('/Version A/Matte').size.should == 1
+        expect(@tree.children_at_path('/Version A/Matte').size).to eq(1)
       end
 
       it "should return an empty array when a node is not found" do
-        @tree.children_at_path('LOLWUTOMGBBQSAUCE').is_a?(Array).should be_true
-        @tree.children_at_path('LOLWUTOMGBBQSAUCE').size.should == 0
+        expect(@tree.children_at_path('NOPE')).to be_an_instance_of(Array)
+        expect(@tree.children_at_path('NOPE').size).to eq(0)
       end
 
       it "should throw an error if filtering by a non-existant layer comp" do

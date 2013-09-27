@@ -1,6 +1,6 @@
 # PSD.rb
 
-[![Circle CI](https://circleci.com/gh/layervault/psd.rb.png?circle-token=ad8a75fdd86f595e0926a963179a3a621d564c6e)](https://circleci.com/gh/layervault/psd.rb)
+[![Travis CI](https://travis-ci.org/layervault/psd.rb.png)](https://travis-ci.org/layervault/psd.rb)
 
 A general purpose Photoshop file parser written in Ruby. It allows you to work with a Photoshop document in a manageable tree structure and find out important data such as:
 
@@ -15,6 +15,14 @@ A general purpose Photoshop file parser written in Ruby. It allows you to work w
 * Color mode and bit-depth
 * Vector mask data
 * Flattened image data
+
+PSD.rb is tested against:
+
+* MRI 1.9.3 & 2.0.0
+* JRuby (1.9.3 mode)
+* Rubinius (1.9.3 mode)
+
+If you use MRI Ruby and are interested in significantly speeding up PSD.rb with native code, check out [psd_native](https://github.com/layervault/psd_native).
 
 ## Installation
 
@@ -94,7 +102,7 @@ psd.tree.descendant_layers.first.width
 PSD files also store various pieces of information in "layer info" blocks. Which blocks a layer has varies from layer-to-layer, but to access them you can do:
 
 ``` ruby
-psd.tree.descendant_layers.first.type.font
+psd.tree.descendant_layers.first.text[:font]
 
 # Returns
 {:name=>"HelveticaNeue-Light",
@@ -184,7 +192,5 @@ PSD.debug = true
 
 There are a few features that are currently missing from PSD.rb.
 
-* Global layer mask
-* Individual layer image exporting
 * More image modes + depths for image exporting
 * A few layer info blocks
