@@ -94,7 +94,6 @@ describe "Hierarchy" do
       it "should correctly filter and produce a new tree when filtering by layer comp" do
         tree = @tree.filter_by_comp('Version A')
         expect(tree).to be_an_instance_of(PSD::Node::Root)
-        pp tree.to_hash
         expect(tree.children.size).to eq(1)
       end
     end

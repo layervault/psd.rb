@@ -25,7 +25,7 @@ class PSD
         parser.parse!
         @data[:engine_data] = parser.result
       rescue Exception => e
-        puts e.message
+        PSD.logger.error e.message
       end
 
       warpVersion = @file.read_short
