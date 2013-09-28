@@ -97,6 +97,8 @@ If you know the path to a group or layer within the tree, you can search by that
 psd.tree.children_at_path("Version A/Matte")
 ```
 
+**Layer Comps**
+
 You can also filter nodes based on a layer comp. To generate a new tree consisting only of the layers that are enabled in a certain layer comp:
 
 ``` ruby
