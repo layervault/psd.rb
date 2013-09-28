@@ -95,6 +95,7 @@ describe "Hierarchy" do
         tree = @tree.filter_by_comp('Version A')
         expect(tree).to be_an_instance_of(PSD::Node::Root)
         expect(tree.children.size).to eq(1)
+        expect(tree.children[0].name).to eq("Version A")
       end
     end
   end
