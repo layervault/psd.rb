@@ -83,7 +83,7 @@ class PSD
 
     # Reads a boolean value.
     def read_boolean
-      read(1).bytes[0] != 0
+      read(1).bytes.to_a[0] != 0
     end
 
     # Reads a 32-bit color space value.
