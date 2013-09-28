@@ -15,6 +15,7 @@ A general purpose Photoshop file parser written in Ruby. It allows you to work w
 * Color mode and bit-depth
 * Vector mask data
 * Flattened image data
+* Layer comps
 
 PSD.rb is tested against:
 
@@ -89,6 +90,25 @@ For any of the traversal methods, you can also retrieve folder or layer nodes on
 ``` ruby
 psd.tree.descendant_layers
 ```
+
+If you know the path to a group or layer within the tree, you can search by that path. Note that this always returns an Array because layer/group names do not have to be unique.
+
+``` ruby
+psd.tree.children_at_path("Version A/Matte")
+```
+
+You can also filter nodes based on a layer comp. To generate a new tree consisting only of the layers that are enabled in a certain layer comp:
+
+``` ruby
+# Get information about all the available layer comps
+puts psd.layer_comps
+
+# Can filter by name or by ID (obtained from above)
+tree = psd.tree.filter_by_comp('Version A')
+puts tree.children.map(&:name)
+```
+
+This returns a new node tree and does not alter the original so you won't lose any data.
 
 **Accessing Layer Data**
 
