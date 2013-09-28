@@ -97,6 +97,12 @@ describe "Hierarchy" do
         expect(tree.children.size).to eq(1)
         expect(tree.children[0].name).to eq("Version A")
       end
+
+      it "should return a new tree when filtering by layer comps" do
+        tree = @tree.filter_by_comp('Version A')
+        expect(tree).to_not eq(@tree)
+        expect(@tree.children.size).to eq(3)
+      end
     end
   end
 end
