@@ -21,13 +21,13 @@ class PSD::Node
 
     # Calculated height of this folder.
     def rows
-      @right - @left
+      @bottom - @top
     end
     alias :height :rows
 
     # Calculated width of this folder.
     def cols
-      @bottom - @top
+      @right - @left
     end
     alias :width :cols
 
