@@ -14,6 +14,8 @@ class PSD
 
       def build_pixel_data(png)
         children.reverse.each do |c|
+          next unless c.visible?
+          
           if c.group?
             c.build_pixel_data(png)
           else

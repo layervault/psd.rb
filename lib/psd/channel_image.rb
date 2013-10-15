@@ -7,7 +7,8 @@ class PSD
     include ImageFormat::LayerRLE
     include ImageFormat::LayerRAW
 
-    attr_reader :width, :height
+    attr_reader :width, :height, :has_mask
+    alias :has_mask? :has_mask
 
     def initialize(file, header, layer)
       @layer = layer
@@ -18,6 +19,7 @@ class PSD
       super(file, header)
 
       @channels_info = @layer.channels_info
+      @has_mask = @channels_info.map { |c| c[:id] }.include?(-2)
       @opacity = @layer.opacity / 255.0
     end
 
