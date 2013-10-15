@@ -1,6 +1,6 @@
 # PSD.rb
 
-[![Travis CI](https://travis-ci.org/layervault/psd.rb.png)](https://travis-ci.org/layervault/psd.rb)
+[![Travis CI](https://travis-ci.org/layervault/psd.rb.png?branch=master)](https://travis-ci.org/layervault/psd.rb)
 
 A general purpose Photoshop file parser written in Ruby. It allows you to work with a Photoshop document in a manageable tree structure and find out important data such as:
 
