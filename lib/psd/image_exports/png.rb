@@ -8,7 +8,7 @@ class PSD::Image
       # data.
       def to_png
         PSD.logger.debug "Beginning PNG export"
-        png = ChunkyPNG::Image.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
+        png = ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
 
         i = 0
         height.times do |y|

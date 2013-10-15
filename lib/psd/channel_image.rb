@@ -18,6 +18,7 @@ class PSD
       super(file, header)
 
       @channels_info = @layer.channels_info
+      @opacity = @layer.opacity / 255.0
     end
 
     def skip

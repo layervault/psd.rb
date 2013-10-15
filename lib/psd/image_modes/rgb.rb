@@ -15,7 +15,7 @@ class PSD
             val = @channel_data[i + (@channel_length * index)]
 
             case chan[:id]
-            when -1 then  a = val
+            when -1 then  a = (val * opacity).to_i
             when 0 then   r = val
             when 1 then   g = val
             when 2 then   b = val

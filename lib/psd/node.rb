@@ -7,6 +7,7 @@ class PSD
   class Node
     include Ancestry
     include Search
+    include BuildPreview
 
     # Default properties that all nodes contain
     PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]

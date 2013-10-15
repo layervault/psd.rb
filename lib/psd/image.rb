@@ -8,6 +8,8 @@ class PSD
     include ImageMode::RGB
     include Export::PNG
 
+    attr_reader :pixel_data, :opacity
+
     # All of the possible compression formats Photoshop uses.
     COMPRESSIONS = [
       'Raw',
@@ -28,6 +30,7 @@ class PSD
       calculate_length
       @channel_data = []
       @pixel_data = []
+      @opacity = 1.0
 
       @start_pos = @file.tell
       @end_pos = @start_pos + @length
@@ -109,6 +112,10 @@ class PSD
 
     def pixel_step
       depth == 8 ? 1 : 2
+    end
+
+    def pixel(i)
+      @pixel_data[i]
     end
   end
 end
