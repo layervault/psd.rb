@@ -70,7 +70,6 @@ class PSD
       parse_extra_data
 
       PSD.logger.debug "Layer name = #{name}"
-      PSD.logger.debug "Layer type = #{@adjustments.has_key?(:section_divider) ? section_divider.layer_type : "Unknown"}"
 
       @file.seek @layer_end # Skip over any filler zeros
 
@@ -105,14 +104,20 @@ class PSD
 
     # Does this layer represent the start of a folder section?
     def folder?
-      return false unless @adjustments.has_key?(:section_divider)
-      @adjustments[:section_divider].is_folder
+      if @adjustments.has_key?(:section_divider)
+        @adjustments[:section_divider].is_folder
+      else
+        name == "<Layer group>"
+      end
     end
 
     # Does this layer represent the end of a folder section?
     def folder_end?
-      return false unless @adjustments.has_key?(:section_divider)
-      @adjustments[:section_divider].is_hidden
+      if @adjustments.has_key?(:section_divider)
+        @adjustments[:section_divider].is_hidden
+      else
+        name == "</Layer group>"
+      end
     end
 
     # Is this layer visible?
