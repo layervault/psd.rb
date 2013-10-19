@@ -70,6 +70,7 @@ class PSD
       parse_extra_data
 
       PSD.logger.debug "Layer name = #{name}"
+      PSD.logger.debug "Layer type = #{@adjustments.has_key?(:section_divider) ? section_divider.layer_type : "Unknown"}"
 
       @file.seek @layer_end # Skip over any filler zeros
 
@@ -337,7 +338,10 @@ class PSD
           @file.seek pos + length
         end
 
-        @file.seek pos + length if @file.tell != (pos + length)
+        if @file.tell != (pos + length)
+          PSD.logger.warn "Layer info key #{key} ended at #{@file.tell}, expected #{pos + length}"
+          @file.seek pos + length
+        end
       end
 
       @extra_data_end = @file.tell
