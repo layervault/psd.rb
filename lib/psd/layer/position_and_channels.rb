@@ -30,6 +30,18 @@ class PSD
 
         end_section(:info)
       end
+
+      def export_position_and_channels(outfile)
+        [@top, @left, @bottom, @right].each { |val| outfile.write_int(val) }
+        outfile.write_short(@channels)
+
+        @channels_info.each do |channel_info|
+          outfile.write_short channel_info[:id]
+          outfile.write_int channel_info[:length]
+        end
+
+        @file.seek end_of_section(:info)
+      end
     end
   end
 end

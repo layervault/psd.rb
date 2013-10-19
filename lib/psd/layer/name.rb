@@ -24,6 +24,10 @@ class PSD
 
         @legacy_name_end = @file.tell
       end
+
+      def export_legacy_layer_name(outfile)
+        outfile.write @file.read(@legacy_name_end - @legacy_name_start)
+      end
     end
   end
 end

@@ -10,6 +10,10 @@ class PSD
         @mask = PSD::Mask.read(@file)
         @mask_end = @file.tell
       end
+
+      def export_mask_data(outfile)
+        outfile.write @file.read(@mask_end - @mask_begin + 4)
+      end
     end
   end
 end

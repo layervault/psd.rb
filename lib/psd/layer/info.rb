@@ -71,6 +71,17 @@ class PSD
 
         @extra_data_end = @file.tell
       end
+
+      def export_extra_data(outfile)
+        outfile.write @file.read(@extra_data_end - @extra_data_begin)
+        if @path_components && !@path_components.empty?
+          outfile.seek @vector_mask_begin
+          @file.seek @vector_mask_begin
+
+          write_vector_mask(outfile)
+          @file.seek outfile.tell
+        end
+      end
     end
   end
 end
