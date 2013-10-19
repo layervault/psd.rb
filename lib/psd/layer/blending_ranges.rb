@@ -1,6 +1,8 @@
 class PSD
   class Layer
     module BlendingRanges
+      attr_reader :blending_ranges
+      
       private
       
       def parse_blending_ranges

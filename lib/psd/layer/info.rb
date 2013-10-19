@@ -16,12 +16,15 @@ class PSD
         placed_layer: PlacedLayer,
         vector_mask: VectorMask
       }
-      
+
+      attr_reader :adjustments
+      alias :info :adjustments
+
       private
 
       # This section is a bit tricky to parse because it represents all of the
       # extra data that describes this layer.
-      def parse_extra_data
+      def parse_layer_info
         @extra_data_begin = @file.tell
 
         while @file.tell < @layer_end

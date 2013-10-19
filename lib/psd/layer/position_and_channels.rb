@@ -1,9 +1,15 @@
 class PSD
   class Layer
     module PositionAndChannels
+      attr_reader :top, :left, :bottom, :right, :cols, :rows
+      attr_reader :channels, :channels_info
+
+      alias :width :cols
+      alias :height :rows
+
       private
-      
-      def parse_info
+
+      def parse_position_and_channels
         start_section(:info)
 
         @top = @file.read_int

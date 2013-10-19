@@ -1,6 +1,8 @@
 class PSD
   class Layer
     module Mask
+      attr_reader :mask
+      
       private
 
       def parse_mask_data

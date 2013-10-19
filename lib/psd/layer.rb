@@ -14,21 +14,13 @@ class PSD
     include PathComponents
     include PositionAndChannels
 
-    attr_reader :id, :mask, :blending_ranges, :adjustments, :channels_info
-    attr_reader :blend_mode, :layer_type, :blending_mode, :opacity, :fill_opacity
-    attr_reader :channels, :image
-
-    attr_accessor :group_layer
-    attr_accessor :top, :left, :bottom, :right, :rows, :cols, :ref_x, :ref_y, :node, :file
-
-    alias :info :adjustments
-    alias :width :cols
-    alias :height :rows
+    attr_reader :id
+    attr_accessor :group_layer, :node, :file
 
     # Initializes all of the defaults for the layer.
     def initialize(file)
       @file = file
-      @image = nil
+
       @mask = {}
       @blending_ranges = {}
       @adjustments = {}
@@ -36,10 +28,8 @@ class PSD
       @blend_mode = {}
       @group_layer = nil
 
-      @layer_type = 'normal'
       @blending_mode = 'normal'
       @opacity = 255
-      @fill_opacity = 255
 
       # Just used for tracking which layer adjustments we're parsing.
       # Not essential.
@@ -52,7 +42,7 @@ class PSD
 
       @id = index
 
-      parse_info
+      parse_position_and_channels
       parse_blend_modes
 
       extra_len = @file.read_int
@@ -61,7 +51,7 @@ class PSD
       parse_mask_data
       parse_blending_ranges
       parse_legacy_layer_name
-      parse_extra_data
+      parse_layer_info
 
       PSD.logger.debug "Layer name = #{name}"
 
