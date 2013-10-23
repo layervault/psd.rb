@@ -5,6 +5,8 @@ class PSD
       def folder?
         if info.has_key?(:section_divider)
           info[:section_divider].is_folder
+        elsif info.has_key?(:nested_section_divider)
+          info[:nested_section_divider].is_folder
         else
           name == "<Layer group>"
         end
@@ -14,6 +16,8 @@ class PSD
       def folder_end?
         if info.has_key?(:section_divider)
           info[:section_divider].is_hidden
+        elsif info.has_key?(:nested_section_divider)
+          info[:nested_section_divider].is_hidden
         else
           name == "</Layer group>"
         end

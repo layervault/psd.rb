@@ -14,7 +14,7 @@ class PSD
     include PathComponents
     include PositionAndChannels
 
-    attr_reader :id
+    attr_reader :id, :info_keys
     attr_accessor :group_layer, :node, :file
 
     # Initializes all of the defaults for the layer.

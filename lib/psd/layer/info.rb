@@ -10,6 +10,7 @@ class PSD
         object_effects: ObjectEffects,
         name: UnicodeName,
         section_divider: LayerSectionDivider,
+        nested_section_divider: NestedLayerDivider,
         reference_point: ReferencePoint,
         layer_id: LayerID,
         fill_opacity: FillOpacity,

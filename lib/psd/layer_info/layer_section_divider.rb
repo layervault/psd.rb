@@ -31,6 +31,8 @@ class PSD
       when 3 then @is_hidden = true
       end
 
+      PSD.logger.warn "Section divider is unexpected value: #{code}" if code > 4
+
       return self unless @length >= 12
 
       @file.seek 4, IO::SEEK_CUR # sig
