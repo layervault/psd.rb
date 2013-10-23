@@ -79,6 +79,7 @@ end
 To access the document as a tree structure, use `psd.tree` to get the root node. From there, you can traverse the tree using any of these methods:
 
 * `root`: get the root node from anywhere in the tree
+* `children`: get all immediate children of the node
 * `ancestors`: get all ancestors in the path of this node (excluding the root)
 * `siblings`: get all sibling tree nodes including the current one (e.g. all layers in a folder)
 * `descendants`: get all descendant nodes not including the current one
