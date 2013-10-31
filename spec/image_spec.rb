@@ -28,7 +28,7 @@ describe 'Image Exporting' do
 
     describe "as PNG" do
       it "should produce a valid PNG object" do
-        expect(@psd.image.to_png).to be_an_instance_of(ChunkyPNG::Image)
+        expect(@psd.image.to_png).to be_an_instance_of(ChunkyPNG::Canvas)
 
         expect(@psd.image.to_png.width).to eq(1)
         expect(@psd.image.to_png.height).to eq(1)
@@ -58,7 +58,7 @@ describe 'Image Exporting' do
         @psd.parse!
 
         png = @psd.tree.children.first.image.to_png
-        expect(png).to be_an_instance_of(ChunkyPNG::Image)
+        expect(png).to be_an_instance_of(ChunkyPNG::Canvas)
         expect(png.width).to eq(1)
         expect(png.height).to eq(1)
         expect(
