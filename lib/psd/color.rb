@@ -3,10 +3,12 @@ class PSD
   # document in the color space as defined by the user instead of a normalized
   # value of some kind. This means that we have to do all the conversion ourselves
   # for each color space.
-  class Color
+  module Color
+    extend self
+
       # This is a relic of libpsd that will likely go away in a future version. It
       # stored the entire color value in a 32-bit address space for speed.
-    def self.color_space_to_argb(color_space, color_component)
+    def color_space_to_argb(color_space, color_component)
       color = case color_space
       when 0
         rgb_to_color *color_component
@@ -26,7 +28,7 @@ class PSD
       color_to_argb(color)
     end
 
-    def self.color_to_argb(color)
+    def color_to_argb(color)
       [
         (color) >> 24,
         ((color) & 0x00FF0000) >> 16,
@@ -35,19 +37,19 @@ class PSD
       ]
     end
 
-    def self.rgb_to_color(*args)
+    def rgb_to_color(*args)
       argb_to_color(255, *args)
     end
 
-    def self.argb_to_color(a, r, g, b)
+    def argb_to_color(a, r, g, b)
       (a << 24) | (r << 16) | (g << 8) | b
     end
 
-    def self.hsb_to_color(*args)
+    def hsb_to_color(*args)
       ahsb_to_color(255, *args)
     end
 
-    def self.ahsb_to_color(alpha, hue, saturation, brightness)
+    def ahsb_to_color(alpha, hue, saturation, brightness)
       if saturation == 0.0
         b = g = r = (255 * brightness).to_i
       else
@@ -66,7 +68,7 @@ class PSD
       argb_to_color alpha, r, g, b
     end
 
-    def self.hue_to_color(hue, m1, m2)
+    def hue_to_color(hue, m1, m2)
       hue = (hue % 360).to_i
       if hue < 60
         v = m1 + (m2 - m1) * hue / 60
@@ -81,7 +83,7 @@ class PSD
       (v * 255).to_i
     end
 
-    def self.cmyk_to_color(c, m, y, k)
+    def cmyk_to_color(c, m, y, k)
       r = 1 - (c * (1 - k) + k) * 255
       g = 1 - (m * (1 - k) + k) * 255
       b = 1 - (y * (1 - k) + k) * 255
@@ -93,16 +95,16 @@ class PSD
       rgb_to_color r, g, b
     end
 
-    def self.lab_to_color(*args)
+    def lab_to_color(*args)
       alab_to_color(255, *args)
     end
 
-    def self.alab_to_color(alpha, l, a, b)
+    def alab_to_color(alpha, l, a, b)
       xyz = lab_to_xyz(l, a, b)
       axyz_to_color alpha, xyz[:x], xyz[:y], xyz[:z]
     end
 
-    def self.lab_to_xyz(l, a, b)
+    def lab_to_xyz(l, a, b)
       y = (l + 16) / 116
       x = y + (a / 500)
       z = y - (b / 200)
@@ -112,7 +114,7 @@ class PSD
       end
     end
 
-    def self.cmyk_to_rgb(c, m, y, k)
+    def cmyk_to_rgb(c, m, y, k)
       Hash[{
         r: (65535 - (c * (255 - k) + (k << 8))) >> 8,
         g: (65535 - (m * (255 - k) + (k << 8))) >> 8,

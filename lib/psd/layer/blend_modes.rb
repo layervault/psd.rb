@@ -1,7 +1,11 @@
 class PSD
   class Layer
     module BlendModes
-      attr_reader :blend_mode, :blending_mode, :opacity
+      attr_reader :blend_mode, :opacity
+
+      def blending_mode
+        @blending_mode || 'normal'
+      end
 
       private
       

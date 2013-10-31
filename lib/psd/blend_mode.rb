@@ -40,12 +40,12 @@ class PSD
 
     # Get the readable name for this blend mode.
     def mode
-      BLEND_MODES[blend_key.to_sym]
+      BLEND_MODES[blend_key.strip.to_sym]
     end
 
     # Set the blend mode with the readable name.
     def mode=(val)
-      blend_key = BLEND_MODES.invert[val.downcase]
+      blend_key = BLEND_MODES.invert[val.strip.downcase]
     end
 
     # Opacity is stored as an integer between 0-255. This converts the opacity

@@ -1,7 +1,7 @@
 require 'pp'
 require './lib/psd'
 
-file = ARGV[0] || '/Users/ryanlefevre/LayerVault/Project Templates/Mockups/All Projects.psd'
+file = ARGV[0] || '/Users/ryanlefevre/LayerVault/Pillocks/squares.psd'
 psd = PSD.new(file, parse_layer_images: true)
 psd.parse!
 
