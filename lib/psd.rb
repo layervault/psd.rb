@@ -9,7 +9,8 @@ dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
   '/image_modes/*',
   '/image_exports/*',
   '/nodes/*',
-  '/layer_info/**/*',
+  '/layer_info/*',
+  '/layer/*',
   '/**/*'
 ].each do |path|
   Dir.glob(dir_root + path) { |file| require file if File.file?(file) }
