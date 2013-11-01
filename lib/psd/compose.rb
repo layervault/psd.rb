@@ -1,4 +1,8 @@
 class PSD
+  # Collection of methods that composes two RGBA pixels together
+  # in various ways based on Photoshop blend modes.
+  #
+  # Note: int8_mult performs (a * b / 255)
   module Compose
     extend self
 
