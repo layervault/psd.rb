@@ -57,6 +57,18 @@ class PSD
       rgba(new_r, new_g, new_b, new_a)
     end
 
+    def difference(fg, bg)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      new_r = (r(fg) - r(bg)).abs
+      new_g = (g(fg) - g(bg)).abs
+      new_b = (b(fg) - b(bg)).abs
+      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+
+      rgba(new_r, new_g, new_b, new_a)
+    end
+
     # If the blend mode is missing, we fall back to normal composition.
     def method_missing(method, *args, &block)
       return ChunkyPNG::Color.send(method, *args) if ChunkyPNG::Color.respond_to?(method)
