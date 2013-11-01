@@ -2,9 +2,30 @@ class PSD
   module Compose
     extend self
 
+    #
+    # Normal blend modes
+    #
+
     # Normal composition, delegate to ChunkyPNG
     def normal(*args)
       ChunkyPNG::Color.compose(*args)
+    end
+
+    #
+    # Subtractive blend modes
+    #
+
+    # This isn't quite right. Needs work.
+    def darken(fg, bg)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      new_r = r(fg) > r(bg) ? r(bg) : r(fg)
+      new_g = g(fg) > g(bg) ? g(bg) : g(fg)
+      new_b = b(fg) > b(bg) ? b(bg) : b(fg)
+      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+
+      rgba(new_r, new_g, new_b, new_a)
     end
 
     def multiply(fg, bg)
@@ -19,6 +40,23 @@ class PSD
       rgba(new_r, new_g, new_b, new_a)
     end
 
+    #
+    # Additive blend modes
+    #
+
+    # This also isn't quite right.
+    def lighten(fg, bg)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      new_r = r(fg) < r(bg) ? r(bg) : r(fg)
+      new_g = g(fg) < g(bg) ? g(bg) : g(fg)
+      new_b = b(fg) < b(bg) ? b(bg) : b(fg)
+      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+      
+      rgba(new_r, new_g, new_b, new_a)
+    end
+
     def screen(fg, bg)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
@@ -30,6 +68,10 @@ class PSD
 
       rgba(new_r, new_g, new_b, new_a)
     end
+
+    #
+    # Contrasting blend modes
+    #
 
     def overlay(fg, bg)
       return fg if opaque?(fg) || fully_transparent?(bg)
@@ -56,6 +98,10 @@ class PSD
       new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
       rgba(new_r, new_g, new_b, new_a)
     end
+
+    #
+    # Inversion blend modes
+    #
 
     def difference(fg, bg)
       return fg if opaque?(fg) || fully_transparent?(bg)
