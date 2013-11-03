@@ -75,6 +75,10 @@ class PSD
       read(length).encode('UTF-8', 'MacRoman').delete("\000")
     end
 
+    def read_byte
+      read(1).bytes.to_a[0]
+    end
+
     # Reads a unicode string, which is double the length of a normal string and encoded as UTF-16.
     def read_unicode_string(length=nil)
       length ||= read_int if length.nil?
@@ -83,7 +87,7 @@ class PSD
 
     # Reads a boolean value.
     def read_boolean
-      read(1).bytes.to_a[0] != 0
+      read_byte != 0
     end
 
     # Reads a 32-bit color space value.
