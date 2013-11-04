@@ -57,29 +57,18 @@ class PSD
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
 
-      new_r = if r(fg) > 0
-        f = ((255 - r(bg)) << 8) / r(fg)
-        f = f > 255 ? 0 : (255 - f)
-        blend_channel(r(bg), f, mix_alpha)
-      else
-        r(bg)
+      calculate_foreground = Proc.new do |b, f|
+        if f > 0
+          f = ((255 - b << 8) / f
+          f > 255 ? 0 : (255 - f)
+        else
+          b
+        end
       end
 
-      new_g = if g(fg) > 0
-        f = ((255 - g(bg)) << 8) / g(fg)
-        f = f > 255 ? 0 : (255 - f)
-        blend_channel(g(bg), f, mix_alpha)
-      else
-        g(bg)
-      end
-
-      new_b = if b(fg) > 0
-        f = ((255 - b(bg)) << 8) / b(fg)
-        f = f > 255 ? 0 : (255 - f)
-        blend_channel(b(bg), f, mix_alpha)
-      else
-        b(bg)
-      end
+      new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
+      new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
@@ -133,26 +122,13 @@ class PSD
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
 
-      new_r = if r(fg) < 255
-        f = [(r(bg) << 8) / (255 - r(fg)), 255].min
-        blend_channel(r(bg), f, mix_alpha)
-      else
-        r(bg)
+      calculate_foreground = Proc.new do |b, f|
+        f < 255 ? [(b << 8) / (255 - f), 255].min : b
       end
 
-      new_g = if g(fg) < 255
-        f = [(g(bg) << 8) / (255 - g(fg)), 255].min
-        blend_channel(g(bg), f, mix_alpha)
-      else
-        g(bg)
-      end
-
-      new_b = if b(fg) < 255
-        f = [(b(bg) << 8) / (255 - b(fg)), 255].min
-        blend_channel(b(bg), f, mix_alpha)
-      else
-        b(bg)
-      end
+      new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
+      new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
@@ -181,23 +157,17 @@ class PSD
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
 
-      new_r = if r(bg) < 128
-        blend_channel(r(bg), r(bg) * r(fg) >> 7, mix_alpha)
-      else
-        blend_channel(r(bg), 255 - ((255 - r(bg)) * (255 - r(fg)) >> 7), mix_alpha)
+      calculate_foreground = Proc.new do |b, f|
+        if b < 128
+          b * f >> 7
+        else
+          255 - ((255 - b) * (255 - f) >> 7)
+        end
       end
 
-      new_g = if g(bg) < 128
-        blend_channel(g(bg), g(bg) * g(fg) >> 7, mix_alpha)
-      else
-        blend_channel(g(bg), 255 - ((255 - g(bg)) * (255 - g(fg)) >> 7), mix_alpha)
-      end
-
-      new_b = if b(bg) < 128
-        blend_channel(b(bg), b(bg) * b(fg) >> 7, mix_alpha)
-      else
-        blend_channel(b(bg), 255 - ((255 - b(bg)) * (255 - b(fg)) >> 7), mix_alpha)
-      end
+      new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
+      new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
