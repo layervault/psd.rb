@@ -207,7 +207,7 @@ class PSD
 
       new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
       new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
-      new_b = blend_channel(r(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
@@ -228,7 +228,28 @@ class PSD
 
       new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
       new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
-      new_b = blend_channel(r(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
+    def linear_light(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      calculate_foreground = Proc.new do |b, f|
+        if b < 255
+          [f * f / (255 - b), 255].min
+        else
+          255
+        end
+      end
+
+      new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
+      new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
