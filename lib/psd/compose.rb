@@ -202,7 +202,24 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    
+    def soft_light(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      calculate_foreground = Proc.new do |b, f|
+        c1 = b * f >> 8
+        c2 = 255 - ((255 - b) * (255 - f) >> 8)
+        ((255 - b) * c1 >> 8) + (b * c2 >> 8)
+      end
+
+      new_r = blend_channel(r(bg), calculate_foreground.call(r(bg), r(fg)), mix_alpha)
+      new_g = blend_channel(g(bg), calculate_foreground.call(g(bg), g(fg)), mix_alpha)
+      new_b = blend_channel(b(bg), calculate_foreground.call(b(bg), b(fg)), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
 
     #
     # Inversion blend modes
