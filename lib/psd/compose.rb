@@ -305,6 +305,19 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
+    def exclusion(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = blend_channel(r(bg), r(bg) + r(fg) - (r(bg) * r(fg) >> 7), mix_alpha)
+      new_g = blend_channel(g(bg), g(bg) + g(fg) - (g(bg) * g(fg) >> 7), mix_alpha)
+      new_b = blend_channel(b(bg), b(bg) + b(fg) - (b(bg) * b(fg) >> 7), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
     # If the blend mode is missing, we fall back to normal composition.
     def method_missing(method, *args, &block)
       return ChunkyPNG::Color.send(method, *args) if ChunkyPNG::Color.respond_to?(method)
