@@ -103,8 +103,6 @@ class PSD
     @resources = Resources.new(@file)
     @resources.parse
 
-    PSD.logger.debug @resources.data.inspect
-
     return @resources
   end
 

@@ -36,6 +36,7 @@ class PSD
 
     def parse
       PSD.logger.debug "Layer = #{@layer.name}, Size = #{width}x#{height}"
+      PSD.logger.debug @channels_info
 
       @chan_pos = 0
 
@@ -83,7 +84,7 @@ class PSD
       when 1 then parse_rle!
       when 2, 3 then parse_zip!
       else
-        PSD.logger.error "Unknown image compression. Attempting to skip."
+        PSD.logger.error "Unknown image compression: #{@compression}. Attempting to skip."
         @file.seek(@end_pos)
       end
     end
