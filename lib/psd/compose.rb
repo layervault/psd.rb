@@ -59,7 +59,7 @@ class PSD
 
       calculate_foreground = Proc.new do |b, f|
         if f > 0
-          f = ((255 - b << 8) / f
+          f = ((255 - b) << 8) / f
           f > 255 ? 0 : (255 - f)
         else
           b
