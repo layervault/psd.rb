@@ -292,16 +292,17 @@ class PSD
     # Inversion blend modes
     #
 
-    def difference(fg, bg)
+    def difference(fg, bg, layer)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      new_r = (r(fg) - r(bg)).abs
-      new_g = (g(fg) - g(bg)).abs
-      new_b = (b(fg) - b(bg)).abs
-      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
 
-      rgba(new_r, new_g, new_b, new_a)
+      new_r = blend_channel(r(bg), (r(bg) - r(fg)).abs, mix_alpha)
+      new_g = blend_channel(g(bg), (g(bg) - g(fg)).abs, mix_alpha)
+      new_b = blend_channel(b(bg), (b(bg) - b(fg)).abs, mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
 
     # If the blend mode is missing, we fall back to normal composition.
