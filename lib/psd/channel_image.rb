@@ -7,7 +7,7 @@ class PSD
     include ImageFormat::LayerRLE
     include ImageFormat::LayerRAW
 
-    attr_reader :width, :height, :has_mask
+    attr_reader :width, :height, :has_mask, :mask_data
     alias :has_mask? :has_mask
 
     def initialize(file, header, layer)
@@ -19,8 +19,9 @@ class PSD
       super(file, header)
 
       @channels_info = @layer.channels_info
-      @has_mask = @channels_info.map { |c| c[:id] }.include?(-2)
+      @has_mask = @layer.mask.width * @layer.mask.height > 0
       @opacity = @layer.opacity / 255.0
+      @mask_data = []
     end
 
     def skip
@@ -73,6 +74,7 @@ class PSD
         PSD.logger.error "#{@channel_data.length} read; expected #{@length}"
       end
 
+      parse_user_mask
       process_image_data
     end
 
@@ -86,6 +88,24 @@ class PSD
       else
         PSD.logger.error "Unknown image compression: #{@compression}. Attempting to skip."
         @file.seek(@end_pos)
+      end
+    end
+
+    def parse_user_mask
+      return unless has_mask?
+
+      channel = @channels_info.select { |c| c[:id] == -2 }.first
+      index = @channels_info.index { |c| c[:id] == -2 }
+      return if channel.nil?
+
+      start = @channel_length * index
+      length = @layer.mask.width * @layer.mask.height
+      PSD.logger.debug "Copying user mask: #{length} bytes at #{start}"
+
+      @mask_data = @channel_data[start, length]
+
+      if @mask_data.length != length
+        PSD.logger.error "Mask length is incorrect. Expected = #{length}, Actual = #{@mask_data.length}"
       end
     end
   end

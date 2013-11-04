@@ -13,10 +13,11 @@ class PSD
           mask = nil
 
           @channels_info.each_with_index do |chan, index|
+            next if chan[:id] == -2
+            
             val = @channel_data[i + (@channel_length * index)]
 
             case chan[:id]
-            when -2 then  a = ((val / 255.0) * a).to_i
             when -1 then  a = (val * opacity).to_i
             when 0 then   r = val
             when 1 then   g = val
