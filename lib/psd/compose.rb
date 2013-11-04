@@ -275,6 +275,19 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
+    def hard_mix(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = blend_channel(r(bg), (r(bg) + r(fg) <= 255) ? 0 : 255, mix_alpha)
+      new_g = blend_channel(g(bg), (g(bg) + g(fg) <= 255) ? 0 : 255, mix_alpha)
+      new_b = blend_channel(b(bg), (b(bg) + b(fg) <= 255) ? 0 : 255, mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
     #
     # Inversion blend modes
     #
