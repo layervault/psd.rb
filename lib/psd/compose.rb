@@ -2,7 +2,7 @@ class PSD
   # Collection of methods that composes two RGBA pixels together
   # in various ways based on Photoshop blend modes.
   #
-  # Note: int8_mult performs (a * b / 255)
+  # Mostly based on similar code from libpsd.
   module Compose
     extend self
 
@@ -11,97 +11,198 @@ class PSD
     #
 
     # Normal composition, delegate to ChunkyPNG
-    def normal(*args)
-      ChunkyPNG::Color.compose(*args)
+    def normal(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+      new_r = blend_channel(r(bg), r(fg), mix_alpha)
+      new_g = blend_channel(g(bg), g(fg), mix_alpha)
+      new_b = blend_channel(b(bg), b(fg), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
 
     #
     # Subtractive blend modes
     #
 
-    # This isn't quite right. Needs work.
-    def darken(fg, bg)
+    def darken(fg, bg, layer)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      new_r = r(fg) > r(bg) ? r(bg) : r(fg)
-      new_g = g(fg) > g(bg) ? g(bg) : g(fg)
-      new_b = b(fg) > b(bg) ? b(bg) : b(fg)
-      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+      new_r = r(fg) <= r(bg) ? blend_channel(r(bg), r(fg), mix_alpha) : r(bg)
+      new_g = g(fg) <= g(bg) ? blend_channel(g(bg), g(fg), mix_alpha) : g(bg)
+      new_b = b(fg) <= b(bg) ? blend_channel(b(bg), b(fg), mix_alpha) : b(bg)
 
-      rgba(new_r, new_g, new_b, new_a)
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def multiply(fg, bg)
+    def multiply(fg, bg, layer)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      new_r = int8_mult(r(fg), r(bg))
-      new_g = int8_mult(g(fg), g(bg))
-      new_b = int8_mult(b(fg), b(bg))
-      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+      new_r = blend_channel(r(bg), r(fg) * r(bg) >> 8, mix_alpha)
+      new_g = blend_channel(g(bg), g(fg) * g(bg) >> 8, mix_alpha)
+      new_b = blend_channel(b(bg), b(fg) * b(bg) >> 8, mix_alpha)
 
-      rgba(new_r, new_g, new_b, new_a)
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
+    def color_burn(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = if r(fg) > 0
+        f = ((255 - r(bg)) << 8) / r(fg)
+        f = f > 255 ? 0 : (255 - f)
+        blend_channel(r(bg), f, mix_alpha)
+      else
+        r(bg)
+      end
+
+      new_g = if g(fg) > 0
+        f = ((255 - g(bg)) << 8) / g(fg)
+        f = f > 255 ? 0 : (255 - f)
+        blend_channel(g(bg), f, mix_alpha)
+      else
+        g(bg)
+      end
+
+      new_b = if b(fg) > 0
+        f = ((255 - b(bg)) << 8) / b(fg)
+        f = f > 255 ? 0 : (255 - f)
+        blend_channel(b(bg), f, mix_alpha)
+      else
+        b(bg)
+      end
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
+    def linear_burn(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = blend_channel(r(bg), r(fg) < (255 - r(bg)) ? 0 : r(fg) - 255 - r(bg), mix_alpha)
+      new_g = blend_channel(g(bg), g(fg) < (255 - g(bg)) ? 0 : g(fg) - 255 - g(bg), mix_alpha)
+      new_b = blend_channel(b(bg), b(fg) < (255 - b(bg)) ? 0 : b(fg) - 255 - b(bg), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
 
     #
     # Additive blend modes
     #
 
-    # This also isn't quite right.
-    def lighten(fg, bg)
+    def lighten(fg, bg, layer)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      new_r = r(fg) < r(bg) ? r(bg) : r(fg)
-      new_g = g(fg) < g(bg) ? g(bg) : g(fg)
-      new_b = b(fg) < b(bg) ? b(bg) : b(fg)
-      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = r(fg) >= r(bg) ? blend_channel(r(bg), r(fg), mix_alpha) : r(bg)
+      new_g = g(fg) >= g(bg) ? blend_channel(g(bg), g(fg), mix_alpha) : g(bg)
+      new_b = b(fg) >= b(bg) ? blend_channel(b(bg), b(fg), mix_alpha) : b(bg)
       
-      rgba(new_r, new_g, new_b, new_a)
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def screen(fg, bg)
+    def screen(fg, bg, layer)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      new_r = 0xff - int8_mult(0xff - r(fg), 0xff - r(bg))
-      new_g = 0xff - int8_mult(0xff - g(fg), 0xff - g(bg))
-      new_b = 0xff - int8_mult(0xff - b(fg), 0xff - b(bg))
-      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
 
-      rgba(new_r, new_g, new_b, new_a)
+      new_r = blend_channel(r(bg), 255 - ((255 - r(bg)) * (255 - r(fg)) >> 8), mix_alpha)
+      new_g = blend_channel(g(bg), 255 - ((255 - g(bg)) * (255 - g(fg)) >> 8), mix_alpha)
+      new_b = blend_channel(b(bg), 255 - ((255 - b(bg)) * (255 - b(fg)) >> 8), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
+
+    def color_dodge(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = if r(fg) < 255
+        f = [(r(bg) << 8) / (255 - r(fg)), 255].min
+        blend_channel(r(bg), f, mix_alpha)
+      else
+        r(bg)
+      end
+
+      new_g = if g(fg) < 255
+        f = [(g(bg) << 8) / (255 - g(fg)), 255].min
+        blend_channel(g(bg), f, mix_alpha)
+      else
+        g(bg)
+      end
+
+      new_b = if b(fg) < 255
+        f = [(b(bg) << 8) / (255 - b(fg)), 255].min
+        blend_channel(b(bg), f, mix_alpha)
+      else
+        b(bg)
+      end
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
+    def linear_dodge(fg, bg, layer)
+      return fg if opaque?(fg) || fully_transparent?(bg)
+      return bg if fully_transparent?(fg)
+
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = blend_channel(r(bg), (r(bg) + r(fg)) > 255 ? 255 : r(bg) + r(fg), mix_alpha)
+      new_g = blend_channel(g(bg), (g(bg) + g(fg)) > 255 ? 255 : g(bg) + g(fg), mix_alpha)
+      new_b = blend_channel(b(bg), (b(bg) + b(fg)) > 255 ? 255 : b(bg) + b(fg), mix_alpha)
+
+      rgba(new_r, new_g, new_b, dst_alpha)
+    end
+
 
     #
     # Contrasting blend modes
     #
 
-    def overlay(fg, bg)
+    def overlay(fg, bg, layer)
       return fg if opaque?(fg) || fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      if r(bg) > 128
-        new_r = 0xff - 2 * int8_mult(255 - r(fg), 255 - r(bg))
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
+
+      new_r = if r(bg) < 128
+        blend_channel(r(bg), r(bg) * r(fg) >> 7, mix_alpha)
       else
-        new_r = 2 * int8_mult(r(fg), r(bg))
+        blend_channel(r(bg), 255 - ((255 - r(bg)) * (255 - r(fg)) >> 7), mix_alpha)
       end
 
-      if g(bg) > 128
-        new_g = 0xff - 2 * int8_mult(255 - g(fg), 255 - g(bg))
+      new_g = if g(bg) < 128
+        blend_channel(g(bg), g(bg) * g(fg) >> 7, mix_alpha)
       else
-        new_g = 2 * int8_mult(g(fg), g(bg))
+        blend_channel(g(bg), 255 - ((255 - g(bg)) * (255 - g(fg)) >> 7), mix_alpha)
       end
 
-      if b(bg) > 128
-        new_b = 0xff - 2 * int8_mult(255 - b(fg), 255 - b(bg))
+      new_b = if b(bg) < 128
+        blend_channel(b(bg), b(bg) * b(fg) >> 7, mix_alpha)
       else
-        new_b = 2 * int8_mult(b(fg), b(bg))
+        blend_channel(b(bg), 255 - ((255 - b(bg)) * (255 - b(fg)) >> 7), mix_alpha)
       end
 
-      new_a = a(fg) + int8_mult(0xff - a(fg), a(bg))
-      rgba(new_r, new_g, new_b, new_a)
+      rgba(new_r, new_g, new_b, dst_alpha)
     end
+
+    
 
     #
     # Inversion blend modes
@@ -123,6 +224,31 @@ class PSD
     def method_missing(method, *args, &block)
       return ChunkyPNG::Color.send(method, *args) if ChunkyPNG::Color.respond_to?(method)
       normal(*args)
+    end
+
+    private
+
+    def calculate_alphas (fg, bg, layer)
+      opacity = calculate_opacity(layer)
+      src_alpha = a(fg) * opacity >> 8
+      dst_alpha = a(bg)
+
+      mix_alpha = (src_alpha << 8) / (src_alpha + ((256 - src_alpha) * dst_alpha >> 8))
+      dst_alpha = dst_alpha + ((256 - dst_alpha) * src_alpha >> 8)
+
+      return mix_alpha, dst_alpha
+    end
+
+    def calculate_opacity(layer)
+      layer.opacity * layer.fill_opacity / 255
+    end
+
+    def blend_channel(bg, fg, alpha)
+      ((bg << 8) + (fg - bg) * alpha) >> 8
+    end
+
+    def blend_alpha(bg, fg)
+      bg + ((255 - bg) * fg >> 8)
     end
   end
 end

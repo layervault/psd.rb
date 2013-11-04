@@ -19,8 +19,7 @@ class PSD
           if c.group?
             c.build_pixel_data(png)
           else
-            PSD.logger.warn("Blend mode #{c.blending_mode} is not implemented") unless Compose.respond_to?(c.blending_mode)
-            compose! c.blending_mode, png, c.image.to_png, c.left.to_i, c.top.to_i
+            compose! c, png, c.image.to_png, c.left.to_i, c.top.to_i
           end
         end
       end
@@ -28,10 +27,13 @@ class PSD
       private
 
       # Modified from ChunkyPNG::Canvas#compose! in order to support various blend modes.
-      def compose!(blend_mode, base, other, offset_x = 0, offset_y = 0)
+      def compose!(layer, base, other, offset_x = 0, offset_y = 0)
+        blending_mode = layer.blending_mode.gsub(/ /, '_')
+        PSD.logger.warn("Blend mode #{blending_mode} is not implemented") unless Compose.respond_to?(blending_mode)
+
         for y in 0...other.height do
           for x in 0...other.width do
-            color = Compose.send(blend_mode, other.get_pixel(x, y), base.get_pixel(x + offset_x, y + offset_y))
+            color = Compose.send(blending_mode, other.get_pixel(x, y), base.get_pixel(x + offset_x, y + offset_y), layer)
             base.set_pixel(x + offset_x, y + offset_y, color)
           end
         end
