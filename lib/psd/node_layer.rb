@@ -58,7 +58,13 @@ class PSD::Node
         type: :layer,
         text: @layer.text,
         ref_x: @layer.reference_point.x,
-        ref_y: @layer.reference_point.y
+        ref_y: @layer.reference_point.y,
+        mask: @layer.mask.snapshot,
+        image: {
+          width: @layer.image.width,
+          height: @layer.image.height,
+          channels: @layer.channels_info
+        }
       })
     end
 
