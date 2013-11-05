@@ -38,10 +38,6 @@ class PSD
 
         for y in 0...other.height do
           for x in 0...other.width do
-            if layer.has_mask?
-              # mask_color = layer.mask_data[y * layer]
-            end
-
             color = Compose.send(blending_mode, other.get_pixel(x, y), base.get_pixel(x + offset_x, y + offset_y), layer)
             base.set_pixel(x + offset_x, y + offset_y, color)
           end
