@@ -19,9 +19,7 @@ class PSD
           end
 
           def to_a
-            unless @data.nil?
-              @data['slices']
-            end
+            @data.nil? ? [] : @data['slices']
           end
         end
     end
