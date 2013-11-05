@@ -70,6 +70,9 @@ class PSD
         end
       end
 
+      @width = @layer.width
+      @height = @layer.height
+
       if @channel_data.length != @length
         PSD.logger.error "#{@channel_data.length} read; expected #{@length}"
       end

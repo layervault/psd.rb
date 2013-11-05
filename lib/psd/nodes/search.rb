@@ -23,6 +23,7 @@ class PSD
           return matches.map { |m| m.children_at_path(path, opts) }.flatten
         end
       end
+      alias :children_with_path :children_at_path
 
       # Given a layer comp ID, name, or :last for last document state, create a new
       # tree based on the layers/groups that belong to the comp only.

@@ -39,7 +39,7 @@ class PSD
     end
 
     def group?
-      is_a?(PSD::Node::Group)
+      is_a?(PSD::Node::Group) || is_a?(PSD::Node::Root)
     end
 
     def to_hash
