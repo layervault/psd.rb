@@ -40,7 +40,7 @@ describe 'Slices' do
       expect(psd.resources[:slices].data.version).to eq 6
 
       # Slices data to be nil
-      expect(psd.resources[:slices].data.to_a).to be_nil
+      expect(psd.resources[:slices].data.to_a).to eq []
     end
   end
 
