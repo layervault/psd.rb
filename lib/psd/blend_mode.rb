@@ -35,7 +35,8 @@ class PSD
       vLit: 'vivid light',
       lLit: 'linear light',
       pLit: 'pin light',
-      hMix: 'hard mix'
+      hMix: 'hard mix',
+      pass: 'passthru'
     }
 
     # Get the readable name for this blend mode.

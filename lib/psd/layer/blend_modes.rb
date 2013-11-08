@@ -4,7 +4,11 @@ class PSD
       attr_reader :blend_mode, :opacity
 
       def blending_mode
-        @blending_mode || 'normal'
+        if !info[:section_divider].nil? && info[:section_divider].blend_mode
+          BlendMode::BLEND_MODES[info[:section_divider].blend_mode.strip.to_sym]
+        else
+          @blending_mode
+        end
       end
 
       private

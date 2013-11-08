@@ -9,27 +9,32 @@ class PSD
         layer.image.to_png
       end
 
-      def build_png
-        width, height = document_dimensions
-        png = ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
+      def build_png(png=nil)
+        png ||= create_canvas
 
-        build_pixel_data(png)
-        png
-      end
-
-      def build_pixel_data(png)
         children.reverse.each do |c|
           next unless c.visible?
           
           if c.group?
-            c.build_pixel_data(png)
+            if c.blending_mode == 'passthru'
+              c.build_png(png)
+            else
+              compose! c, png, c.build_png, 0, 0
+            end
           else
             compose! c, png, c.image.to_png, c.left.to_i, c.top.to_i
           end
         end
+
+        png
       end
 
       private
+
+      def create_canvas
+        width, height = document_dimensions
+        ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
+      end
 
       # Modified from ChunkyPNG::Canvas#compose! in order to support various blend modes.
       def compose!(layer, base, other, offset_x = 0, offset_y = 0)
