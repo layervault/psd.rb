@@ -40,6 +40,7 @@ class PSD
       def compose!(layer, base, other, offset_x = 0, offset_y = 0)
         blending_mode = layer.blending_mode.gsub(/ /, '_')
         PSD.logger.warn("Blend mode #{blending_mode} is not implemented") unless Compose.respond_to?(blending_mode)
+        PSD.logger.debug("Blending #{layer.name} with #{blending_mode} blend mode")
 
         for y in 0...other.height do
           for x in 0...other.width do

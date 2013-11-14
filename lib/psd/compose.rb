@@ -28,7 +28,7 @@ class PSD
     #
 
     def darken(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -40,7 +40,7 @@ class PSD
     end
 
     def multiply(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -52,7 +52,7 @@ class PSD
     end
 
     def color_burn(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -74,7 +74,7 @@ class PSD
     end
 
     def linear_burn(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -91,7 +91,7 @@ class PSD
     #
 
     def lighten(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -104,7 +104,7 @@ class PSD
     end
 
     def screen(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -117,7 +117,7 @@ class PSD
     end
 
     def color_dodge(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -134,7 +134,7 @@ class PSD
     end
 
     def linear_dodge(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -152,7 +152,7 @@ class PSD
     #
 
     def overlay(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -173,7 +173,7 @@ class PSD
     end
 
     def soft_light(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -192,7 +192,7 @@ class PSD
     end
 
     def hard_light(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -213,7 +213,7 @@ class PSD
     end
 
     def vivid_light(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -234,7 +234,7 @@ class PSD
     end
 
     def linear_light(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -255,7 +255,7 @@ class PSD
     end
 
     def pin_light(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -276,7 +276,7 @@ class PSD
     end
 
     def hard_mix(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -293,7 +293,7 @@ class PSD
     #
 
     def difference(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
@@ -306,7 +306,7 @@ class PSD
     end
 
     def exclusion(fg, bg, layer)
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, layer)
