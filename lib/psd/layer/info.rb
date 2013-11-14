@@ -46,7 +46,7 @@ class PSD
             PSD.logger.debug "Layer Info: key = #{key}, start = #{pos}, length = #{length}"
 
             begin
-              i = info.new(@file, length)
+              i = info.new(self, length)
               i.parse
 
               @adjustments[name] = i

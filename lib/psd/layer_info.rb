@@ -7,8 +7,9 @@ class PSD
     class << self; attr_accessor :key; end
     @key = ""
 
-    def initialize(file, length)
-      @file = file
+    def initialize(layer, length)
+      @layer = layer
+      @file = layer.file
       @length = length
       @section_end = @file.tell + @length
       @data = {}
