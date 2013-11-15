@@ -44,7 +44,14 @@ class PSD
 
         for y in 0...other.height do
           for x in 0...other.width do
-            color = Compose.send(blending_mode, other.get_pixel(x, y), base.get_pixel(x + offset_x, y + offset_y), layer)
+            color = Compose.send(
+              blending_mode, 
+              other.get_pixel(x, y), 
+              base.get_pixel(x + offset_x, y + offset_y), 
+              opacity: layer.opacity,
+              fill_opacity: layer.fill_opacity
+            )
+
             base.set_pixel(x + offset_x, y + offset_y, color)
           end
         end
