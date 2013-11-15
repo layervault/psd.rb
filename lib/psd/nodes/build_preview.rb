@@ -42,6 +42,9 @@ class PSD
         PSD.logger.warn("Blend mode #{blending_mode} is not implemented") unless Compose.respond_to?(blending_mode)
         PSD.logger.debug("Blending #{layer.name} with #{blending_mode} blend mode")
 
+        styles = LayerStyles.new(layer, other)
+        styles.apply!
+
         for y in 0...other.height do
           for x in 0...other.width do
             color = Compose.send(
