@@ -1,4 +1,4 @@
-require_relative '../layer_info'
+require_relative 'vector_mask'
 
 class PSD
   # Identical to VectorMask, except with a different key. This
