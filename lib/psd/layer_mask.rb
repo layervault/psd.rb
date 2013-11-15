@@ -51,7 +51,7 @@ class PSD
 
         @layer_section_start = @file.tell
         layer_count.times do
-          @layers << PSD::Layer.new(@file).parse
+          @layers << PSD::Layer.new(@file, @header).parse
         end
 
         layers.each do |layer|

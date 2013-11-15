@@ -3,6 +3,8 @@ class PSD
     module Info
       # All of the extra layer info sections that we know how to parse.
       LAYER_INFO = {
+        blend_clipping_elements: BlendClippingElements,
+        blend_interior_elements: BlendInteriorElements,
         type: TypeTool,
         legacy_type: LegacyTypeTool,
         metadata: MetadataSetting,
@@ -15,7 +17,10 @@ class PSD
         layer_id: LayerID,
         fill_opacity: FillOpacity,
         placed_layer: PlacedLayer,
-        vector_mask: VectorMask
+        vector_mask: VectorMask,
+        vector_mask_2: VectorMask2,
+        vector_stroke: VectorStroke,
+        vector_stroke_content: VectorStrokeContent
       }
 
       attr_reader :adjustments
@@ -60,7 +65,7 @@ class PSD
           end
 
           if !info_parsed
-            PSD.logger.debug "Skipping: key = #{key}, pos = #{@file.tell}, length = #{length}"
+            PSD.logger.debug "Skipping: layer = #{name}, key = #{key}, pos = #{@file.tell}, length = #{length}"
             @file.seek pos + length
           end
 
@@ -71,6 +76,10 @@ class PSD
         end
 
         @extra_data_end = @file.tell
+      end
+
+      def vector_mask
+        info[:vector_mask_2] || info[:vector_mask]
       end
 
       def export_extra_data(outfile)

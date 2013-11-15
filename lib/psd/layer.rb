@@ -14,12 +14,13 @@ class PSD
     include PathComponents
     include PositionAndChannels
 
-    attr_reader :id, :info_keys
+    attr_reader :id, :info_keys, :header
     attr_accessor :group_layer, :node, :file
 
     # Initializes all of the defaults for the layer.
-    def initialize(file)
+    def initialize(file, header)
       @file = file
+      @header = header
 
       @mask = {}
       @blending_ranges = {}

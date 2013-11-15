@@ -7,8 +7,8 @@ class PSD
     include ImageFormat::LayerRLE
     include ImageFormat::LayerRAW
 
-    attr_reader :width, :height, :has_mask, :mask_data
-    alias :has_mask? :has_mask
+    attr_reader :width, :height, :mask_data
+    
 
     def initialize(file, header, layer)
       @layer = layer

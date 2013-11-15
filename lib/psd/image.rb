@@ -8,7 +8,8 @@ class PSD
     include ImageMode::RGB
     include Export::PNG
 
-    attr_reader :pixel_data, :opacity
+    attr_reader :pixel_data, :opacity, :has_mask
+    alias :has_mask? :has_mask
 
     # All of the possible compression formats Photoshop uses.
     COMPRESSIONS = [
@@ -31,6 +32,7 @@ class PSD
       @channel_data = []
       @pixel_data = []
       @opacity = 1.0
+      @has_mask = false
 
       @start_pos = @file.tell
       @end_pos = @start_pos + @length
