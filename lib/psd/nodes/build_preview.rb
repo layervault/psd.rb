@@ -47,15 +47,20 @@ class PSD
 
         for y in 0...other.height do
           for x in 0...other.width do
+            base_x = x + offset_x
+            base_y = y + offset_y
+            
+            next if base_x < 0 || base_y < 0 || base_x >= base.width || base_y >= base.height
+
             color = Compose.send(
               blending_mode, 
-              other.get_pixel(x, y), 
-              base.get_pixel(x + offset_x, y + offset_y), 
+              other[x, y],
+              base[base_x, base_y],
               opacity: layer.opacity,
               fill_opacity: layer.fill_opacity
             )
 
-            base.set_pixel(x + offset_x, y + offset_y, color)
+            base[base_x, base_y] = color
           end
         end
       end

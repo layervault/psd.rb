@@ -8,7 +8,9 @@ results = Benchmark.measure "Image exporting" do
   psd = PSD.new(file, parse_layer_images: true)
   psd.parse!
 
-  psd.tree.save_as_png('./output.png')
+  png = psd.tree.to_png
+  puts "#{png.width}x#{png.height} - #{png.pixels.length}"
+  png.save('./output.png')
 end
 
 puts Benchmark::CAPTION

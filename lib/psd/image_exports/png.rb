@@ -56,13 +56,13 @@ class PSD::Image
           end
         end
 
-        png.crop!(@layer.left, @layer.top, @layer.width, @layer.height)
+        png.crop!(@layer.left, @layer.top, @layer.width.to_i, @layer.height.to_i)
       end
 
       def mask_to_png
         return unless has_mask?
 
-        png = ChunkyPNG::Canvas.new(@layer.mask.width, @layer.mask.height, ChunkyPNG::Color::TRANSPARENT)
+        png = ChunkyPNG::Canvas.new(@layer.mask.width.to_i, @layer.mask.height.to_i, ChunkyPNG::Color::TRANSPARENT)
 
         i = 0
         @layer.mask.height.times do |y|
