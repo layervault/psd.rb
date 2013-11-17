@@ -30,7 +30,7 @@ class PSD
 
     attr_reader :layer, :data, :png
 
-    def initialize(layer, png = nil)
+    def initialize(layer, png=nil)
       @layer = layer
       @data = layer.info[:object_effects]
       @png = png || layer.image.to_png
@@ -67,7 +67,7 @@ class PSD
           pixel = png.get_pixel(x, y)
           alpha = ChunkyPNG::Color.a(pixel)
           next if alpha == 0
-          
+
           overlay_color = ChunkyPNG::Color.rgba(
             color_data['Rd  '].round, 
             color_data['Grn '].round,

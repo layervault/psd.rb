@@ -11,6 +11,11 @@ class PSD
         end
       end
 
+      # Is the layer below this one a clipping mask?
+      def clipped?
+        @blend_mode.clipping == 1
+      end
+
       private
       
       def parse_blend_modes

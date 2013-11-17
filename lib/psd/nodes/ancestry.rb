@@ -38,6 +38,18 @@ class PSD
         parent.children
       end
 
+      def next_sibling
+        return nil if parent.nil?
+        index = siblings.index(self)
+        siblings[index + 1]
+      end
+
+      def prev_sibling
+        return nil if parent.nil?
+        index = siblings.index(self)
+        siblings[index - 1]
+      end
+
       # Does this node have any siblings?
       def has_siblings?
         siblings.length > 1
