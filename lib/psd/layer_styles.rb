@@ -75,7 +75,7 @@ class PSD
             alpha
           )
 
-          color = Compose.send(blending_mode, overlay_color, pixel, opacity: alpha, fill_opacity: alpha)
+          color = Compose.send(blending_mode, overlay_color, pixel)
           png.set_pixel(x, y, color)
         end
       end
