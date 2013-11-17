@@ -43,6 +43,7 @@ class PSD
       width, height = @layer.document_dimensions
       full_png = ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
       full_png.compose!(@png, @layer.left, @layer.top)
+      full_png
     end
   end
 end
