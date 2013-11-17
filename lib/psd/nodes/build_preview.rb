@@ -45,8 +45,8 @@ class PSD
         LayerStyles.new(layer, other).apply!
         other = ClippingMask.new(layer, other).apply
 
-        for y in 0...other.height do
-          for x in 0...other.width do
+        other.height.times do |y|
+          other.width.times do |x|
             base_x = x + offset_x
             base_y = y + offset_y
             

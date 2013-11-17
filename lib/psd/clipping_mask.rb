@@ -8,13 +8,10 @@ class PSD
     def apply
       return @png unless @layer.clipped?
 
-      mask = @layer.next_sibling
-
       PSD.logger.debug "Applying clipping mask #{mask.name} to #{@layer.name}"
 
       width, height = @layer.document_dimensions
-      full_png = ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
-      full_png.compose!(@png, @layer.left, @layer.top)
+      full_png = compose_to_full
 
       height.times do |y|
         width.times do |x|
@@ -35,6 +32,18 @@ class PSD
       end
 
       full_png.crop!(@layer.left, @layer.top, @layer.width, @layer.height)
+    end
+
+    private
+
+    def mask
+      @mask ||= @layer.next_sibling
+    end
+
+    def compose_to_full
+      width, height = @layer.document_dimensions
+      full_png = ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
+      full_png.compose!(@png, @layer.left, @layer.top)
     end
   end
 end
