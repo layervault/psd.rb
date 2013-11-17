@@ -43,7 +43,7 @@ Or install it yourself as:
 
 The [full source code documentation](http://rubydoc.info/gems/psd/frames) is available, but here are some common ways to use and access the PSD data:
 
-**Loading a PSD**
+### Loading a PSD
 
 ``` ruby
 require 'psd'
@@ -74,7 +74,7 @@ PSD.open('path/to/file.psd') do
 end
 ```
 
-**Traversing the Document**
+### Traversing the Document
 
 To access the document as a tree structure, use `psd.tree` to get the root node. From there, you can traverse the tree using any of these methods:
 
@@ -98,7 +98,7 @@ If you know the path to a group or layer within the tree, you can search by that
 psd.tree.children_at_path("Version A/Matte")
 ```
 
-**Layer Comps**
+### Layer Comps
 
 You can also filter nodes based on a layer comp. To generate a new tree consisting only of the layers that are enabled in a certain layer comp:
 
@@ -113,7 +113,7 @@ puts tree.children.map(&:name)
 
 This returns a new node tree and does not alter the original so you won't lose any data.
 
-**Accessing Layer Data**
+### Accessing Layer Data
 
 To get data such as the name or dimensions of a layer:
 
@@ -135,7 +135,7 @@ psd.tree.descendant_layers.first.text[:font]
   "font-family: \"HelveticaNeue-Light\", \"AdobeInvisFont\", \"MyriadPro-Regular\";\nfont-size: 33.0pt;\ncolor: rgba(19, 120, 98, 255);"}
 ```
 
-**Exporting Data**
+### Exporting Data
 
 When working with the tree structure, you can recursively export any node to a Hash.
 
@@ -197,7 +197,7 @@ png = psd.image.to_png # reference to PNG data
 psd.image.save_as_png 'path/to/output.png' # writes PNG to disk
 ```
 
-**Debugging**
+### Debugging
 
 If you run into any problems parsing a PSD, you can enable debug logging via the `PSD_DEBUG` environment variable. For example:
 
@@ -209,6 +209,20 @@ You can also give a path to a file instead. If you need to enable debugging prog
 
 ``` ruby
 PSD.debug = true
+```
+
+### Preview Building
+
+**This is currently an experimental feature. It works "well enough" but is not perfect yet.**
+
+You can build previews of any subset or version of the PSD document. This is useful for generating previews of layer comps or exporting individual layer groups as images.
+
+``` ruby
+# Save a layer comp
+psd.tree.filter_by_comp("Version A").save_as_png('./Version A.png')
+
+# Generate PNG of individual layer group
+psd.tree.children_at_path("Group 1").first.to_png
 ```
 
 ## To-do
