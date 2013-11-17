@@ -84,9 +84,9 @@ class PSD
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
 
-      new_r = blend_channel(r(bg), r(fg) < (255 - r(bg)) ? 0 : r(fg) - 255 - r(bg), mix_alpha)
-      new_g = blend_channel(g(bg), g(fg) < (255 - g(bg)) ? 0 : g(fg) - 255 - g(bg), mix_alpha)
-      new_b = blend_channel(b(bg), b(fg) < (255 - b(bg)) ? 0 : b(fg) - 255 - b(bg), mix_alpha)
+      new_r = blend_channel(r(bg), (r(fg) < (255 - r(bg))) ? 0 : r(fg) - (255 - r(bg)), mix_alpha)
+      new_g = blend_channel(g(bg), (g(fg) < (255 - g(bg))) ? 0 : g(fg) - (255 - g(bg)), mix_alpha)
+      new_b = blend_channel(b(bg), (b(fg) < (255 - b(bg))) ? 0 : b(fg) - (255 - b(bg)), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
