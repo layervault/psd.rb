@@ -25,9 +25,8 @@ class PSD
             alpha = pixel.nil? ? 0 : ChunkyPNG::Color.a(pixel)
           end
           
-          color = ChunkyPNG::Color.to_truecolor_alpha_bytes(full_png[x, y])
-          color[3] = color[3] * alpha / 255
-          full_png[x, y] = ChunkyPNG::Color.rgba(*color)
+          color = full_png[x, y]
+          full_png[x, y] = (color & 0xffffff00) | (ChunkyPNG::Color.a(color) * alpha / 255)
         end
       end
 
