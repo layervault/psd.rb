@@ -49,13 +49,14 @@ class PSD
         node.children.select! do |c|
           c
             .metadata
-            .data[:layer_comp]['layerSettings'].map { |l| !l.has_key?('enab') || l['enab'] ? l['compList'] : nil }
+            .data[:layer_comp]['layerSettings'].map { |l| !l.has_key?('enab') || l['enab'] == true ? l['compList'] : nil }
             .flatten
             .compact
             .include?(id)
         end
 
         node.children.each do |c|
+          c.force_visible = true
           filter_for_comp!(id, c) if c.is_a?(PSD::Node::Group)
         end
       end
