@@ -9,11 +9,11 @@ class PSD
             grey = @channel_data[i]
             alpha = @channel_data[@channel_length + i]
 
-            @pixel_data.push ChunkyPNG::Color.greyscale_alpha(grey, alpha)
+            @pixel_data.push ChunkyPNG::Color.grayscale_alpha(grey, alpha)
           end
         else
           (0...@num_pixels).step(pixel_step) do |i|
-            @pixel_data.push ChunkyPNG::Color.greyscale(@channel_data[i])
+            @pixel_data.push ChunkyPNG::Color.grayscale(@channel_data[i])
           end
         end
       end
