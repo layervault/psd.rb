@@ -37,7 +37,7 @@ class PSD
       end
 
       # Modified from ChunkyPNG::Canvas#compose! in order to support various blend modes.
-      def compose!(layer, base, other, offset_x = 0, offset_y = 0)
+      def compose!(layer, base, other, offset_x, offset_y)
         blending_mode = layer.blending_mode.gsub(/ /, '_')
         PSD.logger.warn("Blend mode #{blending_mode} is not implemented") unless Compose.respond_to?(blending_mode)
         PSD.logger.debug("Blending #{layer.name} with #{blending_mode} blend mode")
@@ -45,6 +45,10 @@ class PSD
         LayerStyles.new(layer, other).apply!
         other = ClippingMask.new(layer, other).apply
 
+        blend_pixels!(blending_mode, layer, base, other, offset_x, offset_y)
+      end
+
+      def blend_pixels!(blending_mode, layer, base, other, offset_x, offset_y)
         other.height.times do |y|
           other.width.times do |x|
             base_x = x + offset_x
