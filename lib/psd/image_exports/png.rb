@@ -36,7 +36,12 @@ class PSD::Image
         i = 0
         @layer.height.times do |y|
           @layer.width.times do |x|
-            png[x + @layer.left, y + @layer.top] = @pixel_data[i]
+            offset_x = x + @layer.left
+            offset_y = y + @layer.top
+
+            next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
+
+            png[offset_x, offset_y] = @pixel_data[i]
             i += 1
           end
         end
@@ -48,10 +53,12 @@ class PSD::Image
             offset_x = @layer.mask.left + x
             offset_y = @layer.mask.top + y
 
-            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(png.get_pixel(offset_x, offset_y))
+            next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
+
+            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(png[offset_x, offset_y])
             color[3] = color[3] * @mask_data[i] / 255
 
-            png.set_pixel(offset_x, offset_y, ChunkyPNG::Color.rgba(*color))
+            png[offset_x, offset_y] = ChunkyPNG::Color.rgba(*color)
             i += 1
           end
         end
