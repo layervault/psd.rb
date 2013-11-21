@@ -22,7 +22,13 @@ class PSD
               compose! c, png, c.build_png, 0, 0
             end
           else
-            compose! c, png, c.image.to_png_with_mask, c.left.to_i, c.top.to_i
+            compose!(
+              c, 
+              png, 
+              c.image.to_png_with_mask, 
+              PSD::Util.clamp(c.left.to_i, 0, png.width), 
+              PSD::Util.clamp(c.top.to_i, 0, png.height)
+            )
           end
         end
 

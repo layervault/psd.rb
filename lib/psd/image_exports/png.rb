@@ -39,7 +39,7 @@ class PSD::Image
             offset_x = x + @layer.left
             offset_y = y + @layer.top
 
-            next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
+            i +=1 and next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
 
             png[offset_x, offset_y] = @pixel_data[i]
             i += 1
@@ -53,7 +53,7 @@ class PSD::Image
             offset_x = @layer.mask.left + x
             offset_y = @layer.mask.top + y
 
-            next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
+            i += 1 and next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
 
             color = ChunkyPNG::Color.to_truecolor_alpha_bytes(png[offset_x, offset_y])
             color[3] = color[3] * @mask_data[i] / 255
@@ -63,7 +63,12 @@ class PSD::Image
           end
         end
 
-        png.crop!(@layer.left, @layer.top, @layer.width.to_i, @layer.height.to_i)
+        crop_left = PSD::Util.clamp(@layer.left, 0, png.width)
+        crop_top = PSD::Util.clamp(@layer.top, 0, png.height)
+        crop_width = PSD::Util.clamp(@layer.width.to_i, 0, png.width - crop_left)
+        crop_height = PSD::Util.clamp(@layer.height.to_i, 0, png.height - crop_top)
+
+        png.crop!(crop_left, crop_top, crop_width, crop_height)
       end
 
       def mask_to_png
