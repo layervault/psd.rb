@@ -49,7 +49,7 @@ class PSD
         PSD.logger.debug("Blending #{layer.name} with #{blending_mode} blend mode")
 
         other = ClippingMask.new(layer, other).apply
-        LayerStyles.new(layer, other).apply!
+        LayerStyles.new(layer, base, other).apply!
 
         blend_pixels!(blending_mode, layer, base, other, offset_x, offset_y)
       end

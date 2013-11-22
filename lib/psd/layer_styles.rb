@@ -31,12 +31,13 @@ class PSD
       'Lmns' => 'lum'
     }
 
-    attr_reader :layer, :data, :png
+    attr_reader :layer, :data, :base, :fg
 
-    def initialize(layer, png=nil)
+    def initialize(layer, base, fg)
       @layer = layer
       @data = layer.info[:object_effects]
-      @png = png || layer.image.to_png
+      @base = base
+      @fg = fg
 
       if @data.nil?
         @applied = true
@@ -47,12 +48,10 @@ class PSD
     end
 
     def apply!
-      return png if @applied || data.nil?
+      return if @applied || data.nil?
 
       apply_color_overlay if data.has_key?('SoFi')
       apply_drop_shadow if data.has_key?('DrSh')
-
-      png
     end
   end
 end
