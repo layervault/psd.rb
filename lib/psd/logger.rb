@@ -13,7 +13,7 @@ class PSD
         return @logger if @logger
 
         if debug || ENV['PSD_DEBUG']
-          @logger = ::Logger.new(debug_output)
+          @logger = ::Logger.new(STDOUT)
           @logger.formatter = proc do |severity, datetime, progname, msg|
             "#{severity}: #{msg}\n"
           end
@@ -22,14 +22,6 @@ class PSD
         end
 
         return @logger
-      end
-
-      def debug_output
-        if ENV['PSD_DEBUG']
-          ENV['PSD_DEBUG'] == 'STDOUT' ? STDOUT : ENV['PSD_DEBUG']
-        end
-
-        STDOUT
       end
     end
   end

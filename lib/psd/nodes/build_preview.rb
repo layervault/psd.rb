@@ -48,8 +48,8 @@ class PSD
         PSD.logger.warn("Blend mode #{blending_mode} is not implemented") unless Compose.respond_to?(blending_mode)
         PSD.logger.debug("Blending #{layer.name} with #{blending_mode} blend mode")
 
-        LayerStyles.new(layer, other).apply!
         other = ClippingMask.new(layer, other).apply
+        LayerStyles.new(layer, other).apply!
 
         blend_pixels!(blending_mode, layer, base, other, offset_x, offset_y)
       end
