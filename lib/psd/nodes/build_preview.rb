@@ -25,7 +25,7 @@ class PSD
             compose!(
               c, 
               png, 
-              c.image.to_png_with_mask, 
+              c.image.to_png_with_mask(false),
               PSD::Util.clamp(c.left.to_i, 0, png.width), 
               PSD::Util.clamp(c.top.to_i, 0, png.height)
             )
