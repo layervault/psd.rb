@@ -1,5 +1,8 @@
 class PSD
   class LayerStyles
+    include ColorOverlay
+    include DropShadow
+
     # Blend modes in layer effects use different keys
     # than normal layer blend modes. Thanks Adobe.
     BLEND_TRANSLATION = {
@@ -47,38 +50,9 @@ class PSD
       return png if @applied || data.nil?
 
       apply_color_overlay if data.has_key?('SoFi')
+      apply_drop_shadow if data.has_key?('DrSh')
+
       png
-    end
-
-    private
-
-    def apply_color_overlay
-      overlay_data = data['SoFi']
-      color_data = overlay_data['Clr ']
-      blending_mode = BlendMode::BLEND_MODES[BLEND_TRANSLATION[overlay_data['Md  ']].to_sym]
-
-      width = layer.width.to_i
-      height = layer.height.to_i
-
-      PSD.logger.debug("Layer style: layer = #{layer.name}, type = color overlay, blend mode = #{blending_mode}")
-
-      for y in 0...height do
-        for x in 0...width do
-          pixel = png.get_pixel(x, y)
-          alpha = ChunkyPNG::Color.a(pixel)
-          next if alpha == 0
-
-          overlay_color = ChunkyPNG::Color.rgba(
-            color_data['Rd  '].round, 
-            color_data['Grn '].round,
-            color_data['Bl  '].round,
-            alpha
-          )
-
-          color = Compose.send(blending_mode, overlay_color, pixel)
-          png.set_pixel(x, y, color)
-        end
-      end
     end
   end
 end
