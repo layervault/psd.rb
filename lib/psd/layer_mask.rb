@@ -107,11 +107,12 @@ class PSD
 
     def parse_global_mask
       length = @file.read_int
+      
+      PSD.logger.debug "Global Mask: length = #{length}"
       return if length <= 0
 
       mask_end = @file.tell + length
-      PSD.logger.debug "Global Mask: length = #{length}"
-
+      
       @global_mask = {}
       @global_mask[:overlay_color_space] = @file.read_short
       @global_mask[:color_components] = 4.times.map { |i| @file.read_short >> 8 }

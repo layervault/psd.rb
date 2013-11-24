@@ -25,12 +25,12 @@ class PSD
       return self
     end
 
-    def has_loaded?
+    def loaded?
       @loaded
     end
 
     def method_missing(method, *args, &block)
-      load! unless has_loaded?
+      load! unless loaded?
       @obj.send(method, *args, &block)
     end
 

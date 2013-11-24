@@ -45,7 +45,6 @@ describe 'Image Exporting' do
       @psd.parse!
 
       image = @psd.tree.children.first.image
-      expect(image).to be_an_instance_of(PSD::ChannelImage)
       expect(image.width).to eq(1)
       expect(image.height).to eq(1)
 
