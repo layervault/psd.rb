@@ -34,6 +34,10 @@ class PSD
       @obj.send(method, *args, &block)
     end
 
+    def inspect
+      "<PSD::LazyExecute @obj=#{@obj.class.name}, @pos=#{@start_pos}, @load_method=:#{@load_method}>"
+    end
+
     private
 
     def load!
