@@ -25,8 +25,7 @@ class PSD
   include NodeExporting
 
   DEFAULTS = {
-    parse_image: false,
-    parse_layer_images: false
+    parse_image: false
   }
 
   attr_reader :file, :opts

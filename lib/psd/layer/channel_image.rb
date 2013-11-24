@@ -3,9 +3,9 @@ class PSD
     module ChannelImage
       attr_reader :image
 
-      def parse_channel_image(header, parse)
-        @image = PSD::ChannelImage.new(@file, header, self)
-        parse ? @image.parse : @image.skip
+      def parse_channel_image(header)
+        image = PSD::ChannelImage.new(@file, header, self)
+        @image = LazyExecute.new(image, @file).now(:skip).later(:parse)
       end
     end
   end

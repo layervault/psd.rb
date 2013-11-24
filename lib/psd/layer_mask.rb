@@ -56,7 +56,7 @@ class PSD
 
         layers.each do |layer|
           @file.seek 8, IO::SEEK_CUR and next if layer.folder? || layer.folder_end?
-          layer.parse_channel_image(@header, @options[:parse_layer_images])
+          layer.parse_channel_image(@header)
         end
       end
 
