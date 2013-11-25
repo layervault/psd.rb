@@ -120,7 +120,9 @@ class PSD
       # The image is the last section in the file, so we don't have to
       # bother with skipping over the bytes to read more data.
       image = Image.new(@file, @header)
-      LazyExecute.new(image, @file).later(:parse)
+      LazyExecute.new(image, @file)
+        .later(:parse)
+        .ignore(:width, :height)
     )
   end
 
