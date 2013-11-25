@@ -9,7 +9,6 @@ class PSD
 
     attr_reader :width, :height, :mask_data
     
-
     def initialize(file, header, layer)
       @layer = layer
 
@@ -27,7 +26,7 @@ class PSD
     def skip
       PSD.logger.debug "Skipping channel image data. Layer = #{@layer.name}"
       @channels_info.each do |ch|
-        @file.seek ch.length, IO::SEEK_CUR
+        @file.seek ch[:length], IO::SEEK_CUR
       end
     end
 
@@ -66,7 +65,7 @@ class PSD
 
         if finish != start + ch_info[:length]
           PSD.logger.error "Read incorrect number of bytes for channel ##{ch_info[:id]}. Expected = #{ch_info[:length]}, Actual = #{finish - start}"
-          @file.seek start + @ch_info[:length]
+          @file.seek start + ch_info[:length]
         end
       end
 

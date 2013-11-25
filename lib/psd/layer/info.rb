@@ -44,34 +44,20 @@ class PSD
           length = Util.pad2 @file.read_int
           pos = @file.tell
 
-          info_parsed = false
+          key_parseable = false
           LAYER_INFO.each do |name, info|
             next unless info.key == key
 
             PSD.logger.debug "Layer Info: key = #{key}, start = #{pos}, length = #{length}"
 
-            begin
-              i = info.new(self, length)
-              i.parse
-
-              @adjustments[name] = i
-              info_parsed = true
-            rescue Exception => e
-              PSD.logger.error "Parsing error: key = #{key}, message = #{e.message}"
-              PSD.logger.error e.backtrace.join("\n")
-            end
-
-            break
+            i = info.new(self, length)
+            @adjustments[name] = LazyExecute.new(i, @file).now(:skip).later(:parse)
+            key_parseable = true and break
           end
 
-          if !info_parsed
-            PSD.logger.debug "Skipping: layer = #{name}, key = #{key}, pos = #{@file.tell}, length = #{length}"
-            @file.seek pos + length
-          end
-
-          if @file.tell != (pos + length)
-            PSD.logger.warn "Layer info key #{key} ended at #{@file.tell}, expected #{pos + length}"
-            @file.seek pos + length
+          unless key_parseable
+            PSD.logger.debug "Skipping unknown layer info block: key = #{key}, length = #{length}"
+            @file.seek length, IO::SEEK_CUR
           end
         end
 
@@ -80,17 +66,6 @@ class PSD
 
       def vector_mask
         info[:vector_mask_2] || info[:vector_mask]
-      end
-
-      def export_extra_data(outfile)
-        outfile.write @file.read(@extra_data_end - @extra_data_begin)
-        if @path_components && !@path_components.empty?
-          outfile.seek @vector_mask_begin
-          @file.seek @vector_mask_begin
-
-          write_vector_mask(outfile)
-          @file.seek outfile.tell
-        end
       end
     end
   end
