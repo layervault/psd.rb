@@ -9,6 +9,7 @@ class PSD
       @loaded = false
       @load_method = nil
       @load_args = []
+      @passthru = []
 
       PSD.logger.debug "Marked #{@obj.class.name} at position #{@start_pos} for lazy execution"
     end
@@ -25,12 +26,17 @@ class PSD
       return self
     end
 
+    def ignore(*args)
+      @passthru += args
+      return self
+    end
+
     def loaded?
       @loaded
     end
 
     def method_missing(method, *args, &block)
-      load! unless loaded?
+      load! if !loaded? && !@passthru.include?(method.to_sym)
       @obj.send(method, *args, &block)
     end
 
