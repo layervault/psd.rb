@@ -39,19 +39,19 @@ class PSD
     end
 
     def height
-      top - bottom
+      bottom - top
     end
 
     def relative
-      flags & 0x01
+      (@flags & 0x01) > 0
     end
 
     def disabled
-      (flags & (0x01 << 1)) > 0
+      (@flags & (0x01 << 1)) > 0
     end
 
     def invert
-      (flags & (0x01 << 2)) > 0
+      (@flags & (0x01 << 2)) > 0
     end
 
     def to_hash
