@@ -6,7 +6,7 @@ class PSD
       alias :orig_to_png :to_png
       def to_png
         return build_png if group?
-        layer.image.to_png
+        layer.image.to_png_with_mask
       end
 
       def build_png(png=nil)
@@ -14,7 +14,7 @@ class PSD
 
         children.reverse.each do |c|
           next unless c.visible?
-          
+
           if c.group?
             if c.blending_mode == 'passthru'
               c.build_png(png)
@@ -23,10 +23,10 @@ class PSD
             end
           else
             compose!(
-              c, 
-              png, 
-              c.image.to_png_with_mask, 
-              PSD::Util.clamp(c.left.to_i, 0, png.width), 
+              c,
+              png,
+              c.image.to_png_with_mask,
+              PSD::Util.clamp(c.left.to_i, 0, png.width),
               PSD::Util.clamp(c.top.to_i, 0, png.height)
             )
           end
@@ -48,8 +48,8 @@ class PSD
         PSD.logger.warn("Blend mode #{blending_mode} is not implemented") unless Compose.respond_to?(blending_mode)
         PSD.logger.debug("Blending #{layer.name} with #{blending_mode} blend mode")
 
-        other = ClippingMask.new(layer, other).apply
         LayerStyles.new(layer, other).apply!
+        other = ClippingMask.new(layer, other).apply
 
         blend_pixels!(blending_mode, layer, base, other, offset_x, offset_y)
       end
@@ -59,11 +59,11 @@ class PSD
           other.width.times do |x|
             base_x = x + offset_x
             base_y = y + offset_y
-            
+
             next if base_x < 0 || base_y < 0 || base_x >= base.width || base_y >= base.height
 
             color = Compose.send(
-              blending_mode, 
+              blending_mode,
               other[x, y],
               base[base_x, base_y],
               opacity: layer.opacity,
