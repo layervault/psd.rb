@@ -3,7 +3,7 @@ class PSD::Image
     module LayerPNG
       # Load the image pixels into a PNG file and return a reference to the
       # data.
-      def to_png(layer_styles=true)
+      def to_png(options = {})
         return @png if @png
         
         PSD.logger.debug "Beginning layer PNG export"
@@ -17,14 +17,14 @@ class PSD::Image
           end
         end
 
-        PSD::LayerStyles.new(@layer, transparent_base, @png).apply! if layer_styles
+        PSD::LayerStyles.new(@layer, transparent_base, @png).apply! if options[:layer_styles]
 
         @png
       end
       alias :export :to_png
 
-      def to_png_with_mask(layer_styles=true)
-        return to_png(layer_styles) unless has_mask?
+      def to_png_with_mask(options = {})
+        return to_png(options) unless has_mask?
         return @png_with_mask if @png_with_mask
 
         PSD.logger.debug "Beginning PNG export with mask"
@@ -71,7 +71,7 @@ class PSD::Image
         crop_height = PSD::Util.clamp(@layer.height.to_i, 0, png.height - crop_top)
 
         png.crop!(crop_left, crop_top, crop_width, crop_height)
-        PSD::LayerStyles.new(@layer, transparent_base, png).apply! if layer_styles
+        PSD::LayerStyles.new(@layer, transparent_base, png).apply! if options[:layer_styles]
 
         @png_with_mask = png and return @png_with_mask
       end
