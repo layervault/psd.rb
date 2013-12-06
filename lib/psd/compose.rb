@@ -17,7 +17,7 @@ class PSD
 
     # Normal composition, delegate to ChunkyPNG
     def normal(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -33,7 +33,7 @@ class PSD
     #
 
     def darken(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -45,7 +45,7 @@ class PSD
     end
 
     def multiply(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -57,7 +57,7 @@ class PSD
     end
 
     def color_burn(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -79,7 +79,7 @@ class PSD
     end
 
     def linear_burn(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -96,7 +96,7 @@ class PSD
     #
 
     def lighten(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -109,7 +109,7 @@ class PSD
     end
 
     def screen(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -122,7 +122,7 @@ class PSD
     end
 
     def color_dodge(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -139,7 +139,7 @@ class PSD
     end
 
     def linear_dodge(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -157,7 +157,7 @@ class PSD
     #
 
     def overlay(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -178,7 +178,7 @@ class PSD
     end
 
     def soft_light(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -197,7 +197,7 @@ class PSD
     end
 
     def hard_light(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -218,7 +218,7 @@ class PSD
     end
 
     def vivid_light(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -239,7 +239,7 @@ class PSD
     end
 
     def linear_light(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -260,7 +260,7 @@ class PSD
     end
 
     def pin_light(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -281,7 +281,7 @@ class PSD
     end
 
     def hard_mix(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -298,7 +298,7 @@ class PSD
     #
 
     def difference(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -311,7 +311,7 @@ class PSD
     end
 
     def exclusion(fg, bg, opts={})
-      return fg if fully_transparent?(bg)
+      return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
@@ -344,6 +344,10 @@ class PSD
 
     def calculate_opacity(opts)
       opts[:opacity] * opts[:fill_opacity] / 255
+    end
+
+    def apply_opacity(color, opts)
+      (color & 0xffffff00) | ((color & 0x000000ff) * calculate_opacity(opts) / 255)
     end
 
     def blend_channel(bg, fg, alpha)
