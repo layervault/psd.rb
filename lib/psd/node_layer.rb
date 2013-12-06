@@ -59,7 +59,7 @@ class PSD::Node
         text: @layer.text,
         ref_x: @layer.reference_point.x,
         ref_y: @layer.reference_point.y,
-        mask: @layer.mask.snapshot,
+        mask: @layer.mask.to_hash,
         image: {
           width: @layer.image.width,
           height: @layer.image.height,

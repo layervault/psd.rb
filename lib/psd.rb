@@ -24,11 +24,6 @@ class PSD
   include Helpers
   include NodeExporting
 
-  DEFAULTS = {
-    parse_image: false,
-    parse_layer_images: false
-  }
-
   attr_reader :file, :opts
   alias :options :opts
 
@@ -55,7 +50,7 @@ class PSD
     @file = PSD::File.new(file, 'rb')
     @file.seek 0 # If the file was previously used and not closed
 
-    @opts = DEFAULTS.merge(opts)
+    @opts = opts
     @header = nil
     @resources = nil
     @layer_mask = nil
@@ -74,7 +69,7 @@ class PSD
     header
     resources
     layer_mask
-    image if @opts[:parse_image]
+    image
     
     @parsed = true
 
@@ -121,7 +116,14 @@ class PSD
     ensure_resources
     ensure_layer_mask
 
-    @image ||= Image.new(@file, @header).parse
+    @image ||= (
+      # The image is the last section in the file, so we don't have to
+      # bother with skipping over the bytes to read more data.
+      image = Image.new(@file, @header)
+      LazyExecute.new(image, @file)
+        .later(:parse)
+        .ignore(:width, :height)
+    )
   end
 
   # Export the current file to a new PSD. This may or may not work.

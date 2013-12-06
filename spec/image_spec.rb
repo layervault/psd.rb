@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Image Exporting' do
   before(:each) do
-    class PSD::Image 
+    class PSD::Image
       attr_accessor :pixel_data
     end
 
@@ -45,7 +45,6 @@ describe 'Image Exporting' do
       @psd.parse!
 
       image = @psd.tree.children.first.image
-      expect(image).to be_an_instance_of(PSD::ChannelImage)
       expect(image.width).to eq(1)
       expect(image.height).to eq(1)
 
@@ -64,6 +63,28 @@ describe 'Image Exporting' do
         expect(
           ChunkyPNG::Color.to_truecolor_alpha_bytes(png[0,0])
         ).to eq([0, 100, 200, 255])
+      end
+
+      it "memorizes the png instance" do
+        @psd.options[:parse_layer_images] = true
+        @psd.parse!
+
+        node = @psd.tree.children.first
+        png  = node.image.to_png
+
+        expect(png).to be_an_instance_of(ChunkyPNG::Canvas)
+        expect(node.image.to_png.__id__).to eq(png.__id__)
+      end
+
+      it "memorizes the png_with_mask instance" do
+        @psd = PSD.new('spec/files/path.psd', parse_layer_images: true)
+        @psd.parse!
+
+        node = @psd.tree.children.first
+        png  = node.image.to_png_with_mask
+
+        expect(png).to be_an_instance_of(ChunkyPNG::Canvas)
+        expect(node.image.to_png_with_mask.__id__).to eq(png.__id__)
       end
     end
   end

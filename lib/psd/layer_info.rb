@@ -15,9 +15,13 @@ class PSD
       @data = {}
     end
 
+    def skip
+      @file.seek @section_end
+    end
+
     # Override this - default seeks to end of section
     def parse
-      @file.seek @section_end
+      skip
     end
   end
 end

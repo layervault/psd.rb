@@ -217,11 +217,7 @@ PSD.debug = true
 
 You can build previews of any subset or version of the PSD document. This is useful for generating previews of layer comps or exporting individual layer groups as images.
 
-**NOTE: You MUST initialize with the parse_layer_images option set to true, as shown below.**
-
 ``` ruby
-psd = PSD.new(file, parse_layer_images: true)
-
 # Save a layer comp
 psd.tree.filter_by_comp("Version A").save_as_png('./Version A.png')
 
@@ -235,3 +231,4 @@ There are a few features that are currently missing from PSD.rb.
 
 * More image modes + depths for image exporting
 * A few layer info blocks
+* Support for rendering all layer styles
