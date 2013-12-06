@@ -50,8 +50,8 @@ class PSD
               slice[:origin] = @file.read_int
 
               slice[:associated_layer_id] = (slice[:origin] == 1 ? @file.read_int : nil)
-              slice[:name] = @file.read_unicode_string
 
+              slice[:name] = @file.read_unicode_string
               slice[:type] = @file.read_int
 
               slice[:bounds] = {}.tap do |bounds|
@@ -72,7 +72,7 @@ class PSD
               slice[:horizontal_alignment] = @file.read_int
               slice[:vertical_alignment] = @file.read_int
 
-              a, r, g, b = 4.times.map { @file.read_int }
+              a, r, g, b = 4.times.map { @file.read_byte }
               slice[:color] = ChunkyPNG::Color.rgba(r, g, b, a)
             end
           end
