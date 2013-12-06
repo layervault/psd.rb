@@ -17,7 +17,7 @@ class PSD
 
     # Normal composition, delegate to ChunkyPNG
     def normal(fg, bg, opts={})
-      return fg if opaque?(fg) || fully_transparent?(bg)
+      return fg if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
       mix_alpha, dst_alpha = calculate_alphas(fg, bg, DEFAULT_OPTS.merge(opts))
