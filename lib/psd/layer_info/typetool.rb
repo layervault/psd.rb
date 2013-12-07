@@ -17,7 +17,7 @@ class PSD
 
       @data[:text] = Descriptor.new(@file).parse
       @data[:text]['EngineData']
-        .encode!('UTF-8', 'MacRoman')
+        .encode!('UTF-8', 'macRoman', invalid: :replace, undef: :replace)
         .delete!("\000")
 
       @data[:engine_data] = nil
@@ -44,7 +44,7 @@ class PSD
     def text_value
       if engine_data.nil?
         # Something went wrong, lets hack our way through.
-        /\/Text \(˛ˇ(.*)\)$/.match(@data[:text]['EngineData'])[1].gsub /\r/, "\n"
+        /\/Text \(˛ˇ(.*)\)$/u.match(@data[:text]['EngineData'])[1].gsub /\r/, "\n"
       else
         engine_data.EngineDict.Editor.Text
       end
