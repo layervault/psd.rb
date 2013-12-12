@@ -40,7 +40,6 @@ class PSD
       PSD.logger.debug @channels_info
 
       @chan_pos = 0
-
       @channels_info.each do |ch_info|
         @ch_info = ch_info
         if ch_info[:length] <= 0

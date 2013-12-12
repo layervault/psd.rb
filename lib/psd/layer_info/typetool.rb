@@ -17,7 +17,7 @@ class PSD
 
       @data[:text] = Descriptor.new(@file).parse
       @data[:text]['EngineData']
-        .encode!('UTF-8', 'MacRoman')
+        .encode!('UTF-8', 'MacRoman', invalid: :replace, undef: :replace)
         .delete!("\000")
 
       @data[:engine_data] = nil

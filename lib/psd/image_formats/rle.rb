@@ -23,7 +23,7 @@ class PSD
         @line_index = 0
 
         channels.times do |i|
-          PSD.logger.debug "Parsing RLE channel ##{i}: position = #{@chan_pos}, line = #{@line_index}"
+          PSD.logger.debug "Parsing RLE channel ##{i}: file position = #{@file.tell}, image position = #{@chan_pos}, line = #{@line_index}"
           decode_rle_channel
           @line_index += height
         end
