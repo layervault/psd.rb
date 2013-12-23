@@ -32,7 +32,7 @@ class PSD
           end
         end
 
-        png
+        group? && image.has_mask? ? apply_group_mask(png) : png
       end
 
       private
@@ -73,6 +73,14 @@ class PSD
             base[base_x, base_y] = color
           end
         end
+      end
+
+      def apply_group_mask(png)
+        service = MaskService.new(layer)
+        service.pixel_data = png.pixels
+        service.layer_width = png.width
+        service.layer_height = png.height
+        service.apply
       end
     end
   end

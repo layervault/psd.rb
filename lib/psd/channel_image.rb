@@ -56,6 +56,8 @@ class PSD
           @height = @layer.height
         end
 
+        @length = @width * @height
+
         start = @file.tell
 
         PSD.logger.debug "Channel ##{ch_info[:id]}, length = #{ch_info[:length]}"
@@ -69,12 +71,12 @@ class PSD
         end
       end
 
-      @width = @layer.width
-      @height = @layer.height
-
       if @channel_data.length != @length
         PSD.logger.error "#{@channel_data.length} read; expected #{@length}"
       end
+
+      @width = @layer.width
+      @height = @layer.height
 
       parse_user_mask
       process_image_data
