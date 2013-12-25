@@ -27,7 +27,7 @@ describe "Hierarchy" do
     end
 
     it "should properly identify the root node" do
-      expect(@tree.root?).to be_true
+      expect(@tree.root?).to be true
       expect(@tree.root).to be @tree
       expect(@tree.children.last.root).to be @tree
     end
