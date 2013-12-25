@@ -17,6 +17,7 @@ class PSD
         layer_id: LayerID,
         fill_opacity: FillOpacity,
         placed_layer: PlacedLayer,
+        locked: Locked,
         vector_mask: VectorMask,
         vector_mask_2: VectorMask2,
         vector_stroke: VectorStroke,
@@ -52,6 +53,7 @@ class PSD
 
             i = info.new(self, length)
             @adjustments[name] = LazyExecute.new(i, @file).now(:skip).later(:parse)
+              
             key_parseable = true and break
           end
 
