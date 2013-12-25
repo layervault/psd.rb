@@ -23,6 +23,30 @@ class PSD
         end
       end
 
+      # Is the layer completely locked?
+      def all_locked?
+        return false unless info.has_key?(:locked)
+        info[:locked].all_locked
+      end
+
+      # Is the layer position locked?
+      def position_locked?
+        return false unless info.has_key?(:locked)
+        info[:locked].position_locked
+      end
+
+      # Is the layer composite locked?
+      def composite_locked?
+        return false unless info.has_key?(:locked)
+        info[:locked].composite_locked
+      end
+
+      # Is the layer transparency locked?
+      def transparency_locked?
+        return false unless info.has_key?(:locked)
+        info[:locked].transparency_locked
+      end
+
       # Is this layer visible?
       def visible?
         @visible
