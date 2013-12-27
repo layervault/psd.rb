@@ -106,6 +106,7 @@ describe "Hierarchy" do
     end
   end
 
+  # https://github.com/layervault/psd.rb/pull/54
   describe "Size Calculation" do
     before(:each) do
       @psd = PSD.new('spec/files/empty-layer.psd')
