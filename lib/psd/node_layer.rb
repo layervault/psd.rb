@@ -52,6 +52,10 @@ class PSD::Node
       end
     end
 
+    def empty?
+      width == 0 || height == 0
+    end
+
     # Exports this layer to a Hash.
     def to_hash
       super.merge({

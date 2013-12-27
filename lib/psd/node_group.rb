@@ -46,6 +46,10 @@ class PSD::Node
       @children.each{ |c| c.show! }
     end
 
+    def empty?
+      @children.empty?
+    end
+
     # Export this layer and it's children to a hash recursively.
     def to_hash
       super.merge({
@@ -64,10 +68,11 @@ class PSD::Node
     private
 
     def get_dimensions
-      @left = @children.map(&:left).min || 0
-      @top = @children.map(&:top).min || 0
-      @bottom = @children.map(&:bottom).max || 0
-      @right = @children.map(&:right).max || 0
+      children = @children.reject(&:empty?)
+      @left = children.map(&:left).min || 0
+      @top = children.map(&:top).min || 0
+      @bottom = children.map(&:bottom).max || 0
+      @right = children.map(&:right).max || 0
     end
   end
 end
