@@ -133,9 +133,11 @@ describe "Hierarchy" do
     end
 
     it 'should correctly identify empty nodes' do
-      expect(@psd.tree.children_at_path('group/subgroup 1').first).to be_empty
-      expect(@psd.tree.children_at_path('group/subgroup 1/subgroup 2').first).to be_empty
-      expect(@psd.tree.children_at_path('group/subgroup 1/subgroup 2/empty').first).to be_empty
+      expect(@psd.tree.children_at_path('group/not empty').first).to_not be_empty
+      expect(@psd.tree.children_at_path('group/Group 2').first).to be_empty
+      expect(@psd.tree.children_at_path('group/Group 2/Group 1').first).to be_empty
+      expect(@psd.tree.children_at_path('group/Group 2/subgroup 1/subgroup 2').first).to be_empty
+      expect(@psd.tree.children_at_path('group/Group 2/subgroup 1/subgroup 2/empty layer').first).to be_empty
       expect(@psd.tree.children[0]).to_not be_empty
     end
 
