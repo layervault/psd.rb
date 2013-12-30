@@ -47,7 +47,11 @@ class PSD::Node
     end
 
     def empty?
-      @children.empty?
+      @children.each do |child|
+        return false unless child.empty?
+      end
+      
+      return true
     end
 
     # Export this layer and it's children to a hash recursively.
