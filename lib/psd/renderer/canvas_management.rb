@@ -5,12 +5,8 @@ class PSD
         @canvas_stack.last
       end
 
-      def create_canvas(width=@width, height=@height)
-        push_canvas Canvas.new(width, height)
-      end
-
-      def create_canvas_for(node)
-        create_canvas node.width.to_i, node.height.to_i
+      def create_canvas(node, width=@width, height=@height)
+        push_canvas Canvas.new(node, width, height)
       end
 
       def push_canvas(canvas)

@@ -19,10 +19,12 @@ class PSD
 
     def render!
       # Create our base canvas
-      create_canvas
+      create_canvas(active_node)
 
       # Begin the rendering process
       execute_pipeline
+
+      @rendered = true
     end
 
     def execute_pipeline
@@ -36,9 +38,11 @@ class PSD
           if group_is_passthru?(child)
             execute_pipeline
           else
-            create_canvas_for(child)
+            create_canvas(child, child.width, child.height)
             execute_pipeline
-            pop_canvas
+            child_canvas = pop_canvas
+
+            child_canvas.paint_to active_canvas
           end
 
           pop_node and next
