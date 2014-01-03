@@ -1,6 +1,6 @@
 class PSD
   class Renderer
-    module CanvasManagment
+    module CanvasManagement
       def active_canvas
         @canvas_stack.last
       end

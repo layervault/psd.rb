@@ -1,3 +1,5 @@
+require_relative 'renderer/canvas_management'
+
 class PSD
   class Renderer
     include CanvasManagement
@@ -53,9 +55,9 @@ class PSD
       end
     end
 
-    def export
+    def to_png
       render! unless @rendered
-      PNGExporter.new(@pixel_data)
+      active_canvas
     end
 
     private

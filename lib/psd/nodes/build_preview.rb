@@ -1,12 +1,11 @@
-class PSD
+ class PSD
   class Node
     module BuildPreview
       include PSD::Image::Export::PNG
 
       alias :orig_to_png :to_png
       def to_png
-        return build_png if group?
-        layer.image.to_png_with_mask
+        PSD::Renderer.new(self).to_png
       end
 
       def build_png(png=nil)

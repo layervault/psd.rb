@@ -3,18 +3,19 @@ class PSD
     class Mask
       attr_accessor :pixel_data, :mask_data, :layer_width, :layer_height
 
-      def initialize(layer, options = {})
-        @layer = layer
+      def initialize(canvas, options = {})
+        @canvas = canvas
+        @layer = canvas.node
         @options = options
 
-        @pixel_data = @layer.image.pixel_data
+        @pixel_data = @canvas.pixels
         @mask_data = @layer.image.mask_data
 
         @layer_width = (@layer.folder? ? @layer.mask.width : @layer.width).to_i
         @layer_height = (@layer.folder? ? @layer.mask.height : @layer.height).to_i
       end
 
-      def apply
+      def apply!
         PSD.logger.debug "Beginning PNG export with mask"
         
         # We generate the preview at the document size instead to make applying the mask
@@ -59,15 +60,8 @@ class PSD
         crop_height = PSD::Util.clamp(@layer_height, 0, png.height - crop_top)
 
         png.crop!(crop_left, crop_top, crop_width, crop_height)
-        PSD::LayerStyles.new(@layer, transparent_base, png).apply! if @options[:layer_styles]
 
         return png
-      end
-
-      private
-
-      def transparent_base
-        ChunkyPNG::Canvas.new(width.to_i, height.to_i, ChunkyPNG::Color::TRANSPARENT)
       end
     end
   end
