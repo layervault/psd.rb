@@ -8,6 +8,28 @@ class PSD
     end
 
     def paint_to(base)
+      apply_mask
+      apply_layer_styles
+      apply_layer_opacity
+      compose_pixels
+    end
+
+    private
+
+    def apply_mask
+      return unless @node.image.has_mask?
+      Mask.new(self).apply!
+    end
+
+    def apply_layer_styles
+      LayerStyles.new(self)
+    end
+
+    def apply_layer_opacity
+
+    end
+
+    def compose_pixels
       offset_x = PSD::Util.clamp(@node.left.to_i, 0, base.width)
       offset_y = PSD::Util.clamp(@node.top.to_i, 0, base.height)
 
