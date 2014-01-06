@@ -61,7 +61,7 @@ class PSD
 
         png.crop!(crop_left, crop_top, crop_width, crop_height)
 
-        return png
+        @canvas.canvas = png
       end
     end
   end

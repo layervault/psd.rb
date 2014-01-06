@@ -20,6 +20,8 @@ class PSD
     end
 
     def render!
+      PSD.logger.debug "Beginning render process"
+
       # Create our base canvas
       create_group_canvas(active_node)
 
@@ -30,6 +32,7 @@ class PSD
     end
 
     def execute_pipeline
+      PSD.logger.debug "Executing pipeline on #{active_node.name || ":root:"}"
       children.each do |child|
         # We skip over hidden nodes. Maybe something configurable in the future?
         next unless child.visible?
@@ -38,8 +41,10 @@ class PSD
           push_node(child)
 
           if group_is_passthru?(child)
+            PSD.logger.debug "#{child.name} is a passthru group"
             execute_pipeline
           else
+            PSD.logger.debug "#{child.name} is a blending group"
             create_group_canvas(child, child.width, child.height)
             execute_pipeline
             child_canvas = pop_canvas
