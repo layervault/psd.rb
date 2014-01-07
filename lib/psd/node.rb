@@ -44,6 +44,10 @@ class PSD
       is_a?(PSD::Node::Group) || is_a?(PSD::Node::Root)
     end
 
+    def debug_name
+      root? ? ":root:" : name
+    end
+
     def to_hash
       hash = {
         type: nil,

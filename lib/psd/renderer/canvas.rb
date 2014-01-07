@@ -19,7 +19,7 @@ class PSD
       end
 
       def paint_to(base)
-        PSD.logger.debug "Painting #{node.name} to #{base.node.name || ":root:"}"
+        PSD.logger.debug "Painting #{node.name} to #{base.node.debug_name}"
 
         apply_mask
         apply_layer_styles
@@ -36,7 +36,7 @@ class PSD
       def initialize_canvas
         return if node.root? || node.group?
 
-        PSD.logger.debug "Initializing canvas for #{node.name || ":root:"}"
+        PSD.logger.debug "Initializing canvas for #{node.debug_name}"
 
         i = 0
         height.times do |y|

@@ -3,11 +3,14 @@ class PSD
     class Blender
       attr_reader :fg, :bg
 
+      # Takes a foreground Canvas and a background Canvas
       def initialize(fg, bg)
         @fg = fg
         @bg = bg
       end
 
+      # Composes the foreground Canvas onto the background Canvas using the
+      # blending mode specified by the foreground.
       def compose!
         PSD.logger.debug "Composing #{fg.node.name} onto #{bg.node.name || ":root:"} with #{fg.node.blending_mode} blending"
 
