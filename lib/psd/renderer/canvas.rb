@@ -4,12 +4,12 @@ class PSD
       attr_accessor :canvas
       attr_reader :node, :width, :height, :left, :top
 
-      def initialize(node, width, height, color = nil)
+      def initialize(node, width = nil, height = nil, color = nil)
         @node = node
         @pixel_data = @node.root? ? [] : @node.image.pixel_data
         
-        @width = width.to_i
-        @height = height.to_i
+        @width = (width || @node.width).to_i
+        @height = (height || @node.height).to_i
         @left = @node.left.to_i
         @top = @node.top.to_i
 
@@ -22,6 +22,7 @@ class PSD
         PSD.logger.debug "Painting #{node.name} to #{base.node.debug_name}"
 
         apply_mask
+        apply_clipping_mask
         apply_layer_styles
         apply_layer_opacity
         compose_pixels(base)
@@ -48,6 +49,9 @@ class PSD
             i += 1
           end
         end
+
+        # This can now be referenced by @canvas.pixels
+        @pixel_data = nil
       end
 
       def apply_mask
@@ -55,6 +59,11 @@ class PSD
 
         PSD.logger.debug "Applying layer mask to #{node.name}"
         Mask.new(self).apply!
+      end
+
+      def apply_clipping_mask
+        return unless @node.clipped?
+        ClippingMask.new(self).apply!
       end
 
       def apply_layer_styles
