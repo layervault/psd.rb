@@ -71,7 +71,7 @@ class PSD
         end
       end
 
-      if @channel_data.length != @length
+      if @channel_data.length != (@length * @channels_info.length)
         PSD.logger.error "#{@channel_data.length} read; expected #{@length}"
       end
 
