@@ -2,13 +2,17 @@ class PSD
   class Renderer
     class Canvas
       attr_accessor :canvas
-      attr_reader :node, :width, :height
+      attr_reader :node, :width, :height, :left, :top
 
       def initialize(node, width, height, color = nil)
         @node = node
         @pixel_data = @node.root? ? [] : @node.image.pixel_data
+        
         @width = width.to_i
         @height = height.to_i
+        @left = @node.left.to_i
+        @top = @node.top.to_i
+
         @canvas = ChunkyPNG::Canvas.new(@width, @height, (color || ChunkyPNG::Color::TRANSPARENT))
 
         initialize_canvas
@@ -30,7 +34,7 @@ class PSD
       private
 
       def initialize_canvas
-        return if node.root?
+        return if node.root? || node.group?
 
         PSD.logger.debug "Initializing canvas for #{node.name || ":root:"}"
 
@@ -62,8 +66,8 @@ class PSD
       def compose_pixels(base)
         PSD.logger.debug "Composing #{node.name} onto #{base.node.name || ":root:"} with #{node.blending_mode} blending"
 
-        offset_x = PSD::Util.clamp(@node.left.to_i, 0, base.width)
-        offset_y = PSD::Util.clamp(@node.top.to_i, 0, base.height)
+        offset_x = PSD::Util.clamp(@left - base.left, 0, base.width)
+        offset_y = PSD::Util.clamp(@top - base.top, 0, base.height) 
 
         height.times do |y|
           width.times do |x|

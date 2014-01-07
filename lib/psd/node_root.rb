@@ -51,6 +51,14 @@ class PSD::Node
       0
     end
 
+    def left
+      0
+    end
+
+    def top
+      0
+    end
+
     def psd; @psd; end
 
     private
