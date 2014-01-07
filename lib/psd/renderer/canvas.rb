@@ -27,6 +27,9 @@ class PSD
         compose_pixels(base)
       end
 
+      def [](x, y); @canvas[x, y]; end
+      def []=(x, y, value); @canvas[x, y] = value; end
+
       def method_missing(method, *args, &block)
         @canvas.send(method, *args, &block)
       end
@@ -56,7 +59,7 @@ class PSD
 
       def apply_layer_styles
         PSD.logger.debug "Applying layer styles to #{node.name}"
-        # LayerStyles.new(self)
+        LayerStyles.new(self).apply!
       end
 
       def apply_layer_opacity
