@@ -8,7 +8,8 @@ results = Benchmark.measure "Image exporting" do
   psd = PSD.new(file)
   psd.parse!
 
-  psd.tree.children_with_path('Ellipse 1').first.save_as_png('./output.png')
+  #psd.tree.children_with_path('Ellipse 1').first.save_as_png('./output.png')
+  psd.tree.save_as_png('./output.png')
 end
 
 puts Benchmark::CAPTION

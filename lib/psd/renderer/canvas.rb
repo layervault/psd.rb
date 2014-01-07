@@ -64,29 +64,7 @@ class PSD
       end
 
       def compose_pixels(base)
-        PSD.logger.debug "Composing #{node.name} onto #{base.node.name || ":root:"} with #{node.blending_mode} blending"
-
-        offset_x = PSD::Util.clamp(@left - base.left, 0, base.width)
-        offset_y = PSD::Util.clamp(@top - base.top, 0, base.height) 
-
-        height.times do |y|
-          width.times do |x|
-            base_x = x + offset_x
-            base_y = y + offset_y
-
-            next if base_x < 0 || base_y < 0 || base_x >= base.width || base_y >= base.height
-
-            color = Compose.send(
-              @node.blending_mode,
-              @canvas[x, y],
-              base[base_x, base_y],
-              opacity: @node.opacity,
-              fill_opacity: @node.fill_opacity
-            )
-
-            base[base_x, base_y] = color
-          end
-        end
+        Blender.new(self, base).compose!
       end
     end
   end
