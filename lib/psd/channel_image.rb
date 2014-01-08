@@ -6,7 +6,6 @@ class PSD
   class ChannelImage < Image
     include ImageFormat::LayerRLE
     include ImageFormat::LayerRAW
-    include Export::LayerPNG
 
     attr_reader :width, :height, :mask_data
     

@@ -6,7 +6,6 @@ class PSD
     include ImageMode::CMYK
     include ImageMode::Greyscale
     include ImageMode::RGB
-    include Export::PNG
 
     attr_reader :pixel_data, :opacity, :has_mask
     alias :has_mask? :has_mask

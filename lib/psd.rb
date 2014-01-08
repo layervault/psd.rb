@@ -1,5 +1,6 @@
 require "bindata"
 require "psd/enginedata"
+require RUBY_ENGINE =~ /jruby/ ? 'chunky_png' : 'oily_png'
 
 require_relative 'psd/section'
 
@@ -7,7 +8,6 @@ dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [
   '/image_formats/*',
   '/image_modes/*',
-  '/image_exports/*',
   '/nodes/*',
   '/layer_info/*',
   '/layer/*',
