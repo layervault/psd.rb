@@ -15,7 +15,6 @@ class PSD
     # Normal blend modes
     #
 
-    # Normal composition, delegate to ChunkyPNG
     def normal(fg, bg, opts={})
       return apply_opacity(fg, opts) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
@@ -27,6 +26,7 @@ class PSD
 
       rgba(new_r, new_g, new_b, dst_alpha)
     end
+    alias_method :passthru, :normal
 
     #
     # Subtractive blend modes

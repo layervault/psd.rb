@@ -40,17 +40,13 @@ class PSD
         if child.group?
           push_node(child)
 
-          if child.passthru_blending?
-            PSD.logger.debug "#{child.name} is a passthru group"
-            execute_pipeline
-          else
-            PSD.logger.debug "#{child.name} is a blending group"
-            create_group_canvas(child)
-            execute_pipeline
-            child_canvas = pop_canvas
-
-            child_canvas.paint_to active_canvas
-          end
+          PSD.logger.debug "#{child.name} is a group with #{child.blending_mode} blending"
+          
+          create_group_canvas(child)
+          execute_pipeline
+          
+          child_canvas = pop_canvas
+          child_canvas.paint_to active_canvas
 
           pop_node and next
         end

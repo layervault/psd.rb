@@ -63,6 +63,9 @@ class PSD::Node
       define_method(meth) { 0 }
     end
 
+    def opacity; 255; end
+    def fill_opacity; 255; end
+    
     def psd; @psd; end
 
     private

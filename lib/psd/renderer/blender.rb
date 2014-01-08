@@ -7,12 +7,15 @@ class PSD
       def initialize(fg, bg)
         @fg = fg
         @bg = bg
+
+        @opacity = @fg.opacity.to_i
+        @fill_opacity = @fg.fill_opacity.to_i
       end
 
       # Composes the foreground Canvas onto the background Canvas using the
       # blending mode specified by the foreground.
       def compose!
-        PSD.logger.debug "Composing #{fg.node.name} onto #{bg.node.name || ":root:"} with #{fg.node.blending_mode} blending"
+        PSD.logger.debug "Composing #{fg.node.debug_name} onto #{bg.node.debug_name} with #{fg.node.blending_mode} blending"
 
         offset_x = PSD::Util.clamp(fg.left - bg.left, 0, bg.width)
         offset_y = PSD::Util.clamp(fg.top - bg.top, 0, bg.height) 
@@ -28,8 +31,8 @@ class PSD
               fg.node.blending_mode,
               fg.canvas[x, y],
               bg.canvas[base_x, base_y],
-              opacity: fg.node.opacity,
-              fill_opacity: fg.node.fill_opacity
+              opacity: @opacity,
+              fill_opacity: @fill_opacity
             )
 
             bg.canvas[base_x, base_y] = color
