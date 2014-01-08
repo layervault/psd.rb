@@ -51,6 +51,14 @@ class PSD::Node
       0
     end
 
+    def width
+      document_dimensions[0]
+    end
+
+    def height
+      document_dimensions[1]
+    end
+
     def left
       0
     end

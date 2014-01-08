@@ -4,7 +4,7 @@ class PSD
       attr_accessor :canvas
       attr_reader :node, :width, :height, :left, :top
 
-      def initialize(node, width = nil, height = nil, color = nil)
+      def initialize(node, width = nil, height = nil, color = ChunkyPNG::Color::TRANSPARENT)
         @node = node
         @pixel_data = @node.root? ? [] : @node.image.pixel_data
         
@@ -13,7 +13,7 @@ class PSD
         @left = @node.left.to_i
         @top = @node.top.to_i
 
-        @canvas = ChunkyPNG::Canvas.new(@width, @height, (color || ChunkyPNG::Color::TRANSPARENT))
+        @canvas = ChunkyPNG::Canvas.new(@width, @height, color)
 
         initialize_canvas
       end

@@ -23,7 +23,7 @@ class PSD
       PSD.logger.debug "Beginning render process"
 
       # Create our base canvas
-      create_group_canvas(active_node)
+      create_group_canvas(active_node, active_node.width, active_node.height)
 
       # Begin the rendering process
       execute_pipeline
@@ -45,7 +45,7 @@ class PSD
             execute_pipeline
           else
             PSD.logger.debug "#{child.name} is a blending group"
-            create_group_canvas(child, child.width, child.height)
+            create_group_canvas(child)
             execute_pipeline
             child_canvas = pop_canvas
 
@@ -55,7 +55,7 @@ class PSD
           pop_node and next
         end
 
-        canvas = Canvas.new(child, child.width, child.height)
+        canvas = Canvas.new(child)
         canvas.paint_to active_canvas
       end
     end
