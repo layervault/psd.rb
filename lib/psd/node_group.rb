@@ -46,6 +46,10 @@ class PSD::Node
       @children.each{ |c| c.show! }
     end
 
+    def passthru_blending?
+      blending_mode == 'passthru'
+    end
+
     # Export this layer and it's children to a hash recursively.
     def to_hash
       super.merge({

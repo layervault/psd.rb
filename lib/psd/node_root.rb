@@ -59,12 +59,8 @@ class PSD::Node
       document_dimensions[1]
     end
 
-    def left
-      0
-    end
-
-    def top
-      0
+    [:top, :right, :bottom, :left].each do |meth|
+      define_method(meth) { 0 }
     end
 
     def psd; @psd; end

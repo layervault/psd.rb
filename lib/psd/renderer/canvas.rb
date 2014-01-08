@@ -2,7 +2,7 @@ class PSD
   class Renderer
     class Canvas
       attr_accessor :canvas
-      attr_reader :node, :width, :height, :left, :top
+      attr_reader :node, :width, :height, :left, :right, :top, :bottom
 
       def initialize(node, width = nil, height = nil, color = ChunkyPNG::Color::TRANSPARENT)
         @node = node
@@ -11,7 +11,9 @@ class PSD
         @width = (width || @node.width).to_i
         @height = (height || @node.height).to_i
         @left = @node.left.to_i
+        @right = @node.right.to_i
         @top = @node.top.to_i
+        @bottom = @node.bottom.to_i
 
         @canvas = ChunkyPNG::Canvas.new(@width, @height, color)
 
@@ -73,6 +75,20 @@ class PSD
 
       def apply_layer_opacity
         PSD.logger.debug "Adjusting opacity for #{node.name}"
+        return if @node.root?
+
+        opacity = @node.opacity.to_f
+        @node.ancestors.each do |parent|
+          break unless parent.passthru_blending?
+          opacity = (opacity * parent.opacity.to_f) / 255.0
+        end
+
+        PSD.logger.debug "Inherited opacity for #{@node.debug_name} is #{opacity}"
+        return if opacity == 255.0
+
+        @canvas.pixels.map do |pixel|
+          (pixel & 0xffffff00) | (ChunkyPNG::Color.a(pixel) * opacity.to_i / 255)
+        end
       end
 
       def compose_pixels(base)

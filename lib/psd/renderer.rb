@@ -40,7 +40,7 @@ class PSD
         if child.group?
           push_node(child)
 
-          if group_is_passthru?(child)
+          if child.passthru_blending?
             PSD.logger.debug "#{child.name} is a passthru group"
             execute_pipeline
           else
@@ -85,10 +85,6 @@ class PSD
 
     def active_node
       @node_stack.last
-    end
-
-    def group_is_passthru?(node)
-      node.blending_mode == 'passthru'
     end
   end
 end
