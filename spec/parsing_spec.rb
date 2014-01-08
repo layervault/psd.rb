@@ -131,7 +131,7 @@ describe 'Parsing' do
       expect(blend_mode.mode).to eq('normal')
       expect(blend_mode.opacity).to eq(255)
       expect(blend_mode.opacity_percentage).to eq(100)
-      expect(blend_mode.visible).to be_true
+      expect(blend_mode.visible).to be true
     end
 
     it "should parse all layer comps" do

@@ -27,7 +27,7 @@ describe "Hierarchy" do
     end
 
     it "should properly identify the root node" do
-      expect(@tree.root?).to be_true
+      expect(@tree.root?).to be true
       expect(@tree.root).to be @tree
       expect(@tree.children.last.root).to be @tree
     end
@@ -103,6 +103,26 @@ describe "Hierarchy" do
         expect(tree).to_not eq(@tree)
         expect(@tree.children.size).to eq(3)
       end
+    end
+  end
+
+  # https://github.com/layervault/psd.rb/pull/54
+  describe "Size Calculation" do
+    before(:each) do
+      @psd = PSD.new('spec/files/empty-layer.psd')
+      @psd.parse!
+    end
+
+    it 'should correctly identify empty nodes' do
+      expect(@psd.tree.children_at_path('group/empty layer').first).to be_empty
+      expect(@psd.tree.children[0]).to_not be_empty
+    end
+
+    it "should correctly calculate the size of a group" do
+      expect(@psd.tree.children[0].width).to eq 100
+      expect(@psd.tree.children[0].height).to eq 100
+      expect(@psd.tree.children[0].left).to eq 450
+      expect(@psd.tree.children[0].top).to eq 450
     end
   end
 end
