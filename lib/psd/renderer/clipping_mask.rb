@@ -25,9 +25,6 @@ class PSD
             doc_x = @canvas.left + x
             doc_y = @canvas.top + y
 
-            # next if doc_x < @mask.left || doc_x > @mask.right
-            # next if doc_y < @mask.top || doc_y > @mask.bottom
-
             mask_x = doc_x - @mask.left
             mask_y = doc_y - @mask.top
 

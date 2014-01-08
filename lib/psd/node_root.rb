@@ -28,18 +28,20 @@ class PSD::Node
 
     # Returns the width and height of the entire PSD document.
     def document_dimensions
-      [@psd.header.width, @psd.header.height]
+      [document_width, document_height]
     end
 
     # The width of the full PSD document as defined in the header.
     def document_width
       @psd.header.width.to_i
     end
+    alias_method :width, :document_width
 
     # The height of the full PSD document as defined in the header.
     def document_height
       @psd.header.height.to_i
     end
+    alias_method :height, :document_height
 
     # The root node has no name since it's not an actual layer or group.
     def name
@@ -51,21 +53,13 @@ class PSD::Node
       0
     end
 
-    def width
-      document_dimensions[0]
-    end
-
-    def height
-      document_dimensions[1]
-    end
-
     [:top, :right, :bottom, :left].each do |meth|
       define_method(meth) { 0 }
     end
 
     def opacity; 255; end
     def fill_opacity; 255; end
-    
+
     def psd; @psd; end
 
     private
