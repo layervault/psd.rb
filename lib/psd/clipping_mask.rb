@@ -42,9 +42,6 @@ class PSD
             @canvas[x, y] = (color & 0xffffff00) | (ChunkyPNG::Color.a(color) * alpha / 255)
           end
         end
-
-        # full_png.crop!(@canvas.left, @canvas.top, @canvas.width, @canvas.height)
-        # @canvas.canvas = full_png
       end
     end
   end
