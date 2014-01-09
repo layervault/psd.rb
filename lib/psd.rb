@@ -1,6 +1,6 @@
 require "bindata"
 require "psd/enginedata"
-require RUBY_ENGINE =~ /jruby/ ? 'chunky_png' : 'oily_png'
+require "chunky_png"
 
 require_relative 'psd/section'
 
