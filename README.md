@@ -202,7 +202,7 @@ psd.image.save_as_png 'path/to/output.png' # writes PNG to disk
 If you run into any problems parsing a PSD, you can enable debug logging via the `PSD_DEBUG` environment variable. For example:
 
 ``` bash
-PSD_DEBUG=STDOUT bundle exec examples/parse.rb
+PSD_DEBUG=true bundle exec examples/parse.rb
 ```
 
 You can also give a path to a file instead. If you need to enable debugging programatically:
@@ -232,3 +232,4 @@ There are a few features that are currently missing from PSD.rb.
 * More image modes + depths for image exporting
 * A few layer info blocks
 * Support for rendering all layer styles
+* Render engine fixes for groups with lowered opacity
