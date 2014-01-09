@@ -1,3 +1,6 @@
+require_relative 'layer_styles/color_overlay'
+require_relative 'layer_styles/drop_shadow'
+
 class PSD
   class LayerStyles
     include ColorOverlay
