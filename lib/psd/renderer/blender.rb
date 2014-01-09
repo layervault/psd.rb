@@ -10,6 +10,7 @@ class PSD
 
         @opacity = @fg.opacity.to_i
         @fill_opacity = @fg.fill_opacity.to_i
+        PSD.logger.debug "Blender: name = #{fg.node.name}, opacity = #{@opacity}, fill opacity = #{@fill_opacity}"
       end
 
       # Composes the foreground Canvas onto the background Canvas using the

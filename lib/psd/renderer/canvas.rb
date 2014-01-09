@@ -6,7 +6,7 @@ class PSD
 
       def initialize(node, width = nil, height = nil, color = ChunkyPNG::Color::TRANSPARENT)
         @node = node
-        @pixel_data = @node.root? ? [] : @node.image.pixel_data
+        @pixel_data = @node.group? ? [] : @node.image.pixel_data
         
         @width = (width || @node.width).to_i
         @height = (height || @node.height).to_i
@@ -29,6 +29,7 @@ class PSD
         apply_mask
         apply_clipping_mask
         apply_layer_styles
+        apply_layer_opacity
         compose_pixels(base)
       end
 
@@ -42,7 +43,7 @@ class PSD
       private
 
       def initialize_canvas
-        return if node.root? || node.group?
+        return if node.group?
 
         PSD.logger.debug "Initializing canvas for #{node.debug_name}"
 
@@ -73,6 +74,19 @@ class PSD
       def apply_layer_styles
         PSD.logger.debug "Applying layer styles to #{node.name}"
         LayerStyles.new(self).apply!
+      end
+
+      def apply_layer_opacity
+        return if @node.root?
+        PSD.logger.debug "Adjusting opacity for #{node.name}"
+        
+        @node.ancestors.each do |parent|
+          break unless parent.passthru_blending?
+          @opacity = (@opacity * parent.opacity.to_f) / 255.0
+        end
+
+        PSD.logger.debug "Inherited opacity for #{@node.debug_name} is #{@opacity}"
+        @opacity = @opacity.to_i
       end
 
       def compose_pixels(base)
