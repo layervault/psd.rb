@@ -48,6 +48,7 @@ class PSD::Node
 
     def passthru_blending?
       blending_mode == 'passthru'
+    end
 
     def empty?
       @children.empty?
