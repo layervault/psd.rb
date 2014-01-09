@@ -20,7 +20,7 @@ class PSD
 
         @canvas = ChunkyPNG::Canvas.new(@width, @height, color)
 
-        initialize_canvas
+        initialize_canvas unless @node.group?
       end
 
       def paint_to(base)
@@ -43,8 +43,6 @@ class PSD
       private
 
       def initialize_canvas
-        return if node.group?
-
         PSD.logger.debug "Initializing canvas for #{node.debug_name}"
 
         i = 0

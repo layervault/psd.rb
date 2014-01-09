@@ -9,14 +9,10 @@ class PSD
         
         mask_node = @canvas.node.next_sibling
         @mask = Canvas.new(mask_node)
-
-        width, height = @node.document_dimensions
-        @document_width = width.to_i
-        @document_height = height.to_i
       end
 
       def apply!
-        return unless @canvas.node.clipped?
+        return unless @node.clipped?
 
         PSD.logger.debug "Applying clipping mask #{mask.node.name} to #{@node.name}"
 
