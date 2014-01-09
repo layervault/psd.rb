@@ -6,6 +6,7 @@ class PSD
     include ImageMode::CMYK
     include ImageMode::Greyscale
     include ImageMode::RGB
+    include Export::PNG
 
     attr_reader :pixel_data, :opacity, :has_mask
     alias :has_mask? :has_mask
@@ -16,7 +17,7 @@ class PSD
       'RLE',
       'ZIP',
       'ZIPPrediction'
-    ]
+    ].freeze
 
     # Store a reference to the file and the header. We also do a few simple calculations
     # to figure out the number of pixels in the image and the length of each channel.

@@ -6,6 +6,7 @@ require_relative 'psd/section'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [
+  '/image_exports/*',
   '/image_formats/*',
   '/image_modes/*',
   '/nodes/*',
