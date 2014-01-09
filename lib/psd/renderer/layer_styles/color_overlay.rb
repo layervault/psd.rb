@@ -4,6 +4,9 @@ class PSD
       private
 
       def apply_color_overlay
+        # TODO - implement CMYK color overlay
+        return if @node.header.cmyk?
+
         overlay_data = data['SoFi']
         color_data = overlay_data['Clr ']
         blending_mode = BlendMode::BLEND_MODES[BLEND_TRANSLATION[overlay_data['Md  ']].to_sym]

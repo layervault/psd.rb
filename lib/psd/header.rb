@@ -57,5 +57,13 @@ class PSD
     def height
       rows
     end
+
+    def rgb?
+      mode == 3
+    end
+
+    def cmyk?
+      mode == 4
+    end
   end
 end
