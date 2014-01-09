@@ -32,13 +32,21 @@ class PSD
               fg.node.blending_mode,
               fg.canvas[x, y],
               bg.canvas[base_x, base_y],
-              opacity: @opacity,
-              fill_opacity: @fill_opacity
+              compose_options
             )
 
             bg.canvas[base_x, base_y] = color
           end
         end
+      end
+
+      private
+
+      def compose_options
+        {
+          opacity: @opacity,
+          fill_opacity: @fill_opacity
+        }
       end
     end
   end
