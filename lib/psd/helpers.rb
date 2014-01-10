@@ -33,6 +33,7 @@ class PSD
     end
 
     def layer_comps
+      return [] if @resources[:layer_comps].nil?
       @resources[:layer_comps].data.to_a
     end
   end
