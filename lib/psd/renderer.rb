@@ -63,7 +63,7 @@ class PSD
 
     def to_png
       render! unless @rendered
-      active_canvas
+      active_canvas.canvas
     end
 
     private
