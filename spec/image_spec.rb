@@ -53,7 +53,7 @@ describe 'Image Exporting' do
     end
 
     it "produces a correct PNG" do
-      expect(psd.tree.to_png).to be_an_instance_of(PSD::Renderer::Canvas)
+      expect(psd.tree.to_png).to be_an_instance_of(ChunkyPNG::Canvas)
       expect(psd.tree.to_png.pixels).to eq([ChunkyPNG::Color.rgba(0, 100, 200, 255)])
       expect(psd.tree.to_png[0, 0]).to eq(ChunkyPNG::Color.rgba(0, 100, 200, 255))
     end
