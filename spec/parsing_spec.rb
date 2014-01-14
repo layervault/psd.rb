@@ -147,4 +147,41 @@ describe 'Parsing' do
       end
     end
   end
+  
+  describe 'Blend Modes' do
+    before(:each) do
+      @psd = PSD.new('spec/files/blendmodes.psd')
+      @psd.parse!
+    end
+
+    it "should parse all blend modes" do
+      expect(@psd.layers.select { |l| l.name == 'normal' }.last.blend_mode.mode).to eq('normal')
+      expect(@psd.layers.select { |l| l.name == 'dissolve' }.last.blend_mode.mode).to eq('dissolve')
+      expect(@psd.layers.select { |l| l.name == 'darken' }.last.blend_mode.mode).to eq('darken')
+      expect(@psd.layers.select { |l| l.name == 'multiply' }.last.blend_mode.mode).to eq('multiply')
+      expect(@psd.layers.select { |l| l.name == 'color burn' }.last.blend_mode.mode).to eq('color burn')
+      expect(@psd.layers.select { |l| l.name == 'linear burn' }.last.blend_mode.mode).to eq('linear burn')
+      expect(@psd.layers.select { |l| l.name == 'darker color' }.last.blend_mode.mode).to eq('darker color')
+      expect(@psd.layers.select { |l| l.name == 'lighten' }.last.blend_mode.mode).to eq('lighten')
+      expect(@psd.layers.select { |l| l.name == 'screen' }.last.blend_mode.mode).to eq('screen')
+      expect(@psd.layers.select { |l| l.name == 'color dodge' }.last.blend_mode.mode).to eq('color dodge')
+      expect(@psd.layers.select { |l| l.name == 'linear dodge' }.last.blend_mode.mode).to eq('linear dodge')
+      expect(@psd.layers.select { |l| l.name == 'lighter color' }.last.blend_mode.mode).to eq('lighter color')
+      expect(@psd.layers.select { |l| l.name == 'overlay' }.last.blend_mode.mode).to eq('overlay')
+      expect(@psd.layers.select { |l| l.name == 'soft light' }.last.blend_mode.mode).to eq('soft light')
+      expect(@psd.layers.select { |l| l.name == 'hard light' }.last.blend_mode.mode).to eq('hard light')
+      expect(@psd.layers.select { |l| l.name == 'vivid light' }.last.blend_mode.mode).to eq('vivid light')
+      expect(@psd.layers.select { |l| l.name == 'linear light' }.last.blend_mode.mode).to eq('linear light')
+      expect(@psd.layers.select { |l| l.name == 'pin light' }.last.blend_mode.mode).to eq('pin light')
+      expect(@psd.layers.select { |l| l.name == 'hard mix' }.last.blend_mode.mode).to eq('hard mix')
+      expect(@psd.layers.select { |l| l.name == 'difference' }.last.blend_mode.mode).to eq('difference')
+      expect(@psd.layers.select { |l| l.name == 'exclusion' }.last.blend_mode.mode).to eq('exclusion')
+      expect(@psd.layers.select { |l| l.name == 'subtract' }.last.blend_mode.mode).to eq('subtract')
+      expect(@psd.layers.select { |l| l.name == 'divide' }.last.blend_mode.mode).to eq('divide')
+      expect(@psd.layers.select { |l| l.name == 'hue' }.last.blend_mode.mode).to eq('hue')
+      expect(@psd.layers.select { |l| l.name == 'saturation' }.last.blend_mode.mode).to eq('saturation')
+      expect(@psd.layers.select { |l| l.name == 'color' }.last.blend_mode.mode).to eq('color')
+      expect(@psd.layers.select { |l| l.name == 'luminosity' }.last.blend_mode.mode).to eq('luminosity')
+    end
+  end  
 end
