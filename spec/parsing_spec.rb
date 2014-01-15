@@ -147,4 +147,17 @@ describe 'Parsing' do
       end
     end
   end
+  
+  describe 'Blend Modes' do
+    before(:each) do
+      @psd = PSD.new('spec/files/blendmodes.psd')
+      @psd.parse!
+    end
+
+    it "should parse all blend modes" do
+      @psd.layers.each do |layer|
+        expect(layer.blend_mode.mode).to eq layer.name
+      end      
+    end
+  end  
 end

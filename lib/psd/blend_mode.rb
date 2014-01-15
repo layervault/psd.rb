@@ -36,7 +36,11 @@ class PSD
       lLit: 'linear light',
       pLit: 'pin light',
       hMix: 'hard mix',
-      pass: 'passthru'
+      pass: 'passthru',
+      dkCl: 'darker color',
+      lgCl: 'lighter color',
+      fsub: 'subtract',
+      fdiv: 'divide'
     }
 
     # Get the readable name for this blend mode.
