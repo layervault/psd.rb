@@ -45,13 +45,8 @@ class PSD
       def initialize_canvas
         PSD.logger.debug "Initializing canvas for #{node.debug_name}"
 
-        i = 0
-        height.times do |y|
-          width.times do |x|
-            @canvas[x, y] = @pixel_data[i]
-            i += 1
-          end
-        end
+        # Sorry, ChunkyPNG.
+        @canvas.send(:replace_canvas!, width, height, @pixel_data)
 
         # This can now be referenced by @canvas.pixels
         @pixel_data = nil
