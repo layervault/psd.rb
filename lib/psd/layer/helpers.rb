@@ -70,7 +70,7 @@ class PSD
 
       def fill_opacity
         return 255 unless info.has_key?(:fill_opacity)
-        info[:fill_opacity].enabled
+        info[:fill_opacity].value
       end
     end
   end

@@ -8,14 +8,12 @@ results = Benchmark.measure "Image exporting" do
   psd = PSD.new(file, parse_layer_images: true)
   psd.parse!
 
-  puts psd.layer_comps.size
-
-  # psd.layer_comps.each do |comp|
-  #   puts "Saving #{comp[:name]} - #{comp[:id]}"
-  #   psd.tree
-  #     .filter_by_comp(comp[:id])
-  #     .save_as_png("./#{comp[:name]}.png")
-  # end
+  psd.layer_comps.each do |comp|
+    puts "Saving #{comp[:name]} - #{comp[:id]}"
+    psd.tree
+      .filter_by_comp(comp[:id])
+      .save_as_png("./#{comp[:name]}.png")
+  end
 end
 
 puts Benchmark::CAPTION

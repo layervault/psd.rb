@@ -4,10 +4,10 @@ class PSD
   class FillOpacity < LayerInfo
     @key = 'iOpa'
 
-    attr_reader :enabled
+    attr_reader :value
 
     def parse
-      @enabled = @file.read_boolean
+      @value = @file.read_byte.to_i
     end
   end
 end
