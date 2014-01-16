@@ -46,6 +46,7 @@ class PSD
       private
 
       def filter_for_comp!(id, node)
+        # Filter out disabled layers
         node.children.select! do |c|
           c
             .metadata
@@ -55,8 +56,16 @@ class PSD
             .include?(id)
         end
 
+        # Force layers to be visible if they are enabled for the comp
         node.children.each do |c|
-          c.force_visible = true
+          force_visible = c
+            .metadata
+            .data[:layer_comp]['layerSettings'].map { |l| l.has_key?('enab') && l['enab'] == true ? l['compList'] : nil }
+            .flatten
+            .compact
+            .include?(id)
+
+          c.force_visible = true if force_visible
           filter_for_comp!(id, c) if c.is_a?(PSD::Node::Group)
         end
       end
