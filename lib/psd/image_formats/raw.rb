@@ -4,8 +4,8 @@ class PSD
     module RAW
       private
 
-      def parse_raw!(length = @length)
-        @channel_data = @file.read(length).bytes.to_a
+      def parse_raw!
+        @channel_data = @file.read(@length).bytes.to_a
       end
     end
   end

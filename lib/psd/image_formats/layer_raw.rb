@@ -7,7 +7,7 @@ class PSD
       # of the RAW encoding parser a bit. This version is aware of the current
       # channel data position, since layers that have RAW encoding often use RLE
       # encoded alpha channels.
-      def parse_raw!(length = @length)
+      def parse_raw!
         PSD.logger.debug "Attempting to parse RAW encoded channel..."
 
         (@chan_pos...(@chan_pos + @ch_info[:length] - 2)).each do |i|
