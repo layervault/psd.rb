@@ -18,8 +18,10 @@ class PSD
       def compose!
         PSD.logger.debug "Composing #{fg.node.debug_name} onto #{bg.node.debug_name} with #{fg.node.blending_mode} blending"
 
-        offset_x = PSD::Util.clamp(fg.left - bg.left, 0, bg.width)
-        offset_y = PSD::Util.clamp(fg.top - bg.top, 0, bg.height) 
+        # offset_x = PSD::Util.clamp(fg.left - bg.left, 0, bg.width)
+        # offset_y = PSD::Util.clamp(fg.top - bg.top, 0, bg.height) 
+        offset_x = fg.left - bg.left
+        offset_y = fg.top - bg.top
 
         fg.height.times do |y|
           fg.width.times do |x|

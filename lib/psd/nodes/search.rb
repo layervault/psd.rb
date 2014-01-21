@@ -48,7 +48,7 @@ class PSD
       def filter_for_comp!(id, node)
         # Force layers to be visible if they are enabled for the comp
         node.children.each do |c|
-          enabled = false
+          enabled = c.visible?
 
           c
             .metadata
