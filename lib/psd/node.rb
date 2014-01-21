@@ -21,7 +21,7 @@ class PSD
         @children << layer
       end
 
-      @force_visible = false
+      @force_visible = nil
     end
 
     def hidden?
@@ -29,7 +29,7 @@ class PSD
     end
 
     def visible?
-      force_visible || @layer.visible?
+      force_visible.nil? ? @layer.visible? : force_visible
     end
 
     def psd

@@ -26,7 +26,7 @@ class PSD
       alias :children_with_path :children_at_path
 
       # Given a layer comp ID, name, or :last for last document state, create a new
-      # tree based on the layers/groups that belong to the comp only.
+      # tree with layer/group visibility altered based on the layer comp.
       def filter_by_comp(id)
         if id.is_a?(String)
           comp = psd.layer_comps.select { |c| c[:name] == id }.first
@@ -46,27 +46,19 @@ class PSD
       private
 
       def filter_for_comp!(id, node)
-        # Filter out disabled layers
-        node.children.select! do |c|
-          c
-            .metadata
-            .data[:layer_comp]['layerSettings'].map { |l| !l.has_key?('enab') || l['enab'] == true ? l['compList'] : nil }
-            .flatten
-            .compact
-            .include?(id)
-        end
-
         # Force layers to be visible if they are enabled for the comp
         node.children.each do |c|
-          force_visible = c
-            .metadata
-            .data[:layer_comp]['layerSettings'].map { |l| l.has_key?('enab') && l['enab'] == true ? l['compList'] : nil }
-            .flatten
-            .compact
-            .include?(id)
+          enabled = false
 
-          c.force_visible = true if force_visible
-          filter_for_comp!(id, c) if c.is_a?(PSD::Node::Group)
+          c
+            .metadata
+            .data[:layer_comp]['layerSettings'].each do |l|
+              enabled = l['enab'] if l.has_key?('enab')
+              break if l['compList'].include?(id)
+            end
+
+          c.force_visible = enabled
+          filter_for_comp!(id, c) if c.group?
         end
       end
     end
