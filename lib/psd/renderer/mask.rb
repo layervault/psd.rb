@@ -16,7 +16,7 @@ class PSD
       end
 
       def apply!
-        PSD.logger.debug "Beginning PNG export with mask"
+        PSD.logger.debug "Applying mask to #{@layer.name}"
         
         # We generate the preview at the document size instead to make applying the mask
         # significantly easier.

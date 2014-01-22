@@ -1,8 +1,7 @@
 class PSD
   class Renderer
     class Canvas
-      attr_accessor :canvas
-      attr_reader :node, :width, :height, :left, :right, :top, :bottom, :opacity, :fill_opacity
+      attr_reader :canvas, :node, :width, :height, :left, :right, :top, :bottom, :opacity, :fill_opacity
 
       def initialize(node, width = nil, height = nil, color = ChunkyPNG::Color::TRANSPARENT)
         @node = node
@@ -31,6 +30,12 @@ class PSD
         apply_layer_styles
         apply_layer_opacity
         compose_pixels(base)
+      end
+
+      def canvas=(canvas)
+        @canvas = canvas
+        @width = @canvas.width
+        @height = @canvas.height
       end
 
       def [](x, y); @canvas[x, y]; end

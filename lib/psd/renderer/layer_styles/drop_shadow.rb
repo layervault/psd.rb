@@ -1,6 +1,18 @@
 class PSD
   class LayerStyles
-    module DropShadow
+    # Not ready yet.
+    class DropShadow
+      def self.should_apply?(data)
+        #data.has_key?('DrSh')
+        false
+      end
+
+      def initialize(styles)
+      end
+
+      def apply!
+      end
+
       private
 
       def apply_drop_shadow

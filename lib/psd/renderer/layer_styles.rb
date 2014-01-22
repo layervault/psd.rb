@@ -3,9 +3,6 @@ require_relative 'layer_styles/drop_shadow'
 
 class PSD
   class LayerStyles
-    include ColorOverlay
-    include DropShadow
-
     # Blend modes in layer effects use different keys
     # than normal layer blend modes. Thanks Adobe.
     BLEND_TRANSLATION = {
@@ -52,8 +49,8 @@ class PSD
     def apply!
       return if @applied || data.nil?
 
-      apply_color_overlay if data.has_key?('SoFi')
-      apply_drop_shadow if data.has_key?('DrSh')
+      ColorOverlay.new(self).apply! if ColorOverlay.should_apply?(data)
+      DropShadow.new(self).apply!   if DropShadow.should_apply?(data)
     end
   end
 end
