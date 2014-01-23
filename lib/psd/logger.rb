@@ -7,7 +7,13 @@ class PSD
     end
 
     module ClassMethods
-      attr_accessor :debug
+      attr_reader :debug
+      attr_writer :logger
+
+      def debug=(enabled)
+        @debug = enabled
+        @logger = nil
+      end
 
       def logger
         return @logger if @logger
