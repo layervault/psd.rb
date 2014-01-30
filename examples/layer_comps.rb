@@ -2,7 +2,7 @@ require 'benchmark'
 require 'pp'
 require 'psd'
 
-file = ARGV[0] || 'examples/example.psd'
+file = ARGV[0] || 'examples/images/example.psd'
 
 results = Benchmark.measure "Image exporting" do
   psd = PSD.new(file, parse_layer_images: true)
