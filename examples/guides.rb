@@ -10,8 +10,8 @@ results = Benchmark.measure "PSD parsing" do
   psd.parse!
 end
 
-if psd.resources[:guides]
-  psd.resources[:guides].data.to_a.each do |guide|
+if psd.guides
+  psd.guides.each do |guide|
     pp guide
   end
 end
