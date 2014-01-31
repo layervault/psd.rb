@@ -36,5 +36,10 @@ class PSD
       return [] if @resources[:layer_comps].nil?
       @resources[:layer_comps].data.to_a
     end
+
+    def guides
+      return [] if @resources[:guides].nil?
+      @resources[:guides].data.to_a
+    end
   end
 end
