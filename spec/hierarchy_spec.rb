@@ -91,11 +91,12 @@ describe "Hierarchy" do
         expect { @tree.filter_by_comp('WAT') }.to raise_error("Layer comp not found")
       end
 
-      it "should correctly filter and produce a new tree when filtering by layer comp" do
+      it "should correctly set visibility when filtering by layer comp" do
         tree = @tree.filter_by_comp('Version A')
         expect(tree).to be_an_instance_of(PSD::Node::Root)
         expect(tree.children.size).to eq(3)
-        expect(tree.children[0].name).to eq("Version A")
+        expect(tree.children_at_path('Version A').first).to be_visible
+        expect(tree.children_at_path('Version B').first).to_not be_visible
       end
 
       it "should return a new tree when filtering by layer comps" do
