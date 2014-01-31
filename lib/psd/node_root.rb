@@ -7,6 +7,7 @@ class PSD::Node
     include PSD::Node::ParseLayers
 
     attr_accessor :children
+    attr_reader :psd
 
     # Stores a reference to the parsed PSD and builds the
     # tree hierarchy.
@@ -64,8 +65,6 @@ class PSD::Node
 
     def opacity; 255; end
     def fill_opacity; 255; end
-
-    def psd; @psd; end
 
     private
 
