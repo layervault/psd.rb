@@ -21,7 +21,12 @@ class PSD::Node
         children: children.map(&:to_hash),
         document: {
           width: document_width,
-          height: document_height
+          height: document_height,
+          resources: {
+            layer_comps: @psd.layer_comps,
+            guides: @psd.guides,
+            slices: @psd.slices
+          }
         }
       }
     end

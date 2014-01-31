@@ -32,14 +32,20 @@ class PSD
       @root ||= PSD::Node::Root.new(self)
     end
 
+    def resource(id)
+      @resources[id].nil? ? nil : @resources[id].data
+    end
+
     def layer_comps
-      return [] if @resources[:layer_comps].nil?
-      @resources[:layer_comps].data.to_a
+      resource(:layer_comps).to_a
     end
 
     def guides
-      return [] if @resources[:guides].nil?
-      @resources[:guides].data.to_a
+      resource(:guides).to_a
+    end
+
+    def slices
+      resource(:slices).to_a
     end
   end
 end
