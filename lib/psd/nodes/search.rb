@@ -33,33 +33,38 @@ class PSD
           raise "Layer comp not found" if comp.nil?
 
           id = comp[:id]
-        elsif id == :last
-          id = 0
+        else
+          comp = psd.layer_comps.select { |c| c[:id] == id }.first
+          raise "Layer comp not found" if comp.nil?
         end
 
         root = PSD::Node::Root.new(psd)
-        filter_for_comp!(id, root)
+        filter_for_comp!(comp, root)
 
         return root
       end
 
       private
 
-      def filter_for_comp!(id, node)
+      def filter_for_comp!(comp, node)
         # Force layers to be visible if they are enabled for the comp
         node.children.each do |c|
-          enabled = true
-
-          c
-            .metadata
-            .data[:layer_comp]['layerSettings'].each do |l|
-              enabled = l['enab'] if l.has_key?('enab')
-              break if l['compList'].include?(id)
-            end
-
-          c.force_visible = enabled
-          filter_for_comp!(id, c) if c.group?
+          set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
+          filter_for_comp!(comp, c) if c.group?
         end
+      end
+
+      def set_visibility(comp, c)
+        visible = true
+
+        c
+          .metadata
+          .data[:layer_comp]['layerSettings'].each do |l|
+            visible = l['enab'] if l.has_key?('enab')
+            break if l['compList'].include?(comp[:id])
+          end
+
+        c.force_visible = visible
       end
     end
   end
