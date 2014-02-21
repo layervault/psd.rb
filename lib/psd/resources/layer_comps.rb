@@ -6,15 +6,15 @@ class PSD
         def self.name; :layer_comps; end
 
         def self.visibility_captured?(comp)
-          comp[:captured_info] & 0b001 == 1
+          comp[:captured_info] & 0b001 > 0
         end
 
         def self.position_captured?(comp)
-          comp[:captured_info] & 0b010 == 1
+          comp[:captured_info] & 0b010 > 0
         end
 
         def self.appearance_captured?(comp)
-          comp[:captured_info] & 0b100 == 1
+          comp[:captured_info] & 0b100 > 0
         end
 
         def parse

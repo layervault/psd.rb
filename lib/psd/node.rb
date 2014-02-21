@@ -5,6 +5,7 @@ require_relative 'nodes/search'
 # A lot of method names borrowed from the Ruby ancestry gem.
 class PSD
   class Node
+    include ParseLayers
     include Ancestry
     include Search
     include BuildPreview
@@ -12,16 +13,14 @@ class PSD
     # Default properties that all nodes contain
     PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
 
-    attr_accessor :parent, :children, :layer, :force_visible
+    attr_accessor :parent, :children, :layer, :force_visible, :top, :left
 
     def initialize(layers=[])
-      @children = []
-      layers.each do |layer|
-        layer.parent = self
-        @children << layer
-      end
+      parse_layers(layers)
 
       @force_visible = nil
+      @top = @layer.top
+      @left = @layer.left
     end
 
     def hidden?

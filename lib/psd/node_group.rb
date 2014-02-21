@@ -5,7 +5,6 @@ class PSD::Node
   # zero or more children nodes.
   class Group < PSD::Node
     include PSD::HasChildren
-    include PSD::Node::ParseLayers
     include PSD::Node::LockToOrigin
 
     attr_reader :name, :top, :left, :bottom, :right
@@ -15,7 +14,8 @@ class PSD::Node
     def initialize(folder)
       @name = folder[:name]
       @layer = folder[:layer]
-      parse_layers(folder[:layers])
+      
+      super(folder[:layers])
       get_dimensions
     end
 

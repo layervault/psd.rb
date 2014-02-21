@@ -8,14 +8,14 @@ class PSD::Node
 
     # Stores a reference to the PSD::Layer
     def initialize(layer)
-      super([])
-      
       @layer = layer
       layer.node = self
+
+      super([])
     end
 
     # Delegates some methods to the PSD::Layer
-    (PROPERTIES + [:text, :ref_x, :ref_y]).each do |meth|
+    [:text, :ref_x, :ref_y].each do |meth|
       define_method meth do
         @layer.send(meth)
       end

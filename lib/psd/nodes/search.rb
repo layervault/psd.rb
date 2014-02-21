@@ -50,6 +50,8 @@ class PSD
         # Force layers to be visible if they are enabled for the comp
         node.children.each do |c|
           set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
+          set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
+
           filter_for_comp!(comp, c) if c.group?
         end
       end
@@ -65,6 +67,24 @@ class PSD
           end
 
         c.force_visible = visible
+      end
+
+      def set_position(comp, c)
+        x = 0
+        y = 0
+
+        c
+          .metadata
+          .data[:layer_comp]['layerSettings'].each do |l|
+            next unless l.has_key?('Ofst')
+            
+            x = l['Ofst']['Hrzn']
+            y = l['Ofst']['Vrtc']
+            break if l['compList'].include?(comp[:id])
+          end
+
+        c.left += x
+        c.top += y
       end
     end
   end
