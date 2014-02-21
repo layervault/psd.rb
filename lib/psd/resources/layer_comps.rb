@@ -5,6 +5,18 @@ class PSD
         def self.id; 1065; end
         def self.name; :layer_comps; end
 
+        def self.visibility_captured?(comp)
+          comp[:captured_info] & 0b001 == 1
+        end
+
+        def self.position_captured?(comp)
+          comp[:captured_info] & 0b010 == 1
+        end
+
+        def self.appearance_captured?(comp)
+          comp[:captured_info] & 0b100 == 1
+        end
+
         def parse
           # Descriptor version
           @file.seek 4, IO::SEEK_CUR
