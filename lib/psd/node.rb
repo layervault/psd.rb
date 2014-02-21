@@ -29,6 +29,7 @@ class PSD
     end
 
     def visible?
+      return false if @layer.clipped? && !next_sibling.visible?
       force_visible.nil? ? @layer.visible? : force_visible
     end
 
