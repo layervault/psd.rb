@@ -32,10 +32,10 @@ class PSD
   # @param filename [String]  the name of the file to open
   # @return [PSD] the {PSD} object if no block was given, otherwise the value of the block
   def self.open(filename, opts={}, &block)
+    raise "Must supply a block. Otherwise, use PSD.new." unless block_given?
+
     psd = PSD.new(filename, opts)
     psd.parse!
-
-    return psd unless block_given?
 
     if 0 == block.arity
       psd.instance_eval(&block)
