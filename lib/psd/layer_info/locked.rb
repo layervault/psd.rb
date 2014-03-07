@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class Locked < LayerInfo
-    @key = 'lspf'
+    def self.should_parse?(key)
+      key == 'lspf'
+    end
 
     attr_reader :all_locked, :transparency_locked, :composite_locked, :position_locked
 

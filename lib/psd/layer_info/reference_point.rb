@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class ReferencePoint < LayerInfo
-    @key = 'fxrp'
+    def self.should_parse?(key)
+      key == 'fxrp'
+    end
 
     attr_reader :x, :y
 

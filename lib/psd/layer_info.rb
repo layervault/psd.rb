@@ -3,10 +3,6 @@ class PSD
   class LayerInfo
     attr_reader :data
 
-    # The value of the key as used in the PSD format.
-    class << self; attr_accessor :key; end
-    @key = ""
-
     def initialize(layer, length)
       @layer = layer
       @file = layer.file

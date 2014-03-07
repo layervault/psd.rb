@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class BlendInteriorElements < LayerInfo
-    @key = 'infx'
+    def self.should_parse?(key)
+      key == 'infx'
+    end
 
     attr_reader :enabled
     def parse

@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class VectorStrokeContent < LayerInfo
-    @key = 'vscg'
+    def self.should_parse?(key)
+      key == 'vscg'
+    end
 
     attr_reader :key
     
