@@ -1,67 +1,44 @@
 class PSD
   class Renderer
     class Mask
-      attr_accessor :pixel_data, :mask_data, :layer_width, :layer_height
+      attr_accessor :mask_data
 
-      def initialize(canvas, options = {})
+      def initialize(canvas)
         @canvas = canvas
         @layer = canvas.node
-        @options = options
 
-        @pixel_data = @canvas.pixels
         @mask_data = @layer.image.mask_data
 
-        @layer_width = (@layer.folder? ? @layer.mask.width : @layer.width).to_i
-        @layer_height = (@layer.folder? ? @layer.mask.height : @layer.height).to_i
+        @doc_width = @layer.header.width.to_i
+        @doc_height = @layer.header.height.to_i
       end
 
       def apply!
         PSD.logger.debug "Applying mask to #{@layer.name}"
         
-        # We generate the preview at the document size instead to make applying the mask
-        # significantly easier.
-        width = @layer.header.width.to_i
-        height = @layer.header.height.to_i
-        png = ChunkyPNG::Canvas.new(width, height, ChunkyPNG::Color::TRANSPARENT)
-
-        i = 0
-        @layer_height.times do |y|
-          @layer_width.times do |x|
-            offset_x = x + @layer.left
-            offset_y = y + @layer.top
-
-            i +=1 and next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
-
-            png[offset_x, offset_y] = @pixel_data[i]
-            i += 1
-          end
-        end
-        
         # Now we apply the mask
         i = 0
         @layer.mask.height.times do |y|
           @layer.mask.width.times do |x|
-            offset_x = @layer.mask.left + x
-            offset_y = @layer.mask.top + y
+            doc_x = @layer.mask.left + x
+            doc_y = @layer.mask.top + y
 
-            i += 1 and next if offset_x < 0 || offset_y < 0 || offset_x >= png.width || offset_y >= png.height
+            layer_x = doc_x - @layer.left
+            layer_y = doc_y - @layer.top
 
-            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(png[offset_x, offset_y])
-            color[3] = color[3] * @mask_data[i] / 255
+            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas[layer_x, layer_y])
 
-            png[offset_x, offset_y] = ChunkyPNG::Color.rgba(*color)
+            # We're off the document canvas. Crop.
+            if doc_x < 0 || doc_x >= @doc_width || doc_y < 0 || doc_y > @doc_height
+              color[3] = 0
+            else
+              color[3] = color[3] * @mask_data[i] / 255
+            end 
+
+            @canvas[layer_x, layer_y] = ChunkyPNG::Color.rgba(*color)
             i += 1
           end
         end
-
-        crop_left = PSD::Util.clamp(@layer.left, 0, png.width)
-        crop_top = PSD::Util.clamp(@layer.top, 0, png.height)
-        crop_width = PSD::Util.clamp(@layer_width, 0, png.width - crop_left)
-        crop_height = PSD::Util.clamp(@layer_height, 0, png.height - crop_top)
-
-        png.crop!(crop_left, crop_top, crop_width, crop_height)
-
-        @canvas.canvas = png
       end
     end
   end
