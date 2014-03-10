@@ -17,13 +17,14 @@ class PSD
         @fill_data = @node.vector_stroke_content.data
 
         @points = []
+        @curve_points = []
       end
 
       def render_to_canvas!
         PSD.logger.debug "Drawing vector shape to #{@node.name}"
 
         find_points
-        render_curves
+        render_shape
       end
 
       private
@@ -40,9 +41,7 @@ class PSD
         end
 
         PSD.logger.debug "Shape has #{@points.size} points"
-      end
 
-      def render_curves
         @points.size.times do |i|
           point_a = @points[i]
           point_b = @points[i+1] || @points[0] # wraparound
@@ -56,15 +55,14 @@ class PSD
 
           b.draw_points(@canvas.canvas)
 
-          curve_points = []
           b.each_point do |point|
-            curve_points << point
-          end
-
-          curve_points.each_cons(2) do |p1, p2|
-            @canvas.canvas.line(p1.x.round, p1.y.round, p2.x.round, p2.y.round, ChunkyPNG::Color::BLACK, false)
+            @curve_points << point
           end
         end
+      end
+
+      def render_shape
+        @canvas.canvas.polygon(@curve_points, stroke_color, fill_color)
       end
 
       def horiz_factor

@@ -49,6 +49,8 @@ class PSD
       private
 
       def initialize_canvas
+        return if VectorShape.can_render?(self)
+        
         PSD.logger.debug "Initializing canvas for #{node.debug_name}"
 
         # Sorry, ChunkyPNG.
