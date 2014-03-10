@@ -100,7 +100,7 @@ psd.tree.children_at_path("Version A/Matte")
 
 ### Layer Comps
 
-You can also filter nodes based on a layer comp. To generate a new tree consisting only of the layers that are enabled in a certain layer comp:
+You can also filter nodes based on a layer comp. To generate a new tree with layer visibility and position set according to the layer comp data:
 
 ``` ruby
 # Get information about all the available layer comps
