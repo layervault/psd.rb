@@ -20,6 +20,7 @@ class PSD
         locked: Locked,
         vector_mask: VectorMask,
         vector_mask_2: VectorMask2,
+        vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
         vector_stroke_content: VectorStrokeContent
       }

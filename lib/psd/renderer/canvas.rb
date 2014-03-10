@@ -25,6 +25,7 @@ class PSD
       def paint_to(base)
         PSD.logger.debug "Painting #{node.name} to #{base.node.debug_name}"
 
+        render_vector_shape
         apply_mask
         apply_clipping_mask
         apply_layer_styles
@@ -55,6 +56,11 @@ class PSD
 
         # This can now be referenced by @canvas.pixels
         @pixel_data = nil
+      end
+
+      def render_vector_shape
+        return unless VectorShape.can_render?(self)
+        VectorShape.new(self).render_to_canvas!
       end
 
       def apply_mask

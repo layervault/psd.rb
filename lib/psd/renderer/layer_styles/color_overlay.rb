@@ -2,7 +2,7 @@ class PSD
   class LayerStyles
     class ColorOverlay
       def self.should_apply?(data)
-        data.has_key?('SoFi')
+        data.has_key?('SoFi') && data['SoFi']['enab']
       end
 
       def initialize(styles)
@@ -18,18 +18,15 @@ class PSD
         width = @canvas.width
         height = @canvas.height
 
-        # puts width, height
-        # puts @canvas.canvas.width, @canvas.canvas.height
-
         PSD.logger.debug "Layer style: layer = #{@node.name}, type = color overlay, blend mode = #{blending_mode}"
 
         height.times do |y|
           width.times do |x|
             pixel = @canvas[x, y]
-            alpha = ChunkyPNG::Color.a(pixel)
-            next if alpha == 0
+            next if ChunkyPNG::Color.a(pixel) == 0
+            
+            overlay_color = ChunkyPNG::Color.rgba(r, g, b, a)
 
-            overlay_color = ChunkyPNG::Color.rgba(r, g, b, alpha)
             @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel)
           end
         end
@@ -59,6 +56,10 @@ class PSD
 
       def b
         @b ||= color_data['Bl  '].round
+      end
+
+      def a
+        @a ||= (overlay_data['Opct'][:value] * 2.55).ceil
       end
     end
   end

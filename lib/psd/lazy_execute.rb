@@ -41,7 +41,11 @@ class PSD
     end
 
     def inspect
-      "<PSD::LazyExecute @obj=#{@obj.class.name}, @pos=#{@start_pos}, @load_method=:#{@load_method}>"
+      if loaded?
+        @obj.inspect
+      else
+        "<PSD::LazyExecute @obj=#{@obj.class.name}, @pos=#{@start_pos}, @load_method=:#{@load_method}>"
+      end
     end
 
     private
