@@ -14,6 +14,10 @@ class PSD
           y + (b.y - y) * t
         )
       end
+
+      def to_a
+        [@x, @y]
+      end
     end
   end
 end

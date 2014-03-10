@@ -39,8 +39,19 @@ class PSD
 
       def each_point
         (left_bound..right_bound).each do |x|
+          next if x.even?
           yield point_at t_for_x(x)
         end
+      end
+
+      # For debugging
+      def draw_points(canvas)
+        canvas.circle(a.x.round, a.y.round, 3, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
+        canvas.circle(b.x.round, b.y.round, 3, ChunkyPNG::Color.rgb(255, 0 ,0), ChunkyPNG::Color.rgb(255, 0 ,0))
+        canvas.circle(c.x.round, c.y.round, 3, ChunkyPNG::Color.rgb(255, 0 ,0), ChunkyPNG::Color.rgb(255, 0 ,0))
+        canvas.circle(d.x.round, d.y.round, 3, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
+        canvas.line(a.x.round, a.y.round, b.x.round, b.y.round, ChunkyPNG::Color::BLACK)
+        canvas.line(d.x.round, d.y.round, c.x.round, c.y.round, ChunkyPNG::Color::BLACK)
       end
 
       private

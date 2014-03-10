@@ -65,6 +65,7 @@ class PSD
 
       def apply_mask
         return unless @node.image.has_mask?
+        return if VectorShape.can_render?(self) # Skip if there's a vector shape, for now
 
         PSD.logger.debug "Applying layer mask to #{node.name}"
         Mask.new(self).apply!
