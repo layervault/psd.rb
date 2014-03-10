@@ -21,7 +21,6 @@ class PSD
 
       # Adapted from http://cubic.org/docs/bezier.htm
       def point_at(t)
-        puts t
         ab = @a.interpolate(@b, t)
         bc = @b.interpolate(@c, t)
         cd = @c.interpolate(@d, t)

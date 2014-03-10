@@ -56,8 +56,6 @@ class PSD
           @canvas.canvas.circle(b.a.x.to_i, b.a.y.to_i, 5, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
           @canvas.canvas.circle(b.d.x.to_i, b.d.y.to_i, 5, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
 
-          puts b.left_bound, b.right_bound
-
           curve_points = []
           b.each_point do |point|
             curve_points << point
