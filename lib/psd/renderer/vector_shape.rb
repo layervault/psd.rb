@@ -32,7 +32,12 @@ class PSD
       def find_points
         @path.each do |data|
           next unless [1, 2, 4, 5].include? data[:record_type]
-          @points << data
+          @points << data.tap do |d|
+            [:preceding, :anchor, :leaving].each do |type|
+              d[type][:horiz] *= horiz_factor
+              d[type][:vert]  *= vert_factor
+            end
+          end
         end
       end
 
@@ -48,7 +53,19 @@ class PSD
             point_b[:anchor]
           )
 
-          
+          @canvas.canvas.circle(b.a.x.to_i, b.a.y.to_i, 5, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
+          @canvas.canvas.circle(b.d.x.to_i, b.d.y.to_i, 5, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
+
+          puts b.left_bound, b.right_bound
+
+          curve_points = []
+          b.each_point do |point|
+            curve_points << point
+          end
+
+          curve_points.each_cons(2) do |p1, p2|
+            @canvas.canvas.line_xiaolin_wu(p1.x.round, p1.y.round, p2.x.round, p2.y.round, ChunkyPNG::Color::BLACK)
+          end
         end
       end
 
