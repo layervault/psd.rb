@@ -80,6 +80,7 @@ class PSD
         @curve_points.each_cons(2) do |p1, p2|
           vector = Vector.new(p1, p2)
           vector.each_point do |p|
+            # Not sure why we're getting the occasional NaN
             next if p.nan?
 
             point2_x = if vector.p1.x < vector.p2.x
@@ -94,9 +95,7 @@ class PSD
               p.y - (vector.normal.y * stroke_size)
             end
 
-            point2 = Point.new(point2_x, point2_y)
-
-            @stroke_canvas.line(p.x.round, p.y.round, point2.x.round, point2.y.round, stroke_color)
+            @stroke_canvas.line(p.x.round, p.y.round, point2_x.round, point2_y.round, stroke_color)
           end
         end
 
