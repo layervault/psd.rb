@@ -22,6 +22,10 @@ class PSD
       def to_a
         [@x, @y]
       end
+
+      def ==(other)
+        @x == other.x && @y == other.y
+      end
     end
   end
 end
