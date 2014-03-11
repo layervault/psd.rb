@@ -8,6 +8,8 @@ class PSD
         ] & canvas.node.info.keys).length == 2
       end
 
+      DPI = 96.freeze
+
       def initialize(canvas)
         @canvas = canvas
         @node = @canvas.node
@@ -18,13 +20,17 @@ class PSD
 
         @points = []
         @curve_points = []
+        @fill_canvas = nil
+        @stroke_canvas = nil
       end
 
       def render_to_canvas!
         PSD.logger.debug "Drawing vector shape to #{@node.name}"
 
         find_points
+        initialize_canvases
         render_shape
+        render_stroke
       end
 
       private
@@ -54,13 +60,47 @@ class PSD
           )
 
           b.each_point do |point|
+            next if point.nan?
             @curve_points << point
           end
         end
       end
 
+      def initialize_canvases
+        @fill_canvas = ChunkyPNG::Canvas.new(@canvas.width, @canvas.height, ChunkyPNG::Color::TRANSPARENT)
+        @stroke_canvas = ChunkyPNG::Canvas.new(@canvas.width, @canvas.height, ChunkyPNG::Color::TRANSPARENT)
+      end
+
       def render_shape
-        @canvas.canvas.polygon(@curve_points, stroke_color, fill_color)
+        @fill_canvas.polygon(@curve_points, ChunkyPNG::Color::TRANSPARENT, fill_color)
+        @canvas.canvas.compose!(@fill_canvas, 0, 0)
+      end
+
+      def render_stroke
+        @curve_points.each_cons(2) do |p1, p2|
+          vector = Vector.new(p1, p2)
+          vector.each_point do |p|
+            next if p.nan?
+
+            point2_x = if vector.p1.x < vector.p2.x
+              p.x - (vector.normal.x * stroke_size)
+            else
+              p.x + (vector.normal.x * stroke_size)
+            end
+
+            point2_y = if vector.p1.y < vector.p2.y
+              p.y + (vector.normal.y * stroke_size)
+            else
+              p.y - (vector.normal.y * stroke_size)
+            end
+
+            point2 = Point.new(point2_x, point2_y)
+
+            @stroke_canvas.line(p.x.round, p.y.round, point2.x.round, point2.y.round, stroke_color)
+          end
+        end
+
+        @canvas.canvas.compose!(@stroke_canvas, 0, 0)
       end
 
       def horiz_factor
@@ -97,6 +137,23 @@ class PSD
             )
           else
             ChunkyPNG::Color::TRANSPARENT
+          end
+        )
+      end
+
+      def stroke_size
+        @stroke_size ||= (
+          if @stroke_data['strokeStyleLineWidth']
+            value = @stroke_data['strokeStyleLineWidth'][:value]
+
+            # Convert to pixels
+            # if @stroke_data['strokeStyleLineWidth'][:id] == '#Pnt'
+            #   value = DPI * value / @stroke_data['strokeStyleResolution']
+            # end 
+
+            value.to_i
+          else
+            1
           end
         )
       end

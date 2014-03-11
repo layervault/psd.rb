@@ -13,10 +13,10 @@ class PSD
       attr_reader :a, :b, :c, :d
 
       def initialize(start_point, ctrl1, ctrl2, end_point)
-        @a = Vector.new(*start_point)
-        @b = Vector.new(*ctrl1)
-        @c = Vector.new(*ctrl2)
-        @d = Vector.new(*end_point)
+        @a = Point.new(*start_point)
+        @b = Point.new(*ctrl1)
+        @c = Point.new(*ctrl2)
+        @d = Point.new(*end_point)
       end
 
       # Adapted from http://cubic.org/docs/bezier.htm
