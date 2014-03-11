@@ -39,7 +39,6 @@ class PSD
 
       def each_point
         (left_bound..right_bound).each do |x|
-          next if x.even?
           yield point_at t_for_x(x)
         end
       end

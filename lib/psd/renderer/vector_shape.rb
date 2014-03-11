@@ -53,8 +53,6 @@ class PSD
             point_b[:anchor]
           )
 
-          b.draw_points(@canvas.canvas)
-
           b.each_point do |point|
             @curve_points << point
           end
