@@ -69,10 +69,9 @@ class PSD
       end
 
       def render_shape
-        output = cairo_image_surface(@node.root.width, @node.root.height) do |cr, output|
+        output = cairo_image_surface(@canvas.width, @canvas.height) do |cr, output|
           cr.set_line_join Cairo::LINE_JOIN_ROUND
           cr.set_line_cap Cairo::LINE_CAP_ROUND
-          cr.translate @node.left, @node.top
 
           points = @curve_points.map(&:to_a)
           cairo_path(cr, *(points + [:c]))
@@ -85,7 +84,7 @@ class PSD
           cr.stroke
         end
 
-        output.save('./test.png')
+        @canvas.canvas.compose!(output, 0, 0)
       end
 
       def horiz_factor
