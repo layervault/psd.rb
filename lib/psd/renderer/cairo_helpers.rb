@@ -15,10 +15,11 @@ class PSD
         yield cr
 
         data = cr.target.data.to_s[0, 4 * w * h]
+
+        # Cairo data is stored as BGRA, ugh.
         data = data.unpack("N*").map do |color|
           color = ChunkyPNG::Color.to_truecolor_alpha_bytes(color)
-          color[0], color[2] = color[2], color[0]
-          ChunkyPNG::Color.rgba(*color)
+          ChunkyPNG::Color.rgba(color[2], color[1], color[0], color[3])
         end
 
         ChunkyPNG::Canvas.new(w, h, data)
