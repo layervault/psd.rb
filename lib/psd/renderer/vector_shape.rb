@@ -1,5 +1,4 @@
 require_relative './cairo_helpers'
-require 'pp'
 
 class PSD
   class Renderer
@@ -30,8 +29,8 @@ class PSD
       end
 
       def render_to_canvas!
-        PSD.logger.debug "Drawing vector shape to #{@node.name}"
-        pp @stroke_data
+        PSD.logger.debug "Beginning vector render for #{@node.name}"
+
         find_points
         render_shape
       end
@@ -39,6 +38,8 @@ class PSD
       private
 
       def find_points
+        PSD.logger.debug "Formatting vector points..."
+
         @path.each do |data|
           next unless [1, 2, 4, 5].include? data[:record_type]
           @points << data.tap do |d|
@@ -72,6 +73,8 @@ class PSD
       # TODO: stroke alignment
       # Right now we assume the stroke style is always an inside stroke.
       def render_shape
+        PSD.logger.debug "Rendering #{@curve_points.size} vector points with cairo"
+
         points = @curve_points.map(&:to_a)
         output = cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
           cr.set_line_join stroke_join
