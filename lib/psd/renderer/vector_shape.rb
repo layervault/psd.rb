@@ -1,4 +1,5 @@
 require_relative './cairo_helpers'
+require 'pp'
 
 class PSD
   class Renderer
@@ -30,7 +31,7 @@ class PSD
 
       def render_to_canvas!
         PSD.logger.debug "Drawing vector shape to #{@node.name}"
-
+        pp @stroke_data
         find_points
         render_shape
       end
@@ -68,11 +69,13 @@ class PSD
         end
       end
 
+      # TODO: stroke alignment
+      # Right now we assume the stroke style is always an inside stroke.
       def render_shape
         points = @curve_points.map(&:to_a)
         output = cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
-          cr.set_line_join Cairo::LINE_JOIN_MITER
-          cr.set_line_cap Cairo::LINE_CAP_SQUARE
+          cr.set_line_join stroke_join
+          cr.set_line_cap stroke_cap
 
           cr.translate stroke_size / 2.0, stroke_size / 2.0
 
@@ -143,6 +146,34 @@ class PSD
             value.to_i
           else
             0
+          end
+        )
+      end
+
+      def stroke_cap
+        @stroke_cap ||= (
+          if @stroke_data['strokeStyleLineCapType']
+            case @stroke_data['strokeStyleLineCapType']
+            when 'strokeStyleButtCap' then Cairo::LINE_CAP_BUTT
+            when 'strokeStyleRoundCap' then Cairo::LINE_CAP_ROUND
+            when 'strokeStyleSquareCap' then Cairo::LINE_CAP_SQUARE
+            end
+          else
+            Cairo::LINE_CAP_BUTT
+          end
+        )
+      end
+
+      def stroke_join
+        @stroke_join ||= (
+          if @stroke_data['strokeStyleLineJoinType']
+            case @stroke_data['strokeStyleLineJoinType']
+            when 'strokeStyleMiterJoin' then Cairo::LINE_JOIN_MITER
+            when 'strokeStyleRoundJoin' then Cairo::LINE_JOIN_ROUND
+            when 'strokeStyleBevelJoin' then Cairo::LINE_JOIN_BEVEL
+            end
+          else
+            Cairo::LINE_JOIN_MITER
           end
         )
       end
