@@ -70,32 +70,28 @@ class PSD
 
       def render_shape
         points = @curve_points.map(&:to_a)
-        base = cairo_image_surface(@canvas.width, @canvas.height) do |cr|
+        output = cairo_image_surface(@canvas.width + (stroke_size * 2), @canvas.height + (stroke_size * 2)) do |cr|
+          cr.set_line_join Cairo::LINE_JOIN_MITER
+          cr.set_line_cap Cairo::LINE_CAP_SQUARE
+
+          cr.translate stroke_size, stroke_size
+
           cairo_path(cr, *(points + [:c]))
 
-          cr.set_source_rgba has_stroke? ? stroke_color : fill_color
+          cr.set_source_rgba fill_color
           cr.fill_preserve
+
+          cr.set_source_rgba stroke_color
+          cr.set_line_width stroke_size
+          cr.stroke
         end
 
-        if has_stroke?
-          interior = cairo_image_surface(@canvas.width, @canvas.height) do |cr|
-            cr.set_line_join Cairo::LINE_JOIN_ROUND
-            cr.set_line_cap Cairo::LINE_CAP_SQUARE
+        output.resample_nearest_neighbor!(
+          @canvas.width,
+          @canvas.height
+        )
 
-            cairo_path(cr, *(points + [:c]))
-
-            cr.set_source_rgba fill_color
-            cr.fill_preserve
-          end
-
-          interior.resample_nearest_neighbor!(
-            @canvas.width - (stroke_size * 2),
-            @canvas.height - (stroke_size * 2)
-          )
-        end
-
-        @canvas.canvas.compose!(base, 0, 0)
-        @canvas.canvas.compose!(interior, stroke_size, stroke_size) if interior
+        @canvas.canvas.compose!(output, 0, 0)
       end
 
       def horiz_factor
