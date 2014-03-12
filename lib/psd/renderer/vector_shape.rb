@@ -32,9 +32,7 @@ class PSD
         PSD.logger.debug "Drawing vector shape to #{@node.name}"
 
         find_points
-        initialize_canvases
         render_shape
-        # render_stroke
       end
 
       private
@@ -70,17 +68,11 @@ class PSD
         end
       end
 
-      def initialize_canvases
-        @fill_canvas = ChunkyPNG::Canvas.new(@canvas.width, @canvas.height, ChunkyPNG::Color::TRANSPARENT)
-        @stroke_canvas = ChunkyPNG::Canvas.new(@canvas.width, @canvas.height, ChunkyPNG::Color::TRANSPARENT)
-      end
-
       def render_shape
-        # @fill_canvas.polygon(@curve_points, ChunkyPNG::Color::TRANSPARENT, fill_color)
-        # @canvas.canvas.compose!(@fill_canvas, 0, 0)
-        cairo_image_surface(@node.width, @node.height) do |cr|
+        output = cairo_image_surface(@node.root.width, @node.root.height) do |cr, output|
           cr.set_line_join Cairo::LINE_JOIN_ROUND
           cr.set_line_cap Cairo::LINE_CAP_ROUND
+          cr.translate @node.left, @node.top
 
           points = @curve_points.map(&:to_a)
           cairo_path(cr, *(points + [:c]))
@@ -91,24 +83,9 @@ class PSD
           cr.set_source_color stroke_color
           cr.set_line_width stroke_size
           cr.stroke
-
-          cr.target.write_to_png('./test.png')
         end
-      end
 
-      def render_stroke
-        cairo_image_surface(@node.width, @node.height) do |cr|
-          cr.set_line_join Cairo::LINE_JOIN_ROUND
-          cr.set_line_cap Cairo::LINE_CAP_ROUND
-
-          points = @curve_points.map(&:to_a)
-          cairo_path(cr, points + [:c])
-
-          cr.set_line_width stroke_size
-          cr.set_source_color stroke_color
-          cr.fill_preserve
-          cr.stroke
-        end
+        output.save('./test.png')
       end
 
       def horiz_factor

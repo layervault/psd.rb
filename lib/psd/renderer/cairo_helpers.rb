@@ -1,6 +1,7 @@
 class PSD
   class Renderer
-    # From http://www.hokstad.com/simple-drawing-in-ruby-with-cairo
+    # Adapted from 
+    # http://www.hokstad.com/simple-drawing-in-ruby-with-cairo
     module CairoHelpers
       def cairo_image_surface(w, h, bg=nil)
         surface = Cairo::ImageSurface.new(w, h)
@@ -12,6 +13,15 @@ class PSD
         end
 
         yield cr
+
+        data = cr.target.data.to_s[0, 4 * w * h]
+        data = data.unpack("N*").map do |color|
+          color = ChunkyPNG::Color.to_truecolor_alpha_bytes(color)
+          color[0], color[2] = color[2], color[0]
+          ChunkyPNG::Color.rgba(*color)
+        end
+
+        ChunkyPNG::Canvas.new(w, h, data)
       end
 
       def cairo_path(cr, *pairs)
