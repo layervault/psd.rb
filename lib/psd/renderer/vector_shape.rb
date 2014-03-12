@@ -12,7 +12,7 @@ class PSD
         ] & canvas.node.info.keys).length == 2
       end
 
-      DPI = 96.freeze
+      DPI = 72.0.freeze
 
       def initialize(canvas)
         @canvas = canvas
@@ -48,7 +48,7 @@ class PSD
           end
         end
 
-        PSD.logger.debug "Shape has #{@points.size} points"
+        PSD.logger.debug "Vector shape has #{@points.size} anchors"
 
         @points.size.times do |i|
           point_a = @points[i]
@@ -69,22 +69,33 @@ class PSD
       end
 
       def render_shape
-        output = cairo_image_surface(@canvas.width, @canvas.height) do |cr|
-          cr.set_line_join Cairo::LINE_JOIN_ROUND
-          cr.set_line_cap Cairo::LINE_CAP_ROUND
-
-          points = @curve_points.map(&:to_a)
+        points = @curve_points.map(&:to_a)
+        base = cairo_image_surface(@canvas.width, @canvas.height) do |cr|
           cairo_path(cr, *(points + [:c]))
 
-          cr.set_source_color fill_color
+          cr.set_source_rgba has_stroke? ? stroke_color : fill_color
           cr.fill_preserve
-
-          cr.set_source_color stroke_color
-          cr.set_line_width stroke_size
-          cr.stroke
         end
 
-        @canvas.canvas.compose!(output, 0, 0)
+        if has_stroke?
+          interior = cairo_image_surface(@canvas.width, @canvas.height) do |cr|
+            cr.set_line_join Cairo::LINE_JOIN_ROUND
+            cr.set_line_cap Cairo::LINE_CAP_SQUARE
+
+            cairo_path(cr, *(points + [:c]))
+
+            cr.set_source_rgba fill_color
+            cr.fill_preserve
+          end
+
+          interior.resample_nearest_neighbor!(
+            @canvas.width - (stroke_size * 2),
+            @canvas.height - (stroke_size * 2)
+          )
+        end
+
+        @canvas.canvas.compose!(base, 0, 0)
+        @canvas.canvas.compose!(interior, stroke_size, stroke_size) if interior
       end
 
       def horiz_factor
@@ -102,10 +113,11 @@ class PSD
             [
               colors['Rd  '] / 255.0,
               colors['Grn '] / 255.0,
-              colors['Bl  '] / 255.0
+              colors['Bl  '] / 255.0,
+              @stroke_data['strokeStyleOpacity'][:value] / 100.0
             ]
           else
-            [0.0, 0.0, 0.0]
+            [0.0, 0.0, 0.0, 0.0]
           end
         )
       end
@@ -117,10 +129,11 @@ class PSD
             [
               colors['Rd  '] / 255.0,
               colors['Grn '] / 255.0,
-              colors['Bl  '] / 255.0
+              colors['Bl  '] / 255.0,
+              @stroke_data['strokeStyleOpacity'][:value] / 100.0
             ]
           else
-            [0.0, 0.0, 0.0]
+            [0.0, 0.0, 0.0, 0.0]
           end
         )
       end
@@ -131,15 +144,19 @@ class PSD
             value = @stroke_data['strokeStyleLineWidth'][:value]
 
             # Convert to pixels
-            # if @stroke_data['strokeStyleLineWidth'][:id] == '#Pnt'
-            #   value = DPI * value / @stroke_data['strokeStyleResolution']
-            # end 
+            if @stroke_data['strokeStyleLineWidth'][:id] == '#Pnt'
+              value = @stroke_data['strokeStyleResolution'] * value / 72.27
+            end
 
             value.to_i
           else
-            1
+            0
           end
         )
+      end
+
+      def has_stroke?
+        stroke_size > 0
       end
     end
   end
