@@ -69,7 +69,7 @@ class PSD
       end
 
       def render_shape
-        output = cairo_image_surface(@canvas.width, @canvas.height) do |cr, output|
+        output = cairo_image_surface(@canvas.width, @canvas.height) do |cr|
           cr.set_line_join Cairo::LINE_JOIN_ROUND
           cr.set_line_cap Cairo::LINE_CAP_ROUND
 
