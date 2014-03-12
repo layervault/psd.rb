@@ -87,9 +87,11 @@ class PSD
           cr.set_source_rgba fill_color
           cr.fill_preserve
 
-          cr.set_source_rgba stroke_color
-          cr.set_line_width stroke_size
-          cr.stroke
+          if has_stroke?
+            cr.set_source_rgba stroke_color
+            cr.set_line_width stroke_size
+            cr.stroke
+          end
         end
 
         output.resample_nearest_neighbor!(@canvas.width, @canvas.height)

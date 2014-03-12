@@ -14,6 +14,8 @@ class PSD
 
         yield cr
 
+        surface.finish
+
         data = cr.target.data.to_s[0, 4 * w * h]
 
         # Cairo data is stored as BGRA, ugh.
