@@ -70,11 +70,11 @@ class PSD
 
       def render_shape
         points = @curve_points.map(&:to_a)
-        output = cairo_image_surface(@canvas.width + (stroke_size * 2), @canvas.height + (stroke_size * 2)) do |cr|
+        output = cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
           cr.set_line_join Cairo::LINE_JOIN_MITER
           cr.set_line_cap Cairo::LINE_CAP_SQUARE
 
-          cr.translate stroke_size, stroke_size
+          cr.translate stroke_size / 2.0, stroke_size / 2.0
 
           cairo_path(cr, *(points + [:c]))
 
@@ -86,11 +86,7 @@ class PSD
           cr.stroke
         end
 
-        output.resample_nearest_neighbor!(
-          @canvas.width,
-          @canvas.height
-        )
-
+        output.resample_nearest_neighbor!(@canvas.width, @canvas.height)
         @canvas.canvas.compose!(output, 0, 0)
       end
 
