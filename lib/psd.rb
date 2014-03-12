@@ -1,6 +1,7 @@
 require "bindata"
 require "psd/enginedata"
 require "chunky_png"
+require "cairo"
 
 require_relative 'psd/section'
 

@@ -14,6 +14,14 @@ class PSD
         @slope ||= (p2.y - p1.y) / (p2.x - p1.x)
       end
 
+      def vertical?
+        @p1.x == @p2.x
+      end
+
+      def horizontal?
+        @p1.y == @p2.y
+      end
+
       def intercept
         @intercept ||= (@p1.y - (slope * @p1.x))
       end

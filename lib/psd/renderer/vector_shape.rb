@@ -1,6 +1,10 @@
+require_relative './cairo_helpers'
+
 class PSD
   class Renderer
     class VectorShape
+      include CairoHelpers
+
       def self.can_render?(canvas)
         return false if canvas.node.vector_mask.nil?
         ([
@@ -30,7 +34,7 @@ class PSD
         find_points
         initialize_canvases
         render_shape
-        render_stroke
+        # render_stroke
       end
 
       private
@@ -72,34 +76,39 @@ class PSD
       end
 
       def render_shape
-        @fill_canvas.polygon(@curve_points, ChunkyPNG::Color::TRANSPARENT, fill_color)
-        @canvas.canvas.compose!(@fill_canvas, 0, 0)
+        # @fill_canvas.polygon(@curve_points, ChunkyPNG::Color::TRANSPARENT, fill_color)
+        # @canvas.canvas.compose!(@fill_canvas, 0, 0)
+        cairo_image_surface(@node.width, @node.height) do |cr|
+          cr.set_line_join Cairo::LINE_JOIN_ROUND
+          cr.set_line_cap Cairo::LINE_CAP_ROUND
+
+          points = @curve_points.map(&:to_a)
+          cairo_path(cr, *(points + [:c]))
+
+          cr.set_source_color fill_color
+          cr.fill_preserve
+
+          cr.set_source_color stroke_color
+          cr.set_line_width stroke_size
+          cr.stroke
+
+          cr.target.write_to_png('./test.png')
+        end
       end
 
       def render_stroke
-        @curve_points.each_cons(2) do |p1, p2|
-          vector = Vector.new(p1, p2)
-          vector.each_point do |p|
-            # Not sure why we're getting the occasional NaN
-            next if p.nan?
+        cairo_image_surface(@node.width, @node.height) do |cr|
+          cr.set_line_join Cairo::LINE_JOIN_ROUND
+          cr.set_line_cap Cairo::LINE_CAP_ROUND
 
-            point2_x = if vector.p1.x < vector.p2.x
-              p.x - (vector.normal.x * stroke_size)
-            else
-              p.x + (vector.normal.x * stroke_size)
-            end
+          points = @curve_points.map(&:to_a)
+          cairo_path(cr, points + [:c])
 
-            point2_y = if vector.p1.y < vector.p2.y
-              p.y + (vector.normal.y * stroke_size)
-            else
-              p.y - (vector.normal.y * stroke_size)
-            end
-
-            @stroke_canvas.line(p.x.round, p.y.round, point2_x.round, point2_y.round, stroke_color)
-          end
+          cr.set_line_width stroke_size
+          cr.set_source_color stroke_color
+          cr.fill_preserve
+          cr.stroke
         end
-
-        @canvas.canvas.compose!(@stroke_canvas, 0, 0)
       end
 
       def horiz_factor
@@ -114,13 +123,13 @@ class PSD
         @stroke_color ||= (
           if @stroke_data['strokeEnabled']
             colors = @stroke_data['strokeStyleContent']['Clr ']
-            ChunkyPNG::Color.rgb(
-              colors['Rd  '].to_i,
-              colors['Grn '].to_i,
-              colors['Bl  '].to_i
-            )
+            [
+              colors['Rd  '] / 255.0,
+              colors['Grn '] / 255.0,
+              colors['Bl  '] / 255.0
+            ]
           else
-            ChunkyPNG::Color::TRANSPARENT
+            [0.0, 0.0, 0.0]
           end
         )
       end
@@ -129,13 +138,13 @@ class PSD
         @fill_color ||= (
           if @stroke_data['fillEnabled']
             colors = @fill_data['Clr ']
-            ChunkyPNG::Color.rgb(
-              colors['Rd  '].to_i,
-              colors['Grn '].to_i,
-              colors['Bl  '].to_i
-            )
+            [
+              colors['Rd  '] / 255.0,
+              colors['Grn '] / 255.0,
+              colors['Bl  '] / 255.0
+            ]
           else
-            ChunkyPNG::Color::TRANSPARENT
+            [0.0, 0.0, 0.0]
           end
         )
       end
