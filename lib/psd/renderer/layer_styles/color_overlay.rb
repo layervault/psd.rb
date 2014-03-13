@@ -5,6 +5,15 @@ class PSD
         data.has_key?('SoFi') && data['SoFi']['enab']
       end
 
+      def self.for_canvas(canvas)
+        data = canvas.node.object_effects
+        return nil if data.nil?
+        return nil unless should_apply?(data.data)
+
+        styles = LayerStyles.new(canvas)
+        self.new(styles)
+      end
+
       def initialize(styles)
         @canvas = styles.canvas
         @node = styles.node
@@ -14,6 +23,7 @@ class PSD
       def apply!
         # TODO - implement CMYK color overlay
         return if @node.header.cmyk?
+        return if PSD::Renderer::VectorShape.can_render?(@canvas)
 
         width = @canvas.width
         height = @canvas.height
@@ -24,30 +34,11 @@ class PSD
           width.times do |x|
             pixel = @canvas[x, y]
             next if ChunkyPNG::Color.a(pixel) == 0
-            
-            overlay_color = ChunkyPNG::Color.rgba(r, g, b, a)
 
-            if @node.vector?
-              @canvas[x, y] = overlay_color
-            else
-              @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel)
-            end
+            overlay_color = ChunkyPNG::Color.rgba(r, g, b, a)
+            @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel)
           end
         end
-      end
-
-      private
-
-      def blending_mode
-        @blending_mode ||= BlendMode::BLEND_MODES[BLEND_TRANSLATION[overlay_data['Md  ']].to_sym]
-      end
-
-      def overlay_data
-        @data['SoFi']
-      end
-
-      def color_data
-        overlay_data['Clr ']
       end
 
       def r
@@ -64,6 +55,20 @@ class PSD
 
       def a
         @a ||= (overlay_data['Opct'][:value] * 2.55).ceil
+      end
+
+      private
+
+      def blending_mode
+        @blending_mode ||= BlendMode::BLEND_MODES[BLEND_TRANSLATION[overlay_data['Md  ']].to_sym]
+      end
+
+      def overlay_data
+        @data['SoFi']
+      end
+
+      def color_data
+        overlay_data['Clr ']
       end
     end
   end

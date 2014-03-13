@@ -22,7 +22,7 @@ class PSD
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
         vector_stroke_content: VectorStrokeContent
-      }
+      }.freeze
 
       attr_reader :adjustments
       alias :info :adjustments

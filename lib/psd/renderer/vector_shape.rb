@@ -124,7 +124,16 @@ class PSD
 
       def fill_color
         @fill_color ||= (
-          if @stroke_data['fillEnabled']
+          overlay = PSD::LayerStyles::ColorOverlay.for_canvas(@canvas)
+          
+          if overlay
+            [
+              overlay.r / 255.0,
+              overlay.g / 255.0,
+              overlay.b / 255.0,
+              overlay.a / 255.0
+            ]
+          elsif @stroke_data['fillEnabled']
             colors = @fill_data['Clr ']
             [
               colors['Rd  '] / 255.0,
