@@ -12,7 +12,6 @@ class PSD
       def self.for_canvas(canvas)
         data = canvas.node.object_effects
         return nil if data.nil?
-        return nil unless should_apply?(canvas, data.data)
 
         styles = LayerStyles.new(canvas)
         self.new(styles)
