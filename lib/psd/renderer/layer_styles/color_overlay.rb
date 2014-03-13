@@ -25,8 +25,6 @@ class PSD
         return if @node.header.cmyk?
         return if PSD::Renderer::VectorShape.can_render?(@canvas)
 
-        overlay_color = ChunkyPNG::Color.rgba(r, g, b, a)
-
         PSD.logger.debug "Layer style: layer = #{@node.name}, type = color overlay, blend mode = #{blending_mode}"
 
         @canvas.height.times do |y|
@@ -37,6 +35,10 @@ class PSD
             @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel)
           end
         end
+      end
+
+      def overlay_color
+        @overlay_color ||= ChunkyPNG::Color.rgba(r, g, b, a)
       end
 
       def r
