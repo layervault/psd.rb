@@ -50,7 +50,7 @@ class PSD
       end
 
       def calculated_opacity
-        compose_options[:opacity] * compose_options[:fill_opacity] / 255
+        @calculated_opacity ||= compose_options[:opacity] * compose_options[:fill_opacity] / 255
       end
     end
   end
