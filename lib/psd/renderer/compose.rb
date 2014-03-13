@@ -6,21 +6,15 @@ class PSD
   module Compose
     extend self
 
-    DEFAULT_OPTS = {
-      opacity: 255,
-      fill_opacity: 255
-    }
-
     #
     # Normal blend modes
     #
 
-    def normal(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def normal(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
       new_r = blend_channel(r(bg), r(fg), mix_alpha)
       new_g = blend_channel(g(bg), g(fg), mix_alpha)
       new_b = blend_channel(b(bg), b(fg), mix_alpha)
@@ -33,12 +27,11 @@ class PSD
     # Subtractive blend modes
     #
 
-    def darken(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def darken(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
       new_r = r(fg) <= r(bg) ? blend_channel(r(bg), r(fg), mix_alpha) : r(bg)
       new_g = g(fg) <= g(bg) ? blend_channel(g(bg), g(fg), mix_alpha) : g(bg)
       new_b = b(fg) <= b(bg) ? blend_channel(b(bg), b(fg), mix_alpha) : b(bg)
@@ -46,12 +39,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def multiply(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def multiply(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
       new_r = blend_channel(r(bg), r(fg) * r(bg) >> 8, mix_alpha)
       new_g = blend_channel(g(bg), g(fg) * g(bg) >> 8, mix_alpha)
       new_b = blend_channel(b(bg), b(fg) * b(bg) >> 8, mix_alpha)
@@ -59,12 +51,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def color_burn(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def color_burn(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         if f > 0
@@ -82,12 +73,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def linear_burn(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def linear_burn(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = blend_channel(r(bg), (r(fg) < (255 - r(bg))) ? 0 : r(fg) - (255 - r(bg)), mix_alpha)
       new_g = blend_channel(g(bg), (g(fg) < (255 - g(bg))) ? 0 : g(fg) - (255 - g(bg)), mix_alpha)
@@ -100,12 +90,11 @@ class PSD
     # Additive blend modes
     #
 
-    def lighten(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def lighten(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = r(fg) >= r(bg) ? blend_channel(r(bg), r(fg), mix_alpha) : r(bg)
       new_g = g(fg) >= g(bg) ? blend_channel(g(bg), g(fg), mix_alpha) : g(bg)
@@ -114,12 +103,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def screen(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def screen(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = blend_channel(r(bg), 255 - ((255 - r(bg)) * (255 - r(fg)) >> 8), mix_alpha)
       new_g = blend_channel(g(bg), 255 - ((255 - g(bg)) * (255 - g(fg)) >> 8), mix_alpha)
@@ -128,12 +116,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def color_dodge(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def color_dodge(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         f < 255 ? [(b << 8) / (255 - f), 255].min : b
@@ -146,12 +133,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def linear_dodge(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def linear_dodge(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = blend_channel(r(bg), (r(bg) + r(fg)) > 255 ? 255 : r(bg) + r(fg), mix_alpha)
       new_g = blend_channel(g(bg), (g(bg) + g(fg)) > 255 ? 255 : g(bg) + g(fg), mix_alpha)
@@ -165,12 +151,11 @@ class PSD
     # Contrasting blend modes
     #
 
-    def overlay(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def overlay(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         if b < 128
@@ -187,12 +172,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def soft_light(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def soft_light(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         c1 = b * f >> 8
@@ -207,12 +191,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def hard_light(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def hard_light(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         if f < 128
@@ -229,12 +212,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def vivid_light(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def vivid_light(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         if f < 255
@@ -251,12 +233,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def linear_light(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def linear_light(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         if b < 255
@@ -273,12 +254,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def pin_light(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def pin_light(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       calculate_foreground = Proc.new do |b, f|
         if f >= 128
@@ -295,12 +275,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def hard_mix(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def hard_mix(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = blend_channel(r(bg), (r(bg) + r(fg) <= 255) ? 0 : 255, mix_alpha)
       new_g = blend_channel(g(bg), (g(bg) + g(fg) <= 255) ? 0 : 255, mix_alpha)
@@ -313,12 +292,11 @@ class PSD
     # Inversion blend modes
     #
 
-    def difference(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def difference(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = blend_channel(r(bg), (r(bg) - r(fg)).abs, mix_alpha)
       new_g = blend_channel(g(bg), (g(bg) - g(fg)).abs, mix_alpha)
@@ -327,12 +305,11 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
-    def exclusion(fg, bg, opts={})
-      opts = DEFAULT_OPTS.merge(opts)
-      return apply_opacity(fg, opts) if fully_transparent?(bg)
+    def exclusion(fg, bg, opacity)
+      return apply_opacity(fg, opacity) if fully_transparent?(bg)
       return bg if fully_transparent?(fg)
 
-      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opts)
+      mix_alpha, dst_alpha = calculate_alphas(fg, bg, opacity)
 
       new_r = blend_channel(r(bg), r(bg) + r(fg) - (r(bg) * r(fg) >> 7), mix_alpha)
       new_g = blend_channel(g(bg), g(bg) + g(fg) - (g(bg) * g(fg) >> 7), mix_alpha)
@@ -349,8 +326,7 @@ class PSD
 
     private
 
-    def calculate_alphas(fg, bg, opts)
-      opacity = calculate_opacity(opts)
+    def calculate_alphas(fg, bg, opacity)
       src_alpha = a(fg) * opacity >> 8
       dst_alpha = a(bg)
 
@@ -360,12 +336,8 @@ class PSD
       return mix_alpha, dst_alpha
     end
 
-    def calculate_opacity(opts)
-      opts[:opacity] * opts[:fill_opacity] / 255
-    end
-
-    def apply_opacity(color, opts)
-      (color & 0xffffff00) | ((color & 0x000000ff) * calculate_opacity(opts) / 255)
+    def apply_opacity(color, opacity)
+      (color & 0xffffff00) | ((color & 0x000000ff) * opacity / 255)
     end
 
     def blend_channel(bg, fg, alpha)

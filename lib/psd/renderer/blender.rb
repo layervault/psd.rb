@@ -32,7 +32,7 @@ class PSD
               fg.node.blending_mode,
               fg.canvas[x, y],
               bg.canvas[base_x, base_y],
-              compose_options
+              calculated_opacity
             )
 
             bg.canvas[base_x, base_y] = color
@@ -47,6 +47,10 @@ class PSD
           opacity: @opacity,
           fill_opacity: @fill_opacity
         }
+      end
+
+      def calculated_opacity
+        compose_options[:opacity] * compose_options[:fill_opacity] / 255
       end
     end
   end
