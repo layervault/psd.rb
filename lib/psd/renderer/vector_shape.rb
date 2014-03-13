@@ -30,7 +30,7 @@ class PSD
 
         find_points
 
-        output = render_shape
+        output = render_shapes
         apply_to_canvas(output)
       end
 
@@ -67,7 +67,7 @@ class PSD
 
       # TODO: stroke alignment
       # Right now we assume the stroke style is always a overlap stroke.
-      def render_shape
+      def render_shapes
         PSD.logger.debug "Rendering #{@paths.size} vector paths with cairo"
 
         cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
