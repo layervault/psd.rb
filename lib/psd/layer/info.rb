@@ -19,6 +19,7 @@ class PSD
         fill_opacity: FillOpacity,
         placed_layer: PlacedLayer,
         locked: Locked,
+        solid_color: SolidColor,
         vector_mask: VectorMask,
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
