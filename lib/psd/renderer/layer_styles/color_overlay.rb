@@ -25,14 +25,12 @@ class PSD
         return if @node.header.cmyk?
         return if PSD::Renderer::VectorShape.can_render?(@canvas)
 
-        width = @canvas.width
-        height = @canvas.height
         overlay_color = ChunkyPNG::Color.rgba(r, g, b, a)
 
         PSD.logger.debug "Layer style: layer = #{@node.name}, type = color overlay, blend mode = #{blending_mode}"
 
-        height.times do |y|
-          width.times do |x|
+        @canvas.height.times do |y|
+          @canvas.width.times do |x|
             pixel = @canvas[x, y]
             next if ChunkyPNG::Color.a(pixel) == 0
 
