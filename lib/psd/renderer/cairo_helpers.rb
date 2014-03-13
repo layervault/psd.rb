@@ -37,7 +37,7 @@ class PSD
             cr.move_to(*cmd)
             first = false
           else
-            cr.line_to(*cmd)
+            cr.curve_to(*cmd)
           end 
         end
       end

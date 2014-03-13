@@ -6,10 +6,7 @@ class PSD
       include CairoHelpers
 
       def self.can_render?(canvas)
-        return false if canvas.node.vector_mask.nil?
-        ([
-          :vector_stroke, :vector_stroke_content
-        ] & canvas.node.info.keys).length == 2
+        !canvas.node.vector_mask.nil?
       end
 
       DPI = 72.0.freeze
@@ -19,8 +16,8 @@ class PSD
         @node = @canvas.node
         @path = @node.vector_mask.paths.map(&:to_hash)
 
-        @stroke_data = @node.vector_stroke.data
-        @fill_data = @node.vector_stroke_content.data
+        @stroke_data = @node.vector_stroke ? @node.vector_stroke.data : {}
+        @fill_data = @node.vector_stroke_content ? @node.vector_stroke_content.data : {}
 
         @points = []
         @curve_points = []
@@ -54,21 +51,23 @@ class PSD
 
         PSD.logger.debug "Vector shape has #{@points.size} anchors"
 
+        @curve_points << [
+          @points[0][:anchor][:horiz],
+          @points[0][:anchor][:vert]
+        ]
+
         @points.size.times do |i|
           point_a = @points[i]
           point_b = @points[i+1] || @points[0] # wraparound
 
-          b = Bezier.from_path(
-            point_a[:anchor],
-            point_a[:leaving],
-            point_b[:preceding],
-            point_b[:anchor]
-          )
-
-          b.each_point do |point|
-            next if point.nan?
-            @curve_points << point
-          end
+          @curve_points << [
+            point_a[:leaving][:horiz],
+            point_a[:leaving][:vert],
+            point_b[:preceding][:horiz],
+            point_b[:preceding][:vert],
+            point_b[:anchor][:horiz],
+            point_b[:anchor][:vert]
+          ]
         end
       end
 
@@ -83,7 +82,7 @@ class PSD
 
           cr.translate stroke_size / 2.0, stroke_size / 2.0
 
-          cairo_path(cr, *(formatted_points + [:c]))
+          cairo_path(cr, *(@curve_points + [:c]))
 
           cr.set_source_rgba fill_color
           cr.fill_preserve
@@ -147,6 +146,13 @@ class PSD
               colors['Grn '] / 255.0,
               colors['Bl  '] / 255.0,
               @stroke_data['strokeStyleOpacity'][:value] / 100.0
+            ]
+          elsif !@node.solid_color.nil?
+            [
+              @node.solid_color.r / 255.0,
+              @node.solid_color.g / 255.0,
+              @node.solid_color.b / 255.0,
+              1.0
             ]
           else
             [0.0, 0.0, 0.0, 0.0]

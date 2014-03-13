@@ -9,9 +9,16 @@ class PSD
         !PSD::Renderer::VectorShape.can_render?(canvas)
       end
 
+      def self.can_apply?(canvas, data)
+        data.has_key?('SoFi') && 
+        data['SoFi']['enab'] &&
+        canvas.node.header.rgb?
+      end
+
       def self.for_canvas(canvas)
         data = canvas.node.object_effects
         return nil if data.nil?
+        return nil unless can_apply?(canvas, data.data)
 
         styles = LayerStyles.new(canvas)
         self.new(styles)
