@@ -51,6 +51,7 @@ class PSD
       when 1, 2, 4, 5
         {
           linked: @linked,
+          closed: [1, 2].include?(@record_type),
           preceding: {
             vert: @preceding_vert,
             horiz: @preceding_horiz

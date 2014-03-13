@@ -29,7 +29,7 @@ class PSD
 
       def cairo_path(cr, *pairs)
         first = true
-        pairs.each do |cmd| 
+        pairs.each do |cmd|
           if cmd == :c
             cr.close_path
             first = true

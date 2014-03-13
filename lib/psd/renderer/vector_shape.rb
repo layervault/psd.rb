@@ -20,7 +20,7 @@ class PSD
         @fill_data = @node.vector_stroke_content ? @node.vector_stroke_content.data : {}
 
         @points = []
-        @curve_points = []
+        @paths = []
         @fill_canvas = nil
         @stroke_canvas = nil
       end
@@ -39,42 +39,36 @@ class PSD
       def find_points
         PSD.logger.debug "Formatting vector points..."
 
+        cur_path = nil
         @path.each do |data|
-          next unless [1, 2, 4, 5].include? data[:record_type]
-          @points << data.tap do |d|
-            [:preceding, :anchor, :leaving].each do |type|
-              d[type][:horiz] = (d[type][:horiz] * horiz_factor) - @node.left
-              d[type][:vert]  = (d[type][:vert] * vert_factor) - @node.top
+          next if [6, 7, 8].include? data[:record_type]
+          
+          if [0, 3].include? data[:record_type]
+            @paths << cur_path
+            cur_path = []
+            next
+          end
+
+          cur_path << data.tap do |d|
+            if [1, 2, 4, 5].include? data[:record_type]
+              [:preceding, :anchor, :leaving].each do |type|
+                d[type][:horiz] = (d[type][:horiz] * horiz_factor) - @node.left
+                d[type][:vert]  = (d[type][:vert] * vert_factor) - @node.top
+              end
             end
           end
         end
 
-        PSD.logger.debug "Vector shape has #{@points.size} anchors"
+        @paths << cur_path
+        @paths.compact!
 
-        @curve_points << [
-          @points[0][:anchor][:horiz],
-          @points[0][:anchor][:vert]
-        ]
-
-        @points.size.times do |i|
-          point_a = @points[i]
-          point_b = @points[i+1] || @points[0] # wraparound
-
-          @curve_points << [
-            point_a[:leaving][:horiz],
-            point_a[:leaving][:vert],
-            point_b[:preceding][:horiz],
-            point_b[:preceding][:vert],
-            point_b[:anchor][:horiz],
-            point_b[:anchor][:vert]
-          ]
-        end
+        PSD.logger.debug "Vector shape has #{@paths.size} path(s)"
       end
 
       # TODO: stroke alignment
       # Right now we assume the stroke style is always a overlap stroke.
       def render_shape
-        PSD.logger.debug "Rendering #{@curve_points.size} vector points with cairo"
+        PSD.logger.debug "Rendering #{@paths.size} vector paths with cairo"
 
         cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
           cr.set_line_join stroke_join
@@ -82,15 +76,33 @@ class PSD
 
           cr.translate stroke_size / 2.0, stroke_size / 2.0
 
-          cairo_path(cr, *(@curve_points + [:c]))
+          @paths.each do |path|
+            cr.move_to path[0][:anchor][:horiz], path[0][:anchor][:vert]
 
-          cr.set_source_rgba fill_color
-          cr.fill_preserve
+            path.size.times do |i|
+              point_a = path[i]
+              point_b = path[i+1] || path[0]
 
-          if has_stroke?
-            cr.set_source_rgba stroke_color
-            cr.set_line_width stroke_size
-            cr.stroke
+              cr.curve_to(
+                point_a[:leaving][:horiz],
+                point_a[:leaving][:vert],
+                point_b[:preceding][:horiz],
+                point_b[:preceding][:vert],
+                point_b[:anchor][:horiz],
+                point_b[:anchor][:vert]
+              )
+            end
+
+            cr.close_path if path.last[:closed]
+
+            cr.set_source_rgba fill_color
+            cr.fill_preserve
+
+            if has_stroke?
+              cr.set_source_rgba stroke_color
+              cr.set_line_width stroke_size
+              cr.stroke
+            end
           end
         end
       end
