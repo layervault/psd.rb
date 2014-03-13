@@ -27,7 +27,11 @@ class PSD
             
             overlay_color = ChunkyPNG::Color.rgba(r, g, b, a)
 
-            @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel)
+            if @node.vector?
+              @canvas[x, y] = overlay_color
+            else
+              @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel)
+            end
           end
         end
       end
