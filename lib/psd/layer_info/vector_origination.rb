@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class VectorOrigination < LayerInfo
-    @key = 'vogk'
+    def self.should_parse?(key)
+      key == 'vogk'
+    end
 
     def parse
       @file.seek 8, IO::SEEK_CUR

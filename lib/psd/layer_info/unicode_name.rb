@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class UnicodeName < LayerInfo
-    @key = 'luni'
+    def self.should_parse?(key)
+      key == 'luni'
+    end
 
     def parse
       pos = @file.tell

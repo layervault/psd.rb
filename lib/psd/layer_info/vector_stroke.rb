@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class VectorStroke < LayerInfo
-    @key = 'vstk'
+    def self.should_parse?(key)
+      key == 'vstk'
+    end
 
     def parse
       version = @file.read_int

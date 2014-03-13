@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class LayerID < LayerInfo
-    @key = 'lyid'
+    def self.should_parse?(key)
+      key == 'lyid'
+    end
 
     attr_reader :id
 

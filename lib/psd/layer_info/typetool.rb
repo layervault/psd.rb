@@ -5,7 +5,9 @@ class PSD
   # Parses and provides information about text areas within layers in
   # the document.
   class TypeTool < LayerInfo
-    @key = 'TySh'
+    def self.should_parse?(key)
+      key == 'TySh'
+    end
     
     # Parse all of the text data in the layer.
     def parse

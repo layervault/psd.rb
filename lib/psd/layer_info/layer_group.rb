@@ -7,7 +7,9 @@ class PSD
   #
   # See https://github.com/layervault/psd.rb/issues/38
   class NestedLayerDivider < LayerInfo
-    @key = 'lsdk'
+    def self.should_parse?(key)
+      key == 'lsdk'
+    end
 
     attr_reader :is_folder, :is_hidden
 

@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class MetadataSetting < LayerInfo
-    @key = 'shmd'
+    def self.should_parse?(key)
+      key == 'shmd'
+    end
 
     def parse
       count = @file.read_int

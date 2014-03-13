@@ -1,15 +1,14 @@
 require_relative '../layer_info'
 
 class PSD
-  class FillOpacity < LayerInfo
+  class ObjectEffects < LayerInfo
     def self.should_parse?(key)
-      key == 'iOpa'
+      return false
+      ['Patt', 'Pat2', 'Pat3'].include?(key)
     end
 
-    attr_reader :value
-
     def parse
-      @value = @file.read_byte.to_i
+
     end
   end
 end

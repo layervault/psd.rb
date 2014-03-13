@@ -19,7 +19,6 @@ class PSD
         placed_layer: PlacedLayer,
         locked: Locked,
         vector_mask: VectorMask,
-        vector_mask_2: VectorMask2,
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
         vector_stroke_content: VectorStrokeContent
@@ -52,7 +51,7 @@ class PSD
 
           key_parseable = false
           LAYER_INFO.each do |name, info|
-            next unless info.key == key
+            next unless info.should_parse?(key)
 
             PSD.logger.debug "Layer Info: key = #{key}, start = #{pos}, length = #{length}"
 

@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class BlendClippingElements < LayerInfo
-    @key = 'clbl'
+    def self.should_parse?(key)
+      key == 'clbl'
+    end
 
     attr_reader :enabled
     def parse

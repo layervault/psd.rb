@@ -1,5 +1,4 @@
 require_relative 'layer_styles/color_overlay'
-require_relative 'layer_styles/drop_shadow'
 
 class PSD
   class LayerStyles
@@ -31,6 +30,10 @@ class PSD
       'Lmns' => 'lum'
     }.freeze
 
+    SUPPORTED_STYLES = [
+      ColorOverlay
+    ].freeze
+
     attr_reader :canvas, :node, :data
 
     def initialize(canvas)
@@ -49,8 +52,10 @@ class PSD
     def apply!
       return if @applied || data.nil?
 
-      ColorOverlay.new(self).apply! if ColorOverlay.should_apply?(data)
-      DropShadow.new(self).apply!   if DropShadow.should_apply?(data)
+      SUPPORTED_STYLES.each do |style|
+        next unless style.should_apply?(data)
+        style.new(self).apply!
+      end
     end
   end
 end

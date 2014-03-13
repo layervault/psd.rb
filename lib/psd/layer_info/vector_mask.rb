@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class VectorMask < LayerInfo
-    @key = 'vmsk'
+    def self.should_parse?(key)
+      ['vmsk', 'vsms'].include?(key)
+    end
 
     attr_reader :invert, :not_link, :disable, :paths
 

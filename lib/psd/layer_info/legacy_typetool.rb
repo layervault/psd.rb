@@ -3,7 +3,9 @@ require_relative 'typetool'
 
 class PSD
   class LegacyTypeTool < TypeTool
-    @key = 'tySh'
+    def self.should_parse?(key)
+      key == 'tySh'
+    end
     
     def parse      
       version = @file.read_short

@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class LayerSectionDivider < LayerInfo
-    @key = 'lsct'
+    def self.should_parse?(key)
+      key == 'lsct'
+    end
 
     attr_reader :layer_type, :is_folder, :is_hidden, :blend_mode, :sub_type
 

@@ -2,7 +2,9 @@ require_relative '../layer_info'
 
 class PSD
   class PlacedLayer < LayerInfo
-    @key = 'SoLd'
+    def self.should_parse?(key)
+      key == 'SoLd'
+    end
 
     def parse
       # Useless id/version info
