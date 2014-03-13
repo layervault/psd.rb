@@ -12,6 +12,7 @@ class PSD
         object_effects: ObjectEffects,
         name: UnicodeName,
         section_divider: LayerSectionDivider,
+        sheet_color: SheetColor,
         nested_section_divider: NestedLayerDivider,
         reference_point: ReferencePoint,
         layer_id: LayerID,
