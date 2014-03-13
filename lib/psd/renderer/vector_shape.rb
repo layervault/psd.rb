@@ -32,7 +32,9 @@ class PSD
         PSD.logger.debug "Beginning vector render for #{@node.name}"
 
         find_points
-        render_shape
+
+        output = render_shape
+        apply_to_canvas(output)
       end
 
       private
@@ -71,18 +73,17 @@ class PSD
       end
 
       # TODO: stroke alignment
-      # Right now we assume the stroke style is always an inside stroke.
+      # Right now we assume the stroke style is always a overlap stroke.
       def render_shape
         PSD.logger.debug "Rendering #{@curve_points.size} vector points with cairo"
 
-        points = @curve_points.map(&:to_a)
-        output = cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
+        cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
           cr.set_line_join stroke_join
           cr.set_line_cap stroke_cap
 
           cr.translate stroke_size / 2.0, stroke_size / 2.0
 
-          cairo_path(cr, *(points + [:c]))
+          cairo_path(cr, *(formatted_points + [:c]))
 
           cr.set_source_rgba fill_color
           cr.fill_preserve
@@ -93,9 +94,15 @@ class PSD
             cr.stroke
           end
         end
+      end
 
+      def apply_to_canvas(output)
         output.resample_nearest_neighbor!(@canvas.width, @canvas.height)
         @canvas.canvas.compose!(output, 0, 0)
+      end
+
+      def formatted_points
+        @formatted_points ||= @curve_points.map(&:to_a)
       end
 
       def horiz_factor
