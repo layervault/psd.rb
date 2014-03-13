@@ -7,12 +7,12 @@ class PSD
     include BlendingRanges
     include ChannelImage
     include Exporting
-    include Helpers
     include Info
     include Mask
     include Name
     include PathComponents
     include PositionAndChannels
+    include Helpers
 
     attr_reader :id, :info_keys, :header
     attr_accessor :group_layer, :node, :file
@@ -65,15 +65,6 @@ class PSD
     # We just delegate this to a normal method call.
     def [](val)
       self.send(val)
-    end
-
-    # We delegate all missing method calls to the extra layer info to make it easier
-    # to access that data.
-    def method_missing(method, *args, &block)
-      return @adjustments[method] if @adjustments.has_key?(method)
-      return nil if LAYER_INFO.has_key?(method)
-      
-      super
     end
   end
 end

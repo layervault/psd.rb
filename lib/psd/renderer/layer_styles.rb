@@ -39,7 +39,7 @@ class PSD
     def initialize(canvas)
       @canvas = canvas
       @node = @canvas.node
-      @data = @node.layer.info[:object_effects]
+      @data = @node.object_effects
 
       if @data.nil?
         @applied = true
