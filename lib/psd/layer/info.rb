@@ -27,10 +27,6 @@ class PSD
       attr_reader :adjustments
       alias :info :adjustments
 
-      def vector_mask
-        info[:vector_mask_2] || info[:vector_mask]
-      end
-
       private
 
       # This section is a bit tricky to parse because it represents all of the
