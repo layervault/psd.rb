@@ -53,7 +53,7 @@ class PSD
       return if @applied || data.nil?
 
       SUPPORTED_STYLES.each do |style|
-        next unless style.should_apply?(data)
+        next unless style.should_apply?(@canvas, data)
         style.new(self).apply!
       end
     end

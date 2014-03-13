@@ -1,14 +1,18 @@
 class PSD
   class LayerStyles
     class ColorOverlay
-      def self.should_apply?(data)
-        data.has_key?('SoFi') && data['SoFi']['enab']
+      # TODO: CMYK support
+      def self.should_apply?(canvas, data)
+        data.has_key?('SoFi') && 
+        data['SoFi']['enab'] &&
+        canvas.node.header.rgb? &&
+        !PSD::Renderer::VectorShape.can_render?(canvas)
       end
 
       def self.for_canvas(canvas)
         data = canvas.node.object_effects
         return nil if data.nil?
-        return nil unless should_apply?(data.data)
+        return nil unless should_apply?(canvas, data.data)
 
         styles = LayerStyles.new(canvas)
         self.new(styles)
@@ -21,10 +25,6 @@ class PSD
       end
 
       def apply!
-        # TODO - implement CMYK color overlay
-        return if @node.header.cmyk?
-        return if PSD::Renderer::VectorShape.can_render?(@canvas)
-
         PSD.logger.debug "Layer style: layer = #{@node.name}, type = color overlay, blend mode = #{blending_mode}"
 
         @canvas.height.times do |y|
