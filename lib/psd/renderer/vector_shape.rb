@@ -6,7 +6,7 @@ class PSD
       include CairoHelpers
 
       def self.can_render?(canvas)
-        !canvas.node.vector_mask.nil?
+        false && !canvas.node.vector_mask.nil?
       end
 
       DPI = 72.0.freeze
