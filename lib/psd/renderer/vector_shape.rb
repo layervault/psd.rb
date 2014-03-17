@@ -29,9 +29,7 @@ class PSD
         PSD.logger.debug "Beginning vector render for #{@node.name}"
 
         find_points
-
-        output = render_shapes
-        apply_to_canvas(output)
+        apply_to_canvas render_shapes
       end
 
       private
@@ -71,6 +69,7 @@ class PSD
         PSD.logger.debug "Rendering #{@paths.size} vector paths with cairo"
 
         cairo_image_surface(@canvas.width + stroke_size, @canvas.height + stroke_size) do |cr|
+          cr.set_fill_rule Cairo::FILL_RULE_EVEN_ODD
           cr.set_line_join stroke_join
           cr.set_line_cap stroke_cap
 
@@ -94,20 +93,38 @@ class PSD
             end
 
             cr.close_path if path.last[:closed]
+          end
 
-            cr.set_source_rgba fill_color
-            cr.fill_preserve
+          cr.set_source_rgba fill_color
+          cr.fill_preserve
 
-            if has_stroke?
-              cr.set_source_rgba stroke_color
-              cr.set_line_width stroke_size
-              cr.stroke
+          if has_stroke?
+            cr.set_source_rgba stroke_color
+            cr.set_line_width stroke_size
+            cr.stroke
+          end
+        end
+      end
+
+      # For debugging purposes only
+      def draw_debug(canvas)
+        @paths.each do |path|
+          path.each do |point|
+            canvas.circle(point[:anchor][:horiz].to_i, point[:anchor][:vert].to_i, 3, ChunkyPNG::Color::BLACK, ChunkyPNG::Color::BLACK)
+            [:leaving, :preceding].each do |type|
+              canvas.circle(point[type][:horiz].to_i, point[type][:vert].to_i, 3, ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 0, 0))
+              canvas.line(
+                point[:anchor][:horiz].to_i, point[:anchor][:vert].to_i,
+                point[type][:horiz].to_i, point[type][:vert].to_i,
+                ChunkyPNG::Color::BLACK
+              )
             end
           end
         end
       end
 
       def apply_to_canvas(output)
+        # draw_debug(output)
         output.resample_nearest_neighbor!(@canvas.width, @canvas.height)
         @canvas.canvas.compose!(output, 0, 0)
       end
@@ -182,7 +199,7 @@ class PSD
               value = @stroke_data['strokeStyleResolution'] * value / 72.27
             end
 
-            value.to_i
+            value
           else
             0
           end
