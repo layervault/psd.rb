@@ -2,7 +2,7 @@ require 'benchmark'
 require 'pp'
 require 'psd'
 
-file = ARGV[0] || '/Users/ryanlefevre/LayerVault/Turtleworks/Directory Page.psd'
+file = ARGV[0] || 'examples/images/example.psd'
 
 results = Benchmark.measure "Image exporting" do
   psd = PSD.new(file)

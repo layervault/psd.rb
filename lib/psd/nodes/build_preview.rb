@@ -1,8 +1,8 @@
  class PSD
   class Node
     module BuildPreview
-      def renderer
-        PSD::Renderer.new(self)
+      def renderer(opts = {})
+        PSD::Renderer.new(self, opts)
       end
 
       def to_png
