@@ -199,7 +199,7 @@ class PSD
               value = @stroke_data['strokeStyleResolution'] * value / 72.27
             end
 
-            value
+            value.to_i
           else
             0
           end
