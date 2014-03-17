@@ -1,10 +1,11 @@
 class PSD
   class Renderer
     class Canvas
-      attr_reader :canvas, :node, :width, :height, :left, :right, :top, :bottom, :opacity, :fill_opacity
+      attr_reader :canvas, :node, :opts, :width, :height, :left, :right, :top, :bottom, :opacity, :fill_opacity
 
-      def initialize(node, width = nil, height = nil, color = ChunkyPNG::Color::TRANSPARENT)
+      def initialize(node, width = nil, height = nil, opts = {})
         @node = node
+        @opts = opts
         @pixel_data = @node.group? ? [] : @node.image.pixel_data
         
         @width = (width || @node.width).to_i
@@ -17,7 +18,7 @@ class PSD
         @opacity = @node.opacity.to_f
         @fill_opacity = @node.fill_opacity.to_f
 
-        @canvas = ChunkyPNG::Canvas.new(@width, @height, color)
+        @canvas = ChunkyPNG::Canvas.new(@width, @height, ChunkyPNG::Color::TRANSPARENT)
 
         initialize_canvas unless @node.group?
       end

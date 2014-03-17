@@ -4,8 +4,9 @@ class PSD
   class Renderer
     include CanvasManagement
 
-    def initialize(node)
+    def initialize(node, opts = {})
       @root_node = node
+      @opts = opts
 
       # Our canvas always starts as the full document size because
       # all measurements are relative to this size. We can later crop
@@ -56,7 +57,7 @@ class PSD
           pop_node and next
         end
 
-        canvas = Canvas.new(child)
+        canvas = Canvas.new(child, nil, nil, @opts)
         canvas.paint_to active_canvas
       end
     end
