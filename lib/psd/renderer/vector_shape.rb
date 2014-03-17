@@ -19,10 +19,7 @@ class PSD
         @stroke_data = @node.vector_stroke ? @node.vector_stroke.data : {}
         @fill_data = @node.vector_stroke_content ? @node.vector_stroke_content.data : {}
 
-        @points = []
         @paths = []
-        @fill_canvas = nil
-        @stroke_canvas = nil
       end
 
       def render_to_canvas!
