@@ -18,9 +18,7 @@ class PSD
         @opacity = @node.opacity.to_f
         @fill_opacity = @node.fill_opacity.to_f
 
-        @canvas = ChunkyPNG::Canvas.new(@width, @height, ChunkyPNG::Color::TRANSPARENT)
-
-        initialize_canvas unless @node.group?
+        initialize_canvas
       end
 
       def paint_to(base)
@@ -50,15 +48,24 @@ class PSD
       private
 
       def initialize_canvas
-        return if VectorShape.can_render?(self)
-        
-        PSD.logger.debug "Initializing canvas for #{node.debug_name}"
+        PSD.logger.debug "Initializing canvas for #{node.debug_name}; color = #{ChunkyPNG::Color.to_truecolor_alpha_bytes(fill_color)}"
+
+        @canvas = ChunkyPNG::Canvas.new(@width, @height, fill_color)
+        return if @node.group?
 
         # Sorry, ChunkyPNG.
         @canvas.send(:replace_canvas!, width, height, @pixel_data)
 
         # This can now be referenced by @canvas.pixels
         @pixel_data = nil
+      end
+
+      def fill_color
+        if !@node.root? && @node.solid_color
+          @node.solid_color.color
+        else
+          ChunkyPNG::Color::TRANSPARENT
+        end
       end
 
       def render_vector_shape
