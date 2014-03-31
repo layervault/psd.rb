@@ -21,7 +21,6 @@ class PSD
       def apply!
         PSD.logger.debug "Applying mask to #{@layer.name}"
 
-        i = 0
         @canvas.height.times do |y|
           @canvas.width.times do |x|
             doc_x = @canvas.left + x
@@ -32,15 +31,12 @@ class PSD
 
             color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas[x, y])
 
-            if doc_x < 0 || doc_x > @doc_width || doc_y < 0 || doc_y > @doc_height
+            if doc_x < 0 || doc_x >= @doc_width || doc_y < 0 || doc_y >= @doc_height
               color[3] = 0
             elsif mask_x < 0 || mask_x >= @mask_width || mask_y < 0 || mask_y >= @mask_height
               color[3] = 0
-            elsif i >= @mask_data.length
-              color[3] = 0
             else
-              color[3] = color[3] * @mask_data[i] / 255
-              i += 1
+              color[3] = color[3] * @mask_data[@mask_width * mask_y + mask_x] / 255
             end
 
             @canvas[x, y] = ChunkyPNG::Color.rgba(*color)
