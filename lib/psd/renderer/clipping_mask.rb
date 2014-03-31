@@ -12,7 +12,7 @@ class PSD
           mask_node = mask_node.next_sibling
         end
 
-        @mask = Canvas.new(mask_node)
+        @mask = MaskCanvas.new(mask_node)
       end
 
       def apply!
