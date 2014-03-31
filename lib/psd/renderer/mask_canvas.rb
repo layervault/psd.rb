@@ -1,3 +1,5 @@
+require_relative './canvas'
+
 class PSD
   class Renderer
     class MaskCanvas < Canvas
