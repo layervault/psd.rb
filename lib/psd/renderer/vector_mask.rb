@@ -1,3 +1,5 @@
+require_relative './mask'
+
 class PSD
   class Renderer
     class VectorMask < Mask
