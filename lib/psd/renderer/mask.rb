@@ -29,7 +29,7 @@ class PSD
             layer_x = doc_x - @layer.left
             layer_y = doc_y - @layer.top
 
-            next unless @canvas.canvas.include_xy?(layer_x, layer_y)
+            i += 1 and next unless @canvas.canvas.include_xy?(layer_x, layer_y)
             color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas[layer_x, layer_y])
 
             # We're off the document canvas. Crop.
@@ -37,7 +37,7 @@ class PSD
               color[3] = 0
             else
               color[3] = color[3] * @mask_data[i] / 255
-            end 
+            end
 
             @canvas[layer_x, layer_y] = ChunkyPNG::Color.rgba(*color)
             i += 1
