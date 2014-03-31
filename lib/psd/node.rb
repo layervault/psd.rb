@@ -44,10 +44,6 @@ class PSD
       is_a?(PSD::Node::Group) || is_a?(PSD::Node::Root)
     end
 
-    def vector?
-      !layer.vector_mask.nil?
-    end
-
     def debug_name
       root? ? ":root:" : name
     end

@@ -29,7 +29,7 @@ class PSD
       attr_reader :adjustments
       alias :info :adjustments
 
-      LAYER_INFO.each do |key, _|
+      LAYER_INFO.keys.each do |key|
         define_method(key) { @adjustments[key] }
       end
 

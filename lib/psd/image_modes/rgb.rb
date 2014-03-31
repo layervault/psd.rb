@@ -12,7 +12,7 @@ class PSD
           a = 255
 
           @channels_info.each_with_index do |chan, index|
-            next if chan[:id] == -2
+            next if chan[:id] < -1
             
             val = @channel_data[i + (@channel_length * index)]
 

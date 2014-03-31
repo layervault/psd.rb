@@ -72,6 +72,14 @@ class PSD
         return 255 unless info.has_key?(:fill_opacity)
         info[:fill_opacity].value
       end
+
+      def raster_mask?
+        image.has_mask?
+      end
+
+      def vector_mask?
+        !vector_mask.nil?
+      end
     end
   end
 end

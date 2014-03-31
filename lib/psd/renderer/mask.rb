@@ -9,19 +9,22 @@ class PSD
 
         @mask_data = @layer.image.mask_data
 
+        @mask_width = @layer.mask.width.to_i
+        @mask_height = @layer.mask.height.to_i
+        @mask_left = @layer.mask.left.to_i
+        @mask_top = @layer.mask.top.to_i
+
         @doc_width = @layer.header.width.to_i
         @doc_height = @layer.header.height.to_i
       end
 
-      def apply!
-        PSD.logger.debug "Applying mask to #{@layer.name}"
-        
+      def apply!        
         # Now we apply the mask
         i = 0
-        @layer.mask.height.times do |y|
-          @layer.mask.width.times do |x|
-            doc_x = @layer.mask.left + x
-            doc_y = @layer.mask.top + y
+        @mask_height.times do |y|
+          @mask_width.times do |x|
+            doc_x = @mask_left + x
+            doc_y = @mask_top + y
 
             layer_x = doc_x - @layer.left
             layer_y = doc_y - @layer.top

@@ -22,11 +22,11 @@ class PSD
         @paths = []
       end
 
-      def render_to_canvas!
+      def render!
         PSD.logger.debug "Beginning vector render for #{@node.name}"
 
         find_points
-        apply_to_canvas render_shapes
+        render_shapes
       end
 
       private

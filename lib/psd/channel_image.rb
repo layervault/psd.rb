@@ -18,7 +18,7 @@ class PSD
       super(file, header)
 
       @channels_info = @layer.channels_info
-      @has_mask = @layer.mask.width * @layer.mask.height > 0
+      @has_mask = @channels_info.any? { |chan| chan[:id] == -2 }
       @opacity = @layer.opacity / 255.0
       @mask_data = []
     end
@@ -47,7 +47,7 @@ class PSD
 
         # If the ID of this current channel is -2, then we assume the dimensions
         # of the layer mask.
-        if ch_info[:id] == -2
+        if ch_info[:id] < -1
           @width = @layer.mask.width
           @height = @layer.mask.height
         else
@@ -97,8 +97,12 @@ class PSD
     def parse_user_mask
       return unless has_mask?
 
-      channel = @channels_info.select { |c| c[:id] == -2 }.first
-      index = @channels_info.index { |c| c[:id] == -2 }
+      mask_id = -2
+
+      PSD.logger.debug "Using mask in channel #{mask_id}"
+
+      channel = @channels_info.select { |c| c[:id] == mask_id }.first
+      index = @channels_info.index { |c| c[:id] == mask_id }
       return if channel.nil?
 
       start = @channel_length * index
