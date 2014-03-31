@@ -5,9 +5,9 @@ class PSD
         @canvas_stack.last
       end
 
-      def create_group_canvas(node, width = @width, height = @height)
+      def create_group_canvas(node, width = @width, height = @height, opts = {})
         PSD.logger.debug "Group canvas created. Node = #{node.name || ":root:"}, width = #{width}, height = #{height}"
-        push_canvas Canvas.new(node, width, height, @opts)
+        push_canvas Canvas.new(node, width, height, @opts.merge(opts))
       end
 
       def push_canvas(canvas)

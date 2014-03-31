@@ -24,7 +24,7 @@ class PSD
       PSD.logger.debug "Beginning render process"
 
       # Create our base canvas
-      create_group_canvas(active_node, active_node.width, active_node.height)
+      create_group_canvas(active_node, active_node.width, active_node.height, base: true)
 
       # Begin the rendering process
       execute_pipeline

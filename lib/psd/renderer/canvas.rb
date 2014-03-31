@@ -60,7 +60,7 @@ class PSD
       end
 
       def has_fill?
-        !@node.root? && @node.solid_color
+        !@opts[:base] && @node.layer? && @node.solid_color
       end
 
       def fill_color
