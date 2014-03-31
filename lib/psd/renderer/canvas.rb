@@ -50,17 +50,21 @@ class PSD
         PSD.logger.debug "Initializing canvas for #{node.debug_name}; color = #{ChunkyPNG::Color.to_truecolor_alpha_bytes(fill_color)}"
 
         @canvas = ChunkyPNG::Canvas.new(@width, @height, fill_color)
-        return if @node.group?
+        return if @node.group? || has_fill?
 
         # Sorry, ChunkyPNG.
         @canvas.send(:replace_canvas!, width, height, @pixel_data)
-
+      ensure
         # This can now be referenced by @canvas.pixels
         @pixel_data = nil
       end
 
+      def has_fill?
+        !@node.root? && @node.solid_color
+      end
+
       def fill_color
-        if !@node.root? && @node.solid_color
+        if has_fill?
           @node.solid_color.color
         else
           ChunkyPNG::Color::TRANSPARENT

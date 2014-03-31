@@ -74,7 +74,7 @@ class PSD
       end
 
       def raster_mask?
-        image.has_mask?
+        image.has_mask? && image.mask_data.length > 0
       end
 
       def vector_mask?

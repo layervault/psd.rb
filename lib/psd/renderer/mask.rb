@@ -18,29 +18,32 @@ class PSD
         @doc_height = @layer.header.height.to_i
       end
 
-      def apply!        
-        # Now we apply the mask
+      def apply!
+        PSD.logger.debug "Applying mask to #{@layer.name}"
+
         i = 0
-        @mask_height.times do |y|
-          @mask_width.times do |x|
-            doc_x = @mask_left + x
-            doc_y = @mask_top + y
+        @canvas.height.times do |y|
+          @canvas.width.times do |x|
+            doc_x = @canvas.left + x
+            doc_y = @canvas.top + y
 
-            layer_x = doc_x - @layer.left
-            layer_y = doc_y - @layer.top
+            mask_x = doc_x - @mask_left
+            mask_y = doc_y - @mask_top
 
-            i += 1 and next unless @canvas.canvas.include_xy?(layer_x, layer_y)
-            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas[layer_x, layer_y])
+            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas[x, y])
 
-            # We're off the document canvas. Crop.
             if doc_x < 0 || doc_x > @doc_width || doc_y < 0 || doc_y > @doc_height
+              color[3] = 0
+            elsif mask_x < 0 || mask_x > @mask_width || mask_y < 0 || mask_y > @mask_height
+              color[3] = 0
+            elsif i >= @mask_data.length
               color[3] = 0
             else
               color[3] = color[3] * @mask_data[i] / 255
+              i += 1
             end
 
-            @canvas[layer_x, layer_y] = ChunkyPNG::Color.rgba(*color)
-            i += 1
+            @canvas[x, y] = ChunkyPNG::Color.rgba(*color)
           end
         end
       end
