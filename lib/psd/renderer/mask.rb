@@ -34,7 +34,7 @@ class PSD
 
             if doc_x < 0 || doc_x > @doc_width || doc_y < 0 || doc_y > @doc_height
               color[3] = 0
-            elsif mask_x < 0 || mask_x > @mask_width || mask_y < 0 || mask_y > @mask_height
+            elsif mask_x < 0 || mask_x >= @mask_width || mask_y < 0 || mask_y >= @mask_height
               color[3] = 0
             elsif i >= @mask_data.length
               color[3] = 0
