@@ -54,7 +54,7 @@ class PSD
       private
 
       def set_visibility(comp, c)
-        visible = false
+        visible = true
         found = false
 
         c
@@ -64,7 +64,7 @@ class PSD
             found = true and break if l['compList'].include?(comp[:id])
           end
 
-        c.force_visible = found && visible
+        c.force_visible = visible if found
       end
 
       def set_position(comp, c)
