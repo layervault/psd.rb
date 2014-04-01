@@ -64,7 +64,7 @@ class PSD
             found = true and break if l['compList'].include?(comp[:id])
           end
 
-        c.force_visible = visible if found
+        c.force_visible = found && visible
       end
 
       def set_position(comp, c)
