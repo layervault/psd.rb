@@ -39,25 +39,19 @@ class PSD
         end
 
         root = PSD::Node::Root.new(psd)
-        filter_for_comp!(comp, root)
+        
+        # Force layers to be visible if they are enabled for the comp
+        root.descendants.each do |c|
+          set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
+          set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
+
+          PSD.logger.debug "#{c.name}: visible = #{c.visible?}, position = #{c.left}, #{c.top}"
+        end
 
         return root
       end
 
       private
-
-      def filter_for_comp!(comp, node)
-        # Force layers to be visible if they are enabled for the comp
-        node.descendants.each do |c|
-          next if c.root?
-
-          set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
-          set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
-
-          PSD.logger.debug "#{c.name}: visible = #{c.visible?}, position = #{c.left}, #{c.top}"
-          # filter_for_comp!(comp, c) if c.group?
-        end
-      end
 
       def set_visibility(comp, c)
         visible = false
