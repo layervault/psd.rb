@@ -25,8 +25,7 @@ class PSD
       return self
     end
 
-    # Parse this section, including all of the layers and folders. Once implemented, this
-    # will also trigger parsing of the channel images for each layer.
+    # Parse this section, including all of the layers and folders.
     def parse
       start_section
 
@@ -46,7 +45,7 @@ class PSD
         end
 
         if layer_count * (18 + 6 * @header.channels) > layer_info_size
-          raise "Unlikely number of layers parsed: #{layer_count}"
+          PSD.logger.error "Unlikely number of layers parsed: #{layer_count}"
         end
 
         @layer_section_start = @file.tell

@@ -48,26 +48,29 @@ class PSD
 
       def filter_for_comp!(comp, node)
         # Force layers to be visible if they are enabled for the comp
-        node.children.each do |c|
+        node.descendants.each do |c|
+          next if c.root?
+
           set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
           set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
 
-          PSD.logger.debug "#{c.name}: visible = #{c.visible?}, position = #{c.left}, #{c.top}\n"
-          filter_for_comp!(comp, c) if c.group?
+          PSD.logger.debug "#{c.name}: visible = #{c.visible?}, position = #{c.left}, #{c.top}"
+          # filter_for_comp!(comp, c) if c.group?
         end
       end
 
       def set_visibility(comp, c)
-        visible = true
+        visible = false
+        found = false
 
         c
           .metadata
           .data[:layer_comp]['layerSettings'].each do |l|
             visible = l['enab'] if l.has_key?('enab')
-            break if l['compList'].include?(comp[:id])
+            found = true and break if l['compList'].include?(comp[:id])
           end
 
-        c.force_visible = visible
+        c.force_visible = found && visible
       end
 
       def set_position(comp, c)
