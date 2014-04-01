@@ -41,7 +41,7 @@ class PSD
     end
 
     def clipping_mask
-      return nil unless !@layer.clipped?
+      return nil unless @layer.clipped?
 
       mask_node = next_sibling
       while mask_node.clipped?
