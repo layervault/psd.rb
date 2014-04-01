@@ -36,9 +36,21 @@ class PSD
     end
 
     def visible?
-      return false if @layer.clipped? && !next_sibling.visible?
-      force_visible.nil? ? @layer.visible? : force_visible
+      return false if @layer.clipped? && !clipping_mask.visible?
+      @force_visible.nil? ? @layer.visible? : @force_visible
     end
+
+    def clipping_mask
+      return nil unless !@layer.clipped?
+
+      mask_node = next_sibling
+      while mask_node.clipped?
+        mask_node = mask_node.next_sibling
+      end
+
+      mask_node
+    end
+    alias_method :clipped_by, :clipping_mask
 
     def psd
       parent.psd

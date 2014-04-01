@@ -7,10 +7,7 @@ class PSD
         @canvas = canvas
         @node = @canvas.node
         
-        mask_node = @canvas.node.next_sibling
-        while mask_node.clipped?
-          mask_node = mask_node.next_sibling
-        end
+        mask_node = @canvas.node.clipping_mask
 
         @mask = MaskCanvas.new(mask_node)
       end

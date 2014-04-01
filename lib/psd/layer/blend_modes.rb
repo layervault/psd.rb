@@ -11,7 +11,7 @@ class PSD
         end
       end
 
-      # Is the layer below this one a clipping mask?
+      # Is this layer clipped by a clipping mask?
       def clipped?
         @blend_mode.clipping == 1
       end
