@@ -13,14 +13,22 @@ class PSD
     # Default properties that all nodes contain
     PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
 
-    attr_accessor :parent, :children, :layer, :force_visible, :top, :left
+    attr_accessor :parent, :children, :layer, :force_visible, :top_offset, :left_offset
 
     def initialize(layers=[])
       parse_layers(layers)
 
       @force_visible = nil
-      @top = @layer.top
-      @left = @layer.left
+      @top_offset = 0
+      @left_offset = 0
+    end
+
+    def top
+      @layer.top + @top_offset
+    end
+
+    def left
+      @layer.left + @left_offset
     end
 
     def hidden?

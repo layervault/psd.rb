@@ -35,7 +35,7 @@ class PSD
     def execute_pipeline
       PSD.logger.debug "Executing pipeline on #{active_node.debug_name}"
       children.reverse.each do |child|
-        # We skip over hidden nodes. Maybe something configurable in the future?
+        # We skip over hidden nodes.
         next unless child.visible?
 
         if child.group?

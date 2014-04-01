@@ -16,6 +16,7 @@ results = Benchmark.measure "Image exporting" do
       .filter_by_comp(comp[:id])
       .save_as_png("./output/#{comp[:name]}.png")
   end
+  # psd.tree.filter_by_comp('1 empty + prepopulated').save_as_png('./output.png')
 end
 
 puts Benchmark::CAPTION

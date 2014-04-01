@@ -52,6 +52,7 @@ class PSD
           set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
           set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
 
+          PSD.logger.debug "#{c.name}: visible = #{c.visible?}, position = #{c.left}, #{c.top}\n"
           filter_for_comp!(comp, c) if c.group?
         end
       end
@@ -83,8 +84,8 @@ class PSD
             break if l['compList'].include?(comp[:id])
           end
 
-        c.left += x
-        c.top += y
+        c.left_offset = x
+        c.top_offset = y
       end
     end
   end

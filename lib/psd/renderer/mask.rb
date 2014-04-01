@@ -11,8 +11,8 @@ class PSD
 
         @mask_width = @layer.mask.width.to_i
         @mask_height = @layer.mask.height.to_i
-        @mask_left = @layer.mask.left.to_i
-        @mask_top = @layer.mask.top.to_i
+        @mask_left = @layer.mask.left.to_i + @layer.left_offset
+        @mask_top = @layer.mask.top.to_i + @layer.top_offset
 
         @doc_width = @layer.header.width.to_i
         @doc_height = @layer.header.height.to_i
