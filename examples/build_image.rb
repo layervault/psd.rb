@@ -1,6 +1,6 @@
 require 'benchmark'
 require 'pp'
-require 'psd'
+require './lib/psd'
 
 file = ARGV[0] || 'examples/images/example.psd'
 

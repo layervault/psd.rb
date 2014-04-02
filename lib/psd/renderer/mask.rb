@@ -3,16 +3,17 @@ class PSD
     class Mask
       attr_accessor :mask_data
 
-      def initialize(canvas)
+      def initialize(canvas, mask_data = nil, mask = nil)
         @canvas = canvas
         @layer = canvas.node
 
-        @mask_data = @layer.image.mask_data
+        @mask_data = mask_data || @layer.image.mask_data
+        @mask = mask || @layer.mask
 
-        @mask_width = @layer.mask.width.to_i
-        @mask_height = @layer.mask.height.to_i
-        @mask_left = @layer.mask.left.to_i + @layer.left_offset
-        @mask_top = @layer.mask.top.to_i + @layer.top_offset
+        @mask_width = @mask.width.to_i
+        @mask_height = @mask.height.to_i
+        @mask_left = @mask.left.to_i
+        @mask_top = @mask.top.to_i
 
         @doc_width = @layer.header.width.to_i
         @doc_height = @layer.header.height.to_i

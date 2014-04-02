@@ -24,7 +24,7 @@ class PSD
       def paint_to(base)
         PSD.logger.debug "Painting #{node.name} to #{base.node.debug_name}"
 
-        apply_mask
+        apply_masks
         apply_clipping_mask
         apply_layer_styles
         apply_layer_opacity
@@ -72,10 +72,18 @@ class PSD
         end
       end
 
-      def apply_mask
-        if @node.raster_mask?
-          PSD.logger.debug "Applying raster mask to #{node.name}"
-          Mask.new(self).apply!
+      def apply_masks
+        ([@node] + @node.ancestors).each do |n|
+          next unless n.raster_mask?
+          break if n.group? && !n.passthru_blending?
+
+          if n.layer?
+            PSD.logger.debug "Applying raster mask to #{@node.name}"
+            Mask.new(self).apply!
+          else
+            PSD.logger.debug "Applying raster mask to #{@node.name} from #{n.name}"
+            Mask.new(self, n.image.mask_data, n.mask).apply!
+          end
         end
       end
 
