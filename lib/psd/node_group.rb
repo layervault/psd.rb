@@ -7,29 +7,14 @@ class PSD::Node
     include PSD::HasChildren
     include PSD::Node::LockToOrigin
 
-    attr_reader :name, :top, :left, :bottom, :right
-
     # Parses the descendant tree structure and figures out the bounds
     # of the layers within this folder.
     def initialize(folder)
-      @name = folder[:name]
       @layer = folder[:layer]
       
       super(folder[:layers])
       get_dimensions
     end
-
-    # Calculated height of this folder.
-    def rows
-      @bottom - @top
-    end
-    alias :height :rows
-
-    # Calculated width of this folder.
-    def cols
-      @right - @left
-    end
-    alias :width :cols
 
     # Attempt to translate this folder and all of the descendants.
     def translate(x=0, y=0)
@@ -62,7 +47,6 @@ class PSD::Node
     def to_hash
       super.merge({
         type: :group,
-        visible: visible?,
         children: children.map(&:to_hash)
       })
     end

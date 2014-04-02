@@ -16,7 +16,8 @@ class PSD
       # Composes the foreground Canvas onto the background Canvas using the
       # blending mode specified by the foreground.
       def compose!
-        PSD.logger.debug "Composing #{fg.node.debug_name} onto #{bg.node.debug_name} with #{fg.node.blending_mode} blending"
+        PSD.logger.debug "#{fg.node.debug_name} -> #{bg.node.debug_name}: #{fg.node.blending_mode} blending"
+        PSD.logger.debug "fg: (#{fg.left}, #{fg.top}) #{fg.width}x#{fg.height}; bg: (#{bg.left}, #{bg.top}) #{bg.width}x#{bg.height}"
 
         offset_x = fg.left - bg.left
         offset_y = fg.top - bg.top

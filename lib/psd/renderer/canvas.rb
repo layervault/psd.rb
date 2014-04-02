@@ -10,10 +10,10 @@ class PSD
         
         @width = (width || @node.width).to_i
         @height = (height || @node.height).to_i
-        @left = @node.left.to_i
-        @right = @node.right.to_i
-        @top = @node.top.to_i
-        @bottom = @node.bottom.to_i
+        @left = @node.left
+        @right = @node.right
+        @top = @node.top
+        @bottom = @node.bottom
 
         @opacity = @node.opacity.to_f
         @fill_opacity = @node.fill_opacity.to_f
@@ -28,6 +28,7 @@ class PSD
         apply_clipping_mask
         apply_layer_styles
         apply_layer_opacity
+
         compose_pixels(base)
       end
 
