@@ -84,13 +84,27 @@ class PSD
     def parse_identifier; @file.read_int; end
     def parse_index; @file.read_int; end
     def parse_offset; @file.read_int; end
-    def parse_property; parse_id; end
+    
+    def parse_property
+      {
+        class: parse_class,
+        id: parse_id
+      }
+    end
 
-    # Discard the first ID becasue it's the same as the key
-    # parsed from the Key/Item. Also, YOLO.
     def parse_enum
-      parse_id
-      parse_id
+      {
+        type: parse_id,
+        value: parse_id
+      }
+    end
+
+    def parse_enum_reference
+      {
+        class: parse_class,
+        type: parse_id,
+        value: parse_id
+      }
     end
 
     def parse_alias
@@ -149,18 +163,27 @@ class PSD
     end
 
     def parse_reference
-      form = @file.read_string(4)
-      klass = parse_class
+      num_items = @file.read_int
+      items = []
+      
+      num_items.times do
+        type = @file.read_string(4)
+        PSD.logger.debug "Reference type = #{type}"
 
-      case form
-      when 'Clss' then nil
-      when 'Enmr' then parse_enum
-      when 'Idnt' then parse_identifier
-      when 'indx' then parse_index
-      when 'name' then @file.read_unicode_string
-      when 'rele' then parse_offset
-      when 'prop' then parse_property
+        value = case type
+        when 'prop' then parse_property
+        when 'Clss' then parse_class
+        when 'Enmr' then parse_enum_reference
+        when 'Idnt' then parse_identifier
+        when 'indx' then parse_index
+        when 'name' then @file.read_unicode_string
+        when 'rele' then parse_offset
+        end
+
+        items << {type: type, value: value}
       end
+
+      items
     end
 
     def parse_unit_double
