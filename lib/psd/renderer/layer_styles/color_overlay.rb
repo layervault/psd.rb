@@ -66,7 +66,7 @@ class PSD
       private
 
       def blending_mode
-        @blending_mode ||= BlendMode::BLEND_MODES[BLEND_TRANSLATION[overlay_data['Md  ']].to_sym]
+        @blending_mode ||= BlendMode::BLEND_MODES[BLEND_TRANSLATION[overlay_data['Md  '][:value]].to_sym]
       end
 
       def overlay_data
