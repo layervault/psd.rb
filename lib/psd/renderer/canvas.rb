@@ -82,7 +82,7 @@ class PSD
             Mask.new(self).apply!
           else
             PSD.logger.debug "Applying raster mask to #{@node.name} from #{n.name}"
-            Mask.new(self, n.image.mask_data, n.mask).apply!
+            Mask.new(self, n).apply!
           end
         end
       end

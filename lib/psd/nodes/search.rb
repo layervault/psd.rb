@@ -45,7 +45,7 @@ class PSD
           set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
           set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
 
-          PSD.logger.debug "#{c.name}: visible = #{c.visible?}, position = #{c.left}, #{c.top}"
+          PSD.logger.debug "#{c.path}: visible = #{c.visible?}, position = #{c.left}, #{c.top}"
         end
 
         return root
@@ -74,10 +74,11 @@ class PSD
         c
           .metadata
           .data[:layer_comp]['layerSettings'].each do |l|
-            next unless l.has_key?('Ofst')
+            if l.has_key?('Ofst')
+              x = l['Ofst']['Hrzn']
+              y = l['Ofst']['Vrtc']
+            end
             
-            x = l['Ofst']['Hrzn']
-            y = l['Ofst']['Vrtc']
             break if l['compList'].include?(comp[:id])
           end
 
