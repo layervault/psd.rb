@@ -2,7 +2,6 @@ class PSD
   # Represents a single layer and all of the data associated with
   # that layer.
   class Layer
-    include Section
     include BlendModes
     include BlendingRanges
     include ChannelImage
@@ -39,8 +38,6 @@ class PSD
 
     # Parse the layer and all of it's sub-sections.
     def parse(index=nil)
-      start_section
-
       @id = index
 
       parse_position_and_channels
@@ -58,7 +55,6 @@ class PSD
 
       @file.seek @layer_end # Skip over any filler zeros
 
-      end_section
       return self
     end
 

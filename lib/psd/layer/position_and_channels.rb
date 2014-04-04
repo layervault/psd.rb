@@ -10,8 +10,6 @@ class PSD
       private
 
       def parse_position_and_channels
-        start_section(:info)
-
         @top = @file.read_int
         @left = @file.read_int
         @bottom = @file.read_int
@@ -27,8 +25,6 @@ class PSD
 
           @channels_info << {id: channel_id, length: channel_length}
         end
-
-        end_section(:info)
       end
 
       def export_position_and_channels(outfile)

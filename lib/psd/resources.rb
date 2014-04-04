@@ -1,8 +1,6 @@
 class PSD
   # Parses and reads all of the Resource records in the document.
   class Resources
-    include Section
-
     attr_reader :resources
     alias :data :resources
     
@@ -15,8 +13,6 @@ class PSD
 
     # Parses each Resource and stores them.
     def parse
-      start_section
-
       n = length
       start = @file.tell
 
@@ -39,8 +35,6 @@ class PSD
       unless n == 0
         @file.seek start + length
       end
-
-      end_section
     end
 
     def skip

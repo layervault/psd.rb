@@ -2,8 +2,6 @@ class PSD
   # Covers parsing the global mask and controls parsing of all the
   # layers/folders in the document.
   class LayerMask
-    include Section
-
     attr_reader :layers, :global_mask
 
     # Store a reference to the file and the header and initialize the defaults.
@@ -27,8 +25,6 @@ class PSD
 
     # Parse this section, including all of the layers and folders.
     def parse
-      start_section
-
       mask_size = @file.read_int
       finish = @file.tell + mask_size
 
@@ -66,7 +62,6 @@ class PSD
 
       # Ensure we're at the end of this section
       @file.seek finish
-      end_section
 
       return self
     end

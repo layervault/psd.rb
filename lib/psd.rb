@@ -1,9 +1,11 @@
+$LOAD_PATH << Dir.pwd
+
 require "bindata"
 require "psd/enginedata"
 require "chunky_png"
-require "cairo"
+# require "cairo"
 
-require_relative 'psd/section'
+require "active_support/core_ext/module/delegation"
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [
