@@ -1,4 +1,4 @@
-require 'lib/psd/layer_info'
+require 'psd/layer_info'
 
 class PSD
   # Not 100% sure what the purpose of this key is, but it seems to exist

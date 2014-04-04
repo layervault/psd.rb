@@ -1,5 +1,3 @@
-$LOAD_PATH << Dir.pwd
-
 require 'psd/enginedata'
 require 'chunky_png'
 # require "cairo"

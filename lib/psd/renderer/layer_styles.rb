@@ -1,4 +1,4 @@
-require 'lib/psd/renderer/layer_styles/color_overlay'
+require 'psd/renderer/layer_styles/color_overlay'
 
 class PSD
   class LayerStyles

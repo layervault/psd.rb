@@ -1,6 +1,6 @@
-require 'lib/psd/nodes/ancestry'
-require 'lib/psd/nodes/search'
-require 'lib/psd/nodes/build_preview'
+require 'psd/nodes/ancestry'
+require 'psd/nodes/search'
+require 'psd/nodes/build_preview'
 
 # Internal structure to help us build trees of a Photoshop documents.
 # A lot of method names borrowed from the Ruby ancestry gem.

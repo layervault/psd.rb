@@ -1,4 +1,4 @@
-require 'lib/psd/resources/base'
+require 'psd/resources/base'
 
 class PSD
   class Resource

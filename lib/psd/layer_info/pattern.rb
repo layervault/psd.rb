@@ -1,4 +1,4 @@
-require 'lib/psd/layer_info'
+require 'psd/layer_info'
 
 class PSD
   class Pattern < LayerInfo

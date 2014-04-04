@@ -1,4 +1,4 @@
-require 'lib/psd/node'
+require 'psd/node'
 
 class PSD
   module Node

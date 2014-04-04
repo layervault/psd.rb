@@ -1,4 +1,4 @@
-require 'lib/psd/renderer/cairo_helpers'
+require 'psd/renderer/cairo_helpers'
 
 class PSD
   class Renderer
