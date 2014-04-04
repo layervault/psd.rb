@@ -5,7 +5,7 @@ class PSD
     class Layer < PSD::Node::Base
       attr_reader :layer
 
-      [:text, :ref_x, :ref_y].each do |prop|
+      [:text, :ref_x, :ref_y, :blending_mode].each do |prop|
         delegate prop, to: :@layer
         delegate "#{prop}=", to: :@layer
       end

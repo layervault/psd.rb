@@ -318,9 +318,12 @@ class PSD
       rgba(new_r, new_g, new_b, dst_alpha)
     end
 
+    [:r, :g, :b, :a, :rgba, :fully_transparent?].each do |meth|
+      define_method(meth) { |*args| ChunkyPNG::Color.send(meth, *args) }
+    end
+
     # If the blend mode is missing, we fall back to normal composition.
     def method_missing(method, *args, &block)
-      return ChunkyPNG::Color.send(method, *args) if ChunkyPNG::Color.respond_to?(method)
       normal(*args)
     end
 
