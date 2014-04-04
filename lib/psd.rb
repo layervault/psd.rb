@@ -1,11 +1,10 @@
 $LOAD_PATH << Dir.pwd
 
-require "bindata"
-require "psd/enginedata"
-require "chunky_png"
+require 'psd/enginedata'
+require 'chunky_png'
 # require "cairo"
 
-require "active_support/core_ext/module/delegation"
+require 'active_support/core_ext/module/delegation'
 require 'active_support/concern'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
@@ -91,7 +90,7 @@ class PSD
 
     @header = Header.new(@file)
     @header.parse!
-    
+
     PSD.logger.debug @header.inspect
   end
 
