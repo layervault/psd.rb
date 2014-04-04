@@ -89,7 +89,9 @@ class PSD
   def header
     return @header if @header
 
-    @header = Header.read(@file)
+    @header = Header.new(@file)
+    @header.parse!
+    
     PSD.logger.debug @header.inspect
   end
 

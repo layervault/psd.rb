@@ -1,22 +1,6 @@
 class PSD
-  # Describes the Header for the PSD file, which is the first section of the file.
-  class Header < BinData::Record
-    endian :big
-
-    string  :sig, read_length: 4
-    uint16  :version
-
-    # Reserved bytes
-    skip    length: 6
-
-    uint16  :channels
-    uint32  :rows
-    uint32  :cols
-    uint16  :depth
-    uint16  :mode
-
-    uint32  :color_data_len
-    skip    length: :color_data_len
+  class Header
+    attr_reader :sig, :version, :channels, :rows, :cols, :depth, :mode
 
     # All of the color modes are stored internally as a short from 0-15.
     # This is a mapping of that value to a human-readable name.
@@ -37,25 +21,42 @@ class PSD
       'CMYK64',
       'DeepMultichannel',
       'Duotone16'
-    ]
+    ].freeze
 
-    # Get the human-readable color mode name.
+    alias_method :width, :cols
+    alias_method :height, :rows
+
+    def initialize(file)
+      @file = file
+
+      @sig = nil
+      @version = nil
+      @channels = nil
+      @rows = nil
+      @cols = nil
+      @depth = nil
+      @mode = nil
+    end
+
+    def parse!
+      @sig = @file.read_string(4)
+      @version = @file.read_ushort
+
+      # Reserved bytes, must be 0
+      @file.seek 6, IO::SEEK_CUR
+
+      @channels = @file.read_ushort
+      @rows = @file.read_uint
+      @cols = @file.read_uint
+      @depth = @file.read_ushort
+      @mode = @file.read_ushort
+
+      color_data_len = @file.read_uint
+      @file.seek color_data_len, IO::SEEK_CUR
+    end
+
     def mode_name
-      if mode >= 0 && mode <= 15
-        MODES[mode]
-      else
-        "(#{mode})"
-      end
-    end
-
-    # Width of the entire document in pixels.
-    def width
-      cols
-    end
-
-    # Height of the entire document in pixels.
-    def height
-      rows
+      MODES[@mode]
     end
 
     def rgb?
