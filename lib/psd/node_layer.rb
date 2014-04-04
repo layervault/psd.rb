@@ -2,9 +2,12 @@ require_relative 'node'
 
 class PSD::Node
   class Layer < PSD::Node
-    include PSD::Node::LockToOrigin
-
     attr_reader :layer
+
+    [:text, :ref_x, :ref_y].each do |prop|
+      delegate prop, to: :@layer
+      delegate "#{prop}=", to: :@layer
+    end
 
     # Stores a reference to the PSD::Layer
     def initialize(layer)
@@ -12,44 +15,6 @@ class PSD::Node
       layer.node = self
 
       super([])
-    end
-
-    # Delegates some methods to the PSD::Layer
-    [:text, :ref_x, :ref_y].each do |meth|
-      define_method meth do
-        @layer.send(meth)
-      end
-
-      define_method "#{meth}=" do |val|
-        @layer.send("#{meth}=", val)
-      end
-    end
-
-    # Attempt to translate the layer.
-    def translate(x=0, y=0)
-      @layer.translate x, y
-    end
-
-    # Attempt to scale the path components of the layer.
-    def scale_path_components(xr, yr)
-      @layer.scale_path_components(xr, yr)
-    end
-
-    # Tries to hide the layer by moving it way off canvas.
-    def hide!
-      # TODO actually mess with the blend modes instead of
-      # just putting things way off canvas
-      return if @hidden_by_kelly
-      translate(100000, 10000)
-      @hidden_by_kelly = true
-    end
-
-    # Tries to re-show the canvas by moving it back to it's original position.
-    def show!
-      if @hidden_by_kelly
-        translate(-100000, -10000)
-        @hidden_by_kelly = false
-      end
     end
 
     def empty?

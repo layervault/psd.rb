@@ -1,5 +1,5 @@
-require_relative 'nodes/ancestry'
-require_relative 'nodes/search'
+require 'lib/psd/nodes/ancestry'
+require 'lib/psd/nodes/search'
 
 # Internal structure to help us build trees of a Photoshop documents.
 # A lot of method names borrowed from the Ruby ancestry gem.
@@ -15,6 +15,8 @@ class PSD
 
     attr_reader :name
     attr_accessor :parent, :children, :layer, :force_visible, :top_offset, :left_offset
+
+    delegate :psd, to: :parent
 
     def initialize(layers=[])
       parse_layers(layers)
@@ -67,18 +69,16 @@ class PSD
     def clipping_mask
       return nil unless @layer.clipped?
 
-      mask_node = next_sibling
-      while mask_node.clipped?
-        mask_node = mask_node.next_sibling
-      end
+      @clipping_mask ||= (
+        mask_node = next_sibling
+        while mask_node.clipped?
+          mask_node = mask_node.next_sibling
+        end
 
-      mask_node
+        mask_node
+      )
     end
     alias_method :clipped_by, :clipping_mask
-
-    def psd
-      parent.psd
-    end
 
     def layer?
       is_a?(PSD::Node::Layer)

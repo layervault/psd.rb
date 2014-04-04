@@ -5,7 +5,6 @@ class PSD::Node
   # zero or more children nodes.
   class Group < PSD::Node
     include PSD::HasChildren
-    include PSD::Node::LockToOrigin
 
     # Parses the descendant tree structure and figures out the bounds
     # of the layers within this folder.
@@ -14,21 +13,6 @@ class PSD::Node
       
       super(folder[:layers])
       get_dimensions
-    end
-
-    # Attempt to translate this folder and all of the descendants.
-    def translate(x=0, y=0)
-      @children.each{ |c| c.translate(x,y) }
-    end
-
-    # Attempt to hide all children of this layer.
-    def hide!
-      @children.each{ |c| c.hide! }
-    end
-
-    # Attempt to show all children of this layer.
-    def show!
-      @children.each{ |c| c.show! }
     end
 
     def passthru_blending?

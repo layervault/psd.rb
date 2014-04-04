@@ -1,4 +1,4 @@
-require_relative 'node'
+require 'lib/psd/node'
 
 class PSD::Node
   # Represents the root node of a Photoshop document
@@ -6,13 +6,21 @@ class PSD::Node
     include PSD::HasChildren
     include PSD::Node::ParseLayers
 
-    attr_accessor :children
     attr_reader :psd
 
     # Stores a reference to the parsed PSD and builds the
     # tree hierarchy.
     def initialize(psd)
       @psd = psd
+
+      @top = 0
+      @right = 0
+      @bottom = 0
+      @left = 0
+      @top_offset = 0
+      @left_offset = 0
+      @name = nil
+
       build_hierarchy
     end
 
@@ -49,18 +57,9 @@ class PSD::Node
     end
     alias_method :height, :document_height
 
-    # The root node has no name since it's not an actual layer or group.
-    def name
-      nil
-    end
-
     # The depth of the root node is always 0.
     def depth
       0
-    end
-
-    [:top, :right, :bottom, :left].each do |meth|
-      define_method(meth) { 0 }
     end
 
     def opacity; 255; end

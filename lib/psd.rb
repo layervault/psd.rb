@@ -6,6 +6,7 @@ require "chunky_png"
 # require "cairo"
 
 require "active_support/core_ext/module/delegation"
+require 'active_support/concern'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [
@@ -26,7 +27,6 @@ end
 class PSD
   include Logger
   include Helpers
-  include NodeExporting
 
   attr_reader :file, :opts
   alias :options :opts
