@@ -6,6 +6,11 @@ class PSD
       delegate :opacity, :visible, :clipped?, to: :blend_mode
       alias_method :visible?, :visible
 
+      # Is this layer hidden?
+      def hidden?
+        !visible
+      end
+
       def blending_mode
         if !info[:section_divider].nil? && info[:section_divider].blend_mode
           BlendMode::BLEND_MODES[info[:section_divider].blend_mode.strip.to_sym]
