@@ -1,7 +1,9 @@
+require 'lib/psd/resources/base'
+
 class PSD
   class Resource
-    class Section
-      class Slices < Section
+    module Section
+      class Slices < Base
         resource_id 1050
         name :slices
 

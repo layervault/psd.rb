@@ -1,7 +1,9 @@
+require 'lib/psd/resources/base'
+
 class PSD
   class Resource
-    class Section
-      class LayerComps < Section
+    module Section
+      class LayerComps < Base
         resource_id 1065
         name :layer_comps
 

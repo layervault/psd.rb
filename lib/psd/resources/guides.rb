@@ -1,7 +1,9 @@
+require 'lib/psd/resources/base'
+
 class PSD
   class Resource
-    class Section
-      class Guides < Section
+    module Section
+      class Guides < Base
         resource_id 1032
         name :guides
 
