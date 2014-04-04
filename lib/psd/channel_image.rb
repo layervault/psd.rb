@@ -1,4 +1,4 @@
-require_relative 'image'
+require 'lib/psd/image'
 
 class PSD
   # Represents an image for a single layer, which differs slightly in format from

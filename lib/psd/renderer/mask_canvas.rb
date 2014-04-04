@@ -1,4 +1,4 @@
-require_relative './canvas'
+require 'lib/psd/renderer/canvas'
 
 class PSD
   class Renderer

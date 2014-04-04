@@ -1,5 +1,5 @@
-require_relative '../layer_info'
-require_relative 'typetool'
+require 'lib/psd/layer_info'
+require 'lib/psd/layer_info/typetool'
 
 class PSD
   class LegacyTypeTool < TypeTool

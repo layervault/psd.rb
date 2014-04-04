@@ -1,4 +1,4 @@
-require_relative './cairo_helpers'
+require 'lib/psd/renderer/cairo_helpers'
 
 class PSD
   class Renderer

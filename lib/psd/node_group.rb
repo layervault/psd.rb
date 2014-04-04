@@ -1,4 +1,4 @@
-require_relative 'node'
+require 'lib/psd/node'
 
 class PSD
   module Node

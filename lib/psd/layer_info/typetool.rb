@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require_relative '../layer_info'
+require 'lib/psd/layer_info'
 
 class PSD
   # Parses and provides information about text areas within layers in
