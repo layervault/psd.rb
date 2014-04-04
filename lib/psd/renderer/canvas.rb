@@ -1,7 +1,9 @@
 class PSD
   class Renderer
     class Canvas
-      attr_reader :canvas, :node, :opts, :width, :height, :left, :right, :top, :bottom, :opacity, :fill_opacity
+      attr_reader :canvas, :node, :opts, :width, :height, :opacity, :fill_opacity
+      
+      [:top, :right, :bottom, :left].each { |dir| delegate dir, to: :node }
 
       def initialize(node, width = nil, height = nil, opts = {})
         @node = node
@@ -10,10 +12,6 @@ class PSD
         
         @width = (width || @node.width).to_i
         @height = (height || @node.height).to_i
-        @left = @node.left
-        @right = @node.right
-        @top = @node.top
-        @bottom = @node.bottom
 
         @opacity = @node.opacity.to_f
         @fill_opacity = @node.fill_opacity.to_f
