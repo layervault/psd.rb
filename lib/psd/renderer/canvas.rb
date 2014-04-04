@@ -5,6 +5,9 @@ class PSD
       
       [:top, :right, :bottom, :left].each { |dir| delegate dir, to: :node }
 
+      delegate :[], to: :canvas
+      delegate :[]=, to: :canvas
+
       def initialize(node, width = nil, height = nil, opts = {})
         @node = node
         @opts = opts
@@ -35,9 +38,6 @@ class PSD
         @width = @canvas.width
         @height = @canvas.height
       end
-
-      def [](x, y); @canvas[x, y]; end
-      def []=(x, y, value); @canvas[x, y] = value; end
 
       def method_missing(method, *args, &block)
         @canvas.send(method, *args, &block)
