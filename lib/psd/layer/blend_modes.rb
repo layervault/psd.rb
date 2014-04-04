@@ -1,29 +1,24 @@
 class PSD
   class Layer
     module BlendModes
-      attr_reader :blend_mode, :opacity
+      attr_reader :blend_mode
+
+      delegate :opacity, :visible, :clipped?, to: :blend_mode
+      alias_method :visible?, :visible
 
       def blending_mode
         if !info[:section_divider].nil? && info[:section_divider].blend_mode
           BlendMode::BLEND_MODES[info[:section_divider].blend_mode.strip.to_sym]
         else
-          @blending_mode
+          @blend_mode.mode
         end
-      end
-
-      # Is this layer clipped by a clipping mask?
-      def clipped?
-        @blend_mode.clipping == 1
       end
 
       private
       
       def parse_blend_modes
-        @blend_mode = BlendMode.read(@file)
-
-        @blending_mode = @blend_mode.mode
-        @opacity = @blend_mode.opacity
-        @visible = @blend_mode.visible
+        @blend_mode = BlendMode.new(@file)
+        @blend_mode.parse!
       end
     end
   end

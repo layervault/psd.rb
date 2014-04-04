@@ -1,14 +1,6 @@
 class PSD
-  # Describes the blend mode for a single layer or folder.
-  class BlendMode < BinData::Record
-    endian  :big
-
-    string  :sig, read_length: 4
-    string  :blend_key, read_length: 4, trim_value: true
-    uint8   :opacity
-    uint8   :clipping
-    bit8    :flags
-    skip    length: 1
+  class BlendMode
+    attr_reader :blend_key, :opacity, :clipping
 
     # All of the blend modes are stored in the PSD file with a specific key.
     # This is the mapping of that key to its readable name.
@@ -41,40 +33,56 @@ class PSD
       lgCl: 'lighter color',
       fsub: 'subtract',
       fdiv: 'divide'
-    }
+    }.freeze
 
-    # Get the readable name for this blend mode.
+    def initialize(file)
+      @file = file
+      
+      @blend_key = nil
+      @opacity = nil
+      @clipping = nil
+      @flags = nil
+    end
+
+    def parse!
+      @file.seek 4, IO::SEEK_CUR
+
+      @blend_key = @file.read_string(4).strip
+      @opacity = @file.read_byte
+      @clipping = @file.read_byte
+      @flags = @file.read_byte
+
+      @file.seek 1, IO::SEEK_CUR
+    end
+
     def mode
-      BLEND_MODES[blend_key.strip.to_sym]
+      BLEND_MODES[@blend_key.to_sym]
     end
+    alias_method :blending_mode, :mode
 
-    # Set the blend mode with the readable name.
-    def mode=(val)
-      blend_key = BLEND_MODES.invert[val.strip.downcase]
-    end
-
-    # Opacity is stored as an integer between 0-255. This converts the opacity
-    # to a percentage value to match the Photoshop interface.
     def opacity_percentage
-      opacity * 100 / 255
+      @opacity_percentage ||= @opacity * 100 / 255
+    end
+
+    def clipped?
+      @clipping == 1
     end
 
     def transparency_protected
-      flags & 0x01
+      @flags & 0x01
     end
 
-    # Is this layer/folder visible?
     def visible
-      !((flags & (0x01 << 1)) > 0)
+      !((@flags & (0x01 << 1)) > 0)
     end
 
     def obsolete
-      (flags & (0x01 << 2)) > 0
+      (@flags & (0x01 << 2)) > 0
     end
 
     def pixel_data_irrelevant
-      return nil unless (flags & (0x01 << 3)) > 0
-      (flags & (0x01 << 4)) > 0
+      return nil unless (@flags & (0x01 << 3)) > 0
+      (@flags & (0x01 << 4)) > 0
     end
   end
 end

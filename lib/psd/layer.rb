@@ -28,9 +28,6 @@ class PSD
       @blend_mode = {}
       @group_layer = nil
 
-      @blending_mode = 'normal'
-      @opacity = 255
-
       # Just used for tracking which layer adjustments we're parsing.
       # Not essential.
       @info_keys = []

@@ -47,14 +47,9 @@ class PSD
         info[:locked].transparency_locked
       end
 
-      # Is this layer visible?
-      def visible?
-        @visible
-      end
-
       # Is this layer hidden?
       def hidden?
-        !@visible
+        !visible
       end
 
       # Helper that exports the text data in this layer, if any.
