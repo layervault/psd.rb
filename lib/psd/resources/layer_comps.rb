@@ -2,8 +2,8 @@ class PSD
   class Resource
     class Section
       class LayerComps < Section
-        def self.id; 1065; end
-        def self.name; :layer_comps; end
+        resource_id 1065
+        name :layer_comps
 
         def self.visibility_captured?(comp)
           comp[:captured_info] & 0b001 > 0

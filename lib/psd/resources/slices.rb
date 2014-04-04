@@ -2,10 +2,10 @@ class PSD
   class Resource
     class Section
       class Slices < Section
-        attr_reader :data, :version
+        resource_id 1050
+        name :slices
 
-        def self.id; 1050; end
-        def self.name; :slices; end
+        attr_reader :data, :version
 
         def parse
           @version = @file.read_int

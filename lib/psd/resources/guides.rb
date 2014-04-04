@@ -2,8 +2,8 @@ class PSD
   class Resource
     class Section
       class Guides < Section
-        def self.id; 1032; end
-        def self.name; :guides; end
+        resource_id 1032
+        name :guides
 
         def parse
           # Descriptor version
