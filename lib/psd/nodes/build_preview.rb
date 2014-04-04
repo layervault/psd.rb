@@ -1,5 +1,5 @@
  class PSD
-  class Node
+  module Node
     module BuildPreview
       def renderer(opts = {})
         PSD::Renderer.new(self, opts)

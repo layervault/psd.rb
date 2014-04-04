@@ -1,5 +1,5 @@
 class PSD
-  class Node
+  module Node
     module Search
       # Searches the tree structure for a node at the given path. The path is
       # defined by the layer/folder names. Because the PSD format does not

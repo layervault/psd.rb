@@ -1,12 +1,10 @@
 class PSD
-  class Node
+  module Node
     # Collection of methods to help in traversing the PSD tree structure.
     module Ancestry
       extend ActiveSupport::Concern
 
       included do
-        attr_reader :children
-
         # Returns the root node
         def root
           return self if is_root?
@@ -96,8 +94,8 @@ class PSD
 
         private
 
-        def layers_only(d); d.is_a?(PSD::Node::Layer); end
-        def groups_only(d); d.is_a?(PSD::Node::Group); end
+        def layers_only(d); d.layer?; end
+        def groups_only(d); d.group?(false); end
       end
     end
   end
