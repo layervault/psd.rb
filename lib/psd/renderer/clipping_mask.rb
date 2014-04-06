@@ -32,8 +32,8 @@ class PSD
               alpha = pixel.nil? ? 0 : ChunkyPNG::Color.a(pixel)
             end
             
-            color = @canvas[x, y]
-            @canvas[x, y] = (color & 0xffffff00) | (ChunkyPNG::Color.a(color) * alpha / 255)
+            color = @canvas.get_pixel(x, y)
+            @canvas.set_pixel x, y, (color & 0xffffff00) | (ChunkyPNG::Color.a(color) * alpha / 255)
           end
         end
       end

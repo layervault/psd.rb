@@ -31,12 +31,12 @@ class PSD
 
             color = Compose.send(
               fg.node.blending_mode,
-              fg.canvas[x, y],
-              bg.canvas[base_x, base_y],
+              fg.get_pixel(x, y),
+              bg.get_pixel(base_x, base_y),
               calculated_opacity
             )
 
-            bg.canvas[base_x, base_y] = color
+            bg.set_pixel base_x, base_y, color
           end
         end
       end

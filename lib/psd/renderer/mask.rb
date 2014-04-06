@@ -31,7 +31,7 @@ class PSD
             mask_x = doc_x - @mask_left
             mask_y = doc_y - @mask_top
 
-            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas[x, y])
+            color = ChunkyPNG::Color.to_truecolor_alpha_bytes(@canvas.get_pixel(x, y))
 
             if doc_x < 0 || doc_x >= @doc_width || doc_y < 0 || doc_y >= @doc_height
               color[3] = 0
@@ -41,7 +41,7 @@ class PSD
               color[3] = color[3] * @mask_data[@mask_width * mask_y + mask_x] / 255
             end
 
-            @canvas[x, y] = ChunkyPNG::Color.rgba(*color)
+            @canvas.set_pixel x, y, ChunkyPNG::Color.rgba(*color)
           end
         end
       end

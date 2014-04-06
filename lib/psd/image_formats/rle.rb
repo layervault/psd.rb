@@ -39,20 +39,14 @@ class PSD
 
             if len < 128
               len += 1
-              (@chan_pos...@chan_pos+len).each do |k|
-                @channel_data[k] = @file.read(1).bytes.to_a[0]
-              end
-
+              @channel_data.insert @chan_pos, *@file.read(len).bytes.to_a
               @chan_pos += len
             elsif len > 128
               len ^= 0xff
               len += 2
 
-              val = @file.read(1).bytes.to_a[0]
-              (@chan_pos...@chan_pos+len).each do |k|
-                @channel_data[k] = val
-              end
-
+              val = @file.read(1).bytes.to_a
+              @channel_data.insert @chan_pos, *(val * len) 
               @chan_pos += len
             end
           end

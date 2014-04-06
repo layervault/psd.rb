@@ -5,8 +5,7 @@ class PSD
       
       [:top, :right, :bottom, :left].each { |dir| delegate dir, to: :node }
 
-      delegate :[], to: :canvas
-      delegate :[]=, to: :canvas
+      delegate :[], :[]=, :get_pixel, :set_pixel, to: :canvas
 
       def initialize(node, width = nil, height = nil, opts = {})
         @node = node
