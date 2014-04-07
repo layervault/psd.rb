@@ -14,13 +14,13 @@ class PSD
           @name
         end
 
-        delegate :resource_id, to: :class
-        delegate :name, to: :class
-
         def initialize(file, resource)
           @file = file
           @resource = resource
         end
+
+        def resource_id; self.class.resource_id; end
+        def name; self.class.name; end
       end
     end
   end
