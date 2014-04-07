@@ -20,7 +20,7 @@ class PSD
         if path.length == 0
           return matches
         else
-          return matches.map { |m| m.children_at_path(path, opts) }.flatten
+          return matches.map { |m| m.children_at_path(path.dup, opts) }.flatten
         end
       end
       alias :children_with_path :children_at_path
