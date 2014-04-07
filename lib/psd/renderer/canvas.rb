@@ -48,7 +48,7 @@ class PSD
         PSD.logger.debug "Initializing canvas for #{node.debug_name}; color = #{ChunkyPNG::Color.to_truecolor_alpha_bytes(fill_color)}"
 
         @canvas = ChunkyPNG::Canvas.new(@width, @height, fill_color)
-        return if @node.group? || has_fill?
+        return if @node.group? || has_fill? || @opts[:base]
 
         # Sorry, ChunkyPNG.
         @canvas.send(:replace_canvas!, width, height, @pixel_data)
