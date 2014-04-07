@@ -35,7 +35,7 @@ class PSD
           finish = @file.tell + byte_count
 
           while @file.tell < finish
-            len = @file.read(1).bytes.to_a[0]
+            len = @file.read_byte
 
             if len < 128
               len += 1
