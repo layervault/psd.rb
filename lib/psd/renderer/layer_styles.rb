@@ -51,11 +51,16 @@ class PSD
 
     def apply!
       return if @applied || data.nil?
+      return unless styles_enabled?
 
       SUPPORTED_STYLES.each do |style|
         next unless style.should_apply?(@canvas, data)
         style.new(self).apply!
       end
+    end
+
+    def styles_enabled?
+      data['masterFXSwitch']
     end
   end
 end
