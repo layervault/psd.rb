@@ -78,8 +78,9 @@ class PSD
           return ancestors.length + 1
         end
 
-        def path
-          (ancestors.map(&:name) + [name]).join('/')
+        def path(as_array = false)
+          path = (ancestors.map(&:name) + [name])
+          as_array ? path : path.join('/')
         end
 
         def method_missing(method, *args, &block)

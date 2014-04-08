@@ -71,6 +71,11 @@ describe "Hierarchy" do
       expect(node.path).to eq('Version A/Matte')
     end
 
+    it "should be able to return a path as an array" do
+      node = @tree.children_at_path('Version A/Matte').first
+      expect(node.path(:as_array)).to eq(['Version A', 'Matte'])
+    end
+
     describe "Searching" do
       it "should find a node given a path" do
         expect(@tree.children_at_path('Version A/Matte')).to be_an_instance_of(Array)
