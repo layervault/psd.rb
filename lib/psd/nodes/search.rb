@@ -8,6 +8,7 @@ class PSD
       def children_at_path(path, opts={})
         path = path.split('/').delete_if { |p| p == "" } unless path.is_a?(Array)
 
+        path = path.dup
         query = path.shift
         matches = children.select do |c|
           if opts[:case_sensitive]
