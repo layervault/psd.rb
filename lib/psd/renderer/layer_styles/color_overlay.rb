@@ -39,7 +39,7 @@ class PSD
             alpha = ChunkyPNG::Color.a(pixel)
             next if alpha == 0
 
-            @canvas[x, y] = Compose.send(blending_mode, overlay_color, pixel, alpha)
+            @canvas[x, y] = Compose.send(blending_mode, )
           end
         end
       end
