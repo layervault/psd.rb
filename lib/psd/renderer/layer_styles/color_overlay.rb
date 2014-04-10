@@ -39,13 +39,14 @@ class PSD
             alpha = ChunkyPNG::Color.a(pixel)
             next if alpha == 0
 
-            @canvas[x, y] = Compose.send(blending_mode, )
+            new_pixel = Compose.send(blending_mode, overlay_color, pixel, overlay_opacity)
+            @canvas[x, y] = (new_pixel & 0xFFFFFF00) | alpha
           end
         end
       end
 
       def overlay_color
-        @overlay_color ||= ChunkyPNG::Color.rgba(r, g, b, a)
+        @overlay_color ||= ChunkyPNG::Color.rgb(r, g, b)
       end
 
       def r
@@ -63,6 +64,7 @@ class PSD
       def a
         @a ||= (overlay_data['Opct'][:value] * 2.55).ceil
       end
+      alias_method :overlay_opacity, :a
 
       private
 
