@@ -19,9 +19,8 @@ A general purpose Photoshop file parser written in Ruby. It allows you to work w
 
 PSD.rb is tested against:
 
-* MRI 1.9.3 & 2.0.0
+* MRI 1.9.3, 2.0.0, 2.1.0
 * JRuby (1.9.3 mode)
-* Rubinius (1.9.3 mode)
 
 If you use MRI Ruby and are interested in significantly speeding up PSD.rb with native code, check out [psd_native](https://github.com/layervault/psd_native).
 
@@ -76,15 +75,23 @@ end
 
 ### Traversing the Document
 
-To access the document as a tree structure, use `psd.tree` to get the root node. From there, you can traverse the tree using any of these methods:
+To access the document as a tree structure, use `psd.tree` to get the root node. From there, work with the tree using any of these methods:
 
 * `root`: get the root node from anywhere in the tree
+* `root?`: is this the root node?
 * `children`: get all immediate children of the node
+* `has_children?`: does this node have any children?
+* `childless?`: opposite of `has_children?`
 * `ancestors`: get all ancestors in the path of this node (excluding the root)
 * `siblings`: get all sibling tree nodes including the current one (e.g. all layers in a folder)
+* `next_sibling`: gets the sibling immediately following the current node
+* `prev_sibling`: gets the sibling immediately before the current node
+* `has_siblings?`: does this node have any siblings?
+* `only_child?`: opposite of `has_siblings?`
 * `descendants`: get all descendant nodes not including the current one
 * `subtree`: same as descendants but starts with the current node
-* `depth`: calculate the depth of the current node
+* `depth`: calculate the depth of the current node (root node is 0)
+* `path`: gets the path to the current node
 
 For any of the traversal methods, you can also retrieve folder or layer nodes only by appending `_layers` or `_groups` to the method. For example:
 
@@ -96,6 +103,7 @@ If you know the path to a group or layer within the tree, you can search by that
 
 ``` ruby
 psd.tree.children_at_path("Version A/Matte")
+psd.tree.children_at_path(["Version A", "Matte"])
 ```
 
 ### Layer Comps
@@ -111,7 +119,7 @@ tree = psd.tree.filter_by_comp('Version A')
 puts tree.children.map(&:name)
 ```
 
-This returns a new node tree and does not alter the original so you won't lose any data.
+This returns a new node tree and does not alter the original.
 
 ### Accessing Layer Data
 
@@ -197,25 +205,11 @@ png = psd.image.to_png # reference to PNG data
 psd.image.save_as_png 'path/to/output.png' # writes PNG to disk
 ```
 
-### Debugging
-
-If you run into any problems parsing a PSD, you can enable debug logging via the `PSD_DEBUG` environment variable. For example:
-
-``` bash
-PSD_DEBUG=true bundle exec examples/parse.rb
-```
-
-You can also give a path to a file instead. If you need to enable debugging programatically:
-
-``` ruby
-PSD.debug = true
-```
+This uses the full rasterized preview provided by Photoshop. It does not use the built-in rendering engine (described below). If the file was not saved with Compatibility Mode enabled, this will return an empty image.
 
 ### Preview Building
 
-**This is currently an experimental feature. It works "well enough" but is not perfect yet.**
-
-You can build previews of any subset or version of the PSD document. This is useful for generating previews of layer comps or exporting individual layer groups as images.
+You can build previews of any subset or version of the PSD document using the built-in renderer. This is useful for generating previews of layer comps or exporting individual layer groups as images.
 
 ``` ruby
 # Save a layer comp
@@ -225,11 +219,25 @@ psd.tree.filter_by_comp("Version A").save_as_png('./Version A.png')
 psd.tree.children_at_path("Group 1").first.to_png
 ```
 
+### Debugging
+
+If you run into any problems parsing a PSD, you can enable debug logging via the `PSD_DEBUG` environment variable. For example:
+
+``` bash
+PSD_DEBUG=true bundle exec examples/parse.rb
+```
+
+If you need to enable debugging programatically:
+
+``` ruby
+PSD.debug = true
+```
+
 ## To-do
 
 There are a few features that are currently missing from PSD.rb.
 
 * More image modes + depths for image exporting
-* A few layer info blocks
 * Support for rendering all layer styles
+* Support for layer comp adjusted layer styles
 * Render engine fixes for groups with lowered opacity
