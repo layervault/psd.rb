@@ -12,17 +12,18 @@ class PSD
 
         def parse
           @xml = @file.read(@resource.size)
-          @xmp = XMP.new(xml)
-
           @data = {}
 
+          @xmp = XMP.new(xml)
           @xmp.namespaces.each do |a|
             parse_tree(a.to_sym)
           end
-
+        rescue Java::OrgW3cDom::DOMException
+          PSD.logger.error "Unable to parse XMP Metadata"
+        ensure
           @resource.data = self
         end
-        
+
         private
 
         def parse_tree(attr_name)
