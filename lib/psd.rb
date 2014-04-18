@@ -1,5 +1,6 @@
 require 'psd/enginedata'
 require 'chunky_png'
+require 'xmp'
 # require "cairo"
 
 require 'active_support/core_ext/module/delegation'

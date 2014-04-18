@@ -12,8 +12,7 @@ class PSD
 
       @layers = []
       @merged_alpha = false
-      @global_mask = nil
-      @extras = []
+      @global_mask = nil      
     end
 
     # Allows us to skip this section because it starts with the length of the section
