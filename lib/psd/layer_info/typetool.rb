@@ -18,9 +18,6 @@ class PSD
       descriptor_version = @file.read_int
 
       @data[:text] = Descriptor.new(@file).parse
-      @data[:text]['EngineData']
-        .encode!('UTF-8', 'MacRoman', invalid: :replace, undef: :replace)
-        .delete!("\000")
 
       @data[:engine_data] = nil
       begin
@@ -44,12 +41,7 @@ class PSD
     # Extracts the text within the text area. In the event that psd-enginedata fails
     # for some reason, we attempt to extract the text using some rough regex.
     def text_value
-      if engine_data.nil?
-        # Something went wrong, lets hack our way through.
-        /\/Text \(˛ˇ(.*)\)$/.match(@data[:text]['EngineData'])[1].gsub /\r/, "\n"
-      else
-        engine_data.EngineDict.Editor.Text
-      end
+      @data[:text]['Txt ']
     end
     alias :to_s :text_value
 

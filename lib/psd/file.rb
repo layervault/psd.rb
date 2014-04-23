@@ -82,7 +82,10 @@ class PSD
     # Reads a unicode string, which is double the length of a normal string and encoded as UTF-16.
     def read_unicode_string(length=nil)
       length ||= read_int if length.nil?
-      !length.nil? && length > 0 ? read(length * 2).encode('UTF-8', 'UTF-16BE').delete("\000") : ''
+      return '' if length.nil? || length <= 0
+      read(length * 2)
+        .encode('UTF-8', 'UTF-16BE', universal_newline: true)
+        .delete("\000")
     end
 
     # Reads a boolean value.
