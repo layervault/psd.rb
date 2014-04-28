@@ -23,7 +23,8 @@ class PSD
         vector_mask: VectorMask,
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
-        vector_stroke_content: VectorStrokeContent
+        vector_stroke_content: VectorStrokeContent,
+        gradient_fill: GradientFill
       }.freeze
 
       attr_reader :adjustments
@@ -59,7 +60,7 @@ class PSD
 
             i = info.new(self, length)
             @adjustments[name] = LazyExecute.new(i, @file).now(:skip).later(:parse)
-              
+
             key_parseable = true and break
           end
 
