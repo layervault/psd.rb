@@ -4,10 +4,6 @@ class PSD
   module Node
     # Represents the root node of a Photoshop document
     class Root < PSD::Node::Base
-      include Ancestry
-      include Search
-      include BuildPreview
-
       attr_accessor :children
       attr_reader :psd
 
