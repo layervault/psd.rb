@@ -12,7 +12,7 @@ class PSD
 
       @layers = []
       @merged_alpha = false
-      @global_mask = nil      
+      @global_mask = nil
     end
 
     # Allows us to skip this section because it starts with the length of the section
@@ -25,10 +25,25 @@ class PSD
     # Parse this section, including all of the layers and folders.
     def parse
       mask_size = @file.read_int
-      finish = @file.tell + mask_size
+      start_position = @file.tell
+      finish = start_position + mask_size
 
       return self if mask_size <= 0
 
+      parse_layers
+
+      parse_global_mask
+
+      consumed_bytes = @file.tell - start_position
+      parse_layer_tagged_blocks(mask_size - consumed_bytes)
+
+      # Ensure we're at the end of this section
+      @file.seek finish
+
+      self
+    end
+
+    def parse_layers
       layer_info_size = Util.pad2(@file.read_int)
 
       if layer_info_size > 0
@@ -56,13 +71,35 @@ class PSD
       # Layers are parsed in reverse order
       layers.reverse!
       group_layers
+    end
 
-      parse_global_mask
+    def parse_layer_tagged_blocks(remaining_length)
+      start_pos = @file.tell
+      read_bytes = 0
 
-      # Ensure we're at the end of this section
-      @file.seek finish
+      while read_bytes < remaining_length
+        res = parse_additional_layer_info_block
+        read_bytes = @file.tell - start_pos
+        break unless res
+      end
+    end
 
-      return self
+    def parse_additional_layer_info_block
+      sig = @file.read_string(4)
+
+      unless %w(8BIM 8B64).include?(sig)
+        @file.seek(-4, IO::SEEK_CUR)
+        return false
+      end
+
+      key = @file.read_string(4)
+
+      if key == 'Lr16' || key == 'Lr32'
+        parse_layers
+        return true
+      end
+
+      false
     end
 
     # Export the mask and all the children layers to a file.
@@ -99,12 +136,12 @@ class PSD
 
     def parse_global_mask
       length = @file.read_int
-      
+
       PSD.logger.debug "Global Mask: length = #{length}"
       return if length <= 0
 
       mask_end = @file.tell + length
-      
+
       @global_mask = {}
       @global_mask[:overlay_color_space] = @file.read_short
       @global_mask[:color_components] = 4.times.map { |i| @file.read_short >> 8 }
