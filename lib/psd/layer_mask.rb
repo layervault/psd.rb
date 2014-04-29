@@ -31,17 +31,21 @@ class PSD
       return self if mask_size <= 0
 
       parse_layers
-
       parse_global_mask
 
       consumed_bytes = @file.tell - start_position
       parse_layer_tagged_blocks(mask_size - consumed_bytes)
+
+      # Layers are parsed in reverse order
+      layers.reverse!
 
       # Ensure we're at the end of this section
       @file.seek finish
 
       self
     end
+
+    private
 
     def parse_layers
       layer_info_size = Util.pad2(@file.read_int)
@@ -67,10 +71,6 @@ class PSD
           layer.parse_channel_image(@header)
         end
       end
-
-      # Layers are parsed in reverse order
-      layers.reverse!
-      group_layers
     end
 
     def parse_layer_tagged_blocks(remaining_length)
@@ -94,44 +94,12 @@ class PSD
 
       key = @file.read_string(4)
 
-      if key == 'Lr16' || key == 'Lr32'
+      if %w(Lr16 Lr32 Mt16).include?(key)
         parse_layers
         return true
       end
 
       false
-    end
-
-    # Export the mask and all the children layers to a file.
-    def export(outfile)
-      if @layers.size == 0
-        # No data, just read whatever's here.
-        return outfile.write @file.read(@section_end[:all] - start_of_section)
-      end
-
-      # Read the initial mask data since it won't change
-      outfile.write @file.read(@layer_section_start - @file.tell)
-
-      @layers.reverse.each do |layer|
-        layer.export(outfile)
-      end
-
-      outfile.write @file.read(end_of_section - @file.tell)
-    end
-
-    private
-
-    def group_layers
-      group_layer = nil
-      layers.each do |layer|
-        if layer.folder?
-          group_layer = layer
-        elsif layer.folder_end?
-          group_layer = nil
-        else
-          layer.group_layer = layer
-        end
-      end
     end
 
     def parse_global_mask
