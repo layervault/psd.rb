@@ -74,12 +74,10 @@ class PSD
     end
 
     def parse_layer_tagged_blocks(remaining_length)
-      start_pos = @file.tell
-      read_bytes = 0
+      end_pos = @file.tell + remaining_length
 
-      while read_bytes < remaining_length
+      while @file.tell < end_pos
         res = parse_additional_layer_info_block
-        read_bytes = @file.tell - start_pos
         break unless res
       end
     end
