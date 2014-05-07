@@ -7,6 +7,7 @@ class PSD
     def initialize(node, opts = {})
       @root_node = node
       @opts = opts
+      @render_hidden = opts.delete(:render_hidden)
 
       # Our canvas always starts as the full document size because
       # all measurements are relative to this size. We can later crop
@@ -35,8 +36,10 @@ class PSD
     def execute_pipeline
       PSD.logger.debug "Executing pipeline on #{active_node.debug_name}"
       children.reverse.each do |child|
-        # We skip over hidden nodes.
-        next unless child.visible?
+        # We skip over hidden nodes unless explicitly set otherwise.
+        # If rendering a single PSD::Node::Layer, this is automatically
+        # set so that hidden layers will render.
+        next if !@render_hidden && !child.visible?
 
         if child.group?
           push_node(child)

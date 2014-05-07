@@ -6,7 +6,7 @@
       end
 
       def to_png
-        @png ||= renderer.to_png
+        @png ||= renderer(render_hidden: self.layer?).to_png
       end
 
       def save_as_png(output)
