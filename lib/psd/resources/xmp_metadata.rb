@@ -18,7 +18,7 @@ class PSD
           @xmp.namespaces.each do |a|
             parse_tree(a.to_sym)
           end
-        rescue Java::OrgW3cDom::DOMException
+        rescue
           PSD.logger.error "Unable to parse XMP Metadata"
         ensure
           @resource.data = self
