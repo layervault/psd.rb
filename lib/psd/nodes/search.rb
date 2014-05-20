@@ -25,67 +25,6 @@ class PSD
         end
       end
       alias :children_with_path :children_at_path
-
-      # Given a layer comp ID, name, or :last for last document state, create a new
-      # tree with layer/group visibility altered based on the layer comp.
-      def filter_by_comp(id)
-        if id.is_a?(String)
-          comp = psd.layer_comps.select { |c| c[:name] == id }.first
-          raise "Layer comp not found" if comp.nil?
-
-          id = comp[:id]
-        else
-          comp = psd.layer_comps.select { |c| c[:id] == id }.first
-          raise "Layer comp not found" if comp.nil?
-        end
-
-        root = PSD::Node::Root.new(psd)
-        
-        # Force layers to be visible if they are enabled for the comp
-        root.descendants.each do |c|
-          set_visibility(comp, c) if Resource::Section::LayerComps.visibility_captured?(comp)
-          set_position(comp, c) if Resource::Section::LayerComps.position_captured?(comp)
-
-          PSD.logger.debug "#{c.path}: visible = #{c.visible?}, position = #{c.left}, #{c.top}"
-        end
-
-        return root
-      end
-
-      private
-
-      def set_visibility(comp, c)
-        visible = true
-        found = false
-
-        c
-          .metadata
-          .data[:layer_comp]['layerSettings'].each do |l|
-            visible = l['enab'] if l.has_key?('enab')
-            found = true and break if l['compList'].include?(comp[:id])
-          end
-
-        c.force_visible = found && visible
-      end
-
-      def set_position(comp, c)
-        x = 0
-        y = 0
-
-        c
-          .metadata
-          .data[:layer_comp]['layerSettings'].each do |l|
-            if l.has_key?('Ofst')
-              x = l['Ofst']['Hrzn']
-              y = l['Ofst']['Vrtc']
-            end
-            
-            break if l['compList'].include?(comp[:id])
-          end
-
-        c.left_offset = x
-        c.top_offset = y
-      end
     end
   end
 end

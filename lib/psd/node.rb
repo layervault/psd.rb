@@ -1,5 +1,6 @@
 require 'psd/nodes/ancestry'
 require 'psd/nodes/search'
+require 'psd/nodes/layer_comps'
 require 'psd/nodes/build_preview'
 
 # Internal structure to help us build trees of a Photoshop documents.
@@ -10,6 +11,7 @@ class PSD
       include Enumerable
       include Ancestry
       include Search
+      include LayerComps
       include BuildPreview
 
       # Default properties that all nodes contain

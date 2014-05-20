@@ -16,7 +16,7 @@ class PSD
 
       # Exports this layer to a Hash.
       def to_hash
-        super.merge({
+        hash = super.merge({
           type: :layer,
           text: @layer.text,
           ref_x: reference_point.x,
@@ -26,8 +26,18 @@ class PSD
             width: @layer.image.width,
             height: @layer.image.height,
             channels: @layer.channels_info
-          }
+          },
+          layer_comps: {}
         })
+
+        root.psd.layer_comps.each do |comp|
+          hash[:layer_comps][comp[:name]] = {
+            visible: visible_in_comp?(comp[:id]),
+            position: position_in_comp(comp[:id])
+          }
+        end
+
+        hash
       end
 
       # In case the layer doesn't have a reference point
