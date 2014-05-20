@@ -106,11 +106,19 @@ class PSD
           type: nil,
           visible: visible?,
           opacity: @layer.opacity / 255.0,
-          blending_mode: @layer.blending_mode
+          blending_mode: @layer.blending_mode,
+          layer_comps: {}
         }
 
         PROPERTIES.each do |p|
           hash[p] = self.send(p)
+        end
+
+        root.psd.layer_comps.each do |comp|
+          hash[:layer_comps][comp[:name]] = {
+            visible: visible_in_comp?(comp[:id]),
+            position: position_in_comp(comp[:id])
+          }
         end
 
         hash
