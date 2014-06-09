@@ -32,7 +32,7 @@ class PSD
 
     SUPPORTED_STYLES = [
       ColorOverlay
-    ].freeze
+    ]
 
     attr_reader :canvas, :node, :data
 

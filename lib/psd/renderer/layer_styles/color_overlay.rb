@@ -5,8 +5,7 @@ class PSD
       def self.should_apply?(canvas, data)
         data.has_key?('SoFi') && 
         data['SoFi']['enab'] &&
-        canvas.node.header.rgb? &&
-        !PSD::Renderer::VectorShape.can_render?(canvas)
+        canvas.node.header.rgb?
       end
 
       def self.can_apply?(canvas, data)
