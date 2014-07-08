@@ -29,6 +29,8 @@ class PSD
       @num_pixels *= 2 if depth == 16
 
       calculate_length
+      set_channels_info
+
       @channel_data = []
       @pixel_data = []
       @opacity = 1.0
@@ -38,15 +40,6 @@ class PSD
       @end_pos = @start_pos + @length
 
       PSD.logger.debug "Image: #{width}x#{height}, length = #{@length}, mode = #{@header.mode_name}, position = #{@start_pos}"
-
-      # Each color channel is represented by a unique ID
-      @channels_info = [
-        {id: 0},
-        {id: 1},
-        {id: 2}
-      ]
-
-      @channels_info << {id: -1} if channels == 4
     end
 
     # Begins parsing the image by first figuring out the compression format used, and then
@@ -75,6 +68,14 @@ class PSD
     end
 
     private
+
+    def set_channels_info
+      case mode
+      when 1 then set_greyscale_channels
+      when 3 then set_rgb_channels
+      when 4 then set_cmyk_channels
+      end
+    end
 
     def calculate_length
       @length = case depth

@@ -7,12 +7,12 @@ psd = PSD.new(file, parse_layer_images: true)
 
 results = Benchmark.measure "Layer image exporting" do
   psd.parse!
-end
 
-psd.tree.descendant_layers.each do |layer|
-  path = layer.path.split('/')[0...-1].join('/')
-  FileUtils.mkdir_p("output/#{path}")
-  layer.image.save_as_png "output/#{layer.path}.png"
+  psd.tree.descendant_layers.each do |layer|
+    path = layer.path.split('/')[0...-1].join('/')
+    FileUtils.mkdir_p("output/#{path}")
+    layer.image.save_as_png "output/#{layer.path}.png"
+  end
 end
 
 puts Benchmark::CAPTION

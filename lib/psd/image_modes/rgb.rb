@@ -4,6 +4,16 @@ class PSD
     module RGB
       private
 
+      def set_rgb_channels
+        @channels_info = [
+          {id: 0},
+          {id: 1},
+          {id: 2}
+        ]
+
+        @channels_info << {id: -1} if channels == 4
+      end
+
       def combine_rgb_channel
         PSD.logger.debug "Beginning RGB processing"
 
