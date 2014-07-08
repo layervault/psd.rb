@@ -4,8 +4,8 @@ class PSD
       private
 
       def set_greyscale_channels
-        @channels_info = [{id: 0}]
-        @channels_info << {id: -1} if channels == 2
+        @channels_info = [{ id: 0 }]
+        @channels_info << { id: -1 } if channels == 2
       end
 
       def combine_greyscale_channel
