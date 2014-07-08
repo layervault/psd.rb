@@ -15,9 +15,9 @@ class PSD
       end
 
       def combine_cmyk_channel
-        cmyk_channels = @channels_info
-          .map    { |ch| ch[:id] }
-          .reject { |ch| ch < -1 }
+        cmyk_channels = @channels_info.
+          map    { |ch| ch[:id] }.
+          reject { |ch| ch < -1 }
 
         (0...@num_pixels).step(pixel_step) do |i|
           c = m = y = k = 0

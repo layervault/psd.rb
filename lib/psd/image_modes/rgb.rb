@@ -17,9 +17,9 @@ class PSD
       def combine_rgb_channel
         PSD.logger.debug "Beginning RGB processing"
 
-        rgb_channels = @channels_info
-          .map    { |ch| ch[:id] }
-          .reject { |ch| ch < -1 }
+        rgb_channels = @channels_info.
+          map    { |ch| ch[:id] }.
+          reject { |ch| ch < -1 }
 
         (0...@num_pixels).step(pixel_step) do |i|
           r = g = b = 0
