@@ -2,9 +2,8 @@ class PSD
   class Renderer
     class Canvas
       attr_reader :canvas, :node, :opts, :width, :height, :opacity, :fill_opacity
-      
-      [:top, :right, :bottom, :left].each { |dir| delegate dir, to: :node }
 
+      delegate :top, :right, :bottom, :left, to: :node
       delegate :[], :[]=, :get_pixel, :set_pixel, to: :canvas
 
       def initialize(node, width = nil, height = nil, opts = {})

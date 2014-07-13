@@ -5,6 +5,7 @@ class PSD
   # Mostly based on similar code from libpsd.
   module Compose
     extend self
+    extend ChunkyPNG::Color
 
     #
     # Normal blend modes
@@ -316,10 +317,6 @@ class PSD
       new_b = blend_channel(b(bg), b(bg) + b(fg) - (b(bg) * b(fg) >> 7), mix_alpha)
 
       rgba(new_r, new_g, new_b, dst_alpha)
-    end
-
-    [:r, :g, :b, :a, :rgba, :fully_transparent?].each do |meth|
-      define_method(meth) { |*args| ChunkyPNG::Color.send(meth, *args) }
     end
 
     # If the blend mode is missing, we fall back to normal composition.
