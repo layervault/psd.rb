@@ -130,30 +130,6 @@ class PSD
     )
   end
 
-  # Export the current file to a new PSD. This may or may not work.
-  def export(file)
-    parse! unless parsed?
-
-    # Create our file for writing
-    outfile = File.open(file, 'w')
-
-    # Reset the file pointer
-    @file.seek 0
-    @header.write outfile
-    @file.seek @header.num_bytes, IO::SEEK_CUR
-
-    # Nothing in the header or resources we want to bother with changing
-    # right now. Write it straight to file.
-    outfile.write @file.read(@resources.end_of_section - @file.tell)
-
-    # Now, the changeable part. Layers and masks.
-    layer_mask.export(outfile)
-
-    # And the rest of the file (merged image data)
-    outfile.write @file.read
-    outfile.flush
-  end
-
   private
 
   def ensure_header

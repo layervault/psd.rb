@@ -12,7 +12,9 @@ class PSD
     end
 
     def clamp(num, min, max)
-      [min, num, max].sort[1]
+      return max if num > max
+      return min if num < min
+      num
     end
   end
 end
