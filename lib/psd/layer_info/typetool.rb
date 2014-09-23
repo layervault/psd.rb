@@ -52,6 +52,7 @@ class PSD
         name: fonts.first,
         sizes: sizes,
         colors: colors,
+        alignment: alignment,
         css: to_css
       }
     end
@@ -67,6 +68,13 @@ class PSD
     def sizes
       return [] if engine_data.nil? || !styles.has_key?('FontSize')
       styles['FontSize'].uniq
+    end
+    
+    def alignment
+      return {} if engine_data.nil?
+      engine_data.EngineDict.ParagraphRun.RunArray.map do |s| 
+        ["left", "right", "center", "justify"][[s.ParagraphSheet.Properties.Justification.to_i,3].min]
+      end
     end
 
     # Return all colors used for text in this layer. The colors are returned in RGBA
@@ -119,7 +127,8 @@ class PSD
       definition = {
         'font-family' => fonts.join(', '),
         'font-size' => "#{sizes.first}pt",
-        'color' => "rgba(#{colors.first.join(', ')})"
+        'color' => "rgba(#{colors.first.join(', ')})",
+        'text-align' => alignment.first
       }
 
       css = []

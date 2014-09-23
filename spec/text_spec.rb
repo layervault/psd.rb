@@ -25,3 +25,17 @@ describe 'Text' do
     end
   end
 end
+
+describe "Justified Text" do
+  
+  psd = PSD.new('spec/files/alignment_modes.psd')
+  psd.parse!
+  
+  ["left", "right", "center", "justify"].each do |alignment|
+    it "that is #{alignment} justified can be exported to CSS" do
+      type = psd.tree.children_at_path(alignment).first.type
+      css = type.to_css
+      expect(css).to include "text-align: #{alignment}"
+    end
+  end
+end
