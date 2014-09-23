@@ -15,7 +15,7 @@ end
 
 puts "\nVisible Layers:\n===================="
 psd.layers.each do |layer|
-  next if layer.folder? || layer.hidden?
+  next if layer.folder? || layer.hidden? || layer.folder_end?
 
   puts "Name: #{layer.name}"
   puts "Position: top = #{layer.top}, left = #{layer.left}"
