@@ -27,9 +27,7 @@ describe 'Text' do
 end
 
 describe "Justified Text" do
-  
-  psd = PSD.new('spec/files/alignment_modes.psd')
-  psd.parse!
+  let (:psd) { PSD.new('spec/files/alignment_modes.psd').tap(&:parse!) }
   
   ["left", "right", "center", "justify"].each do |alignment|
     it "that is #{alignment} justified can be exported to CSS" do
