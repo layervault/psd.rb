@@ -75,6 +75,8 @@ class PSD
       engine_data.EngineDict.ParagraphRun.RunArray.map do |s| 
         ["left", "right", "center", "justify"][[s.ParagraphSheet.Properties.Justification.to_i,3].min]
       end
+    rescue
+      []
     end
 
     # Return all colors used for text in this layer. The colors are returned in RGBA
@@ -133,6 +135,7 @@ class PSD
 
       css = []
       definition.each do |k, v|
+        next if v.nil?
         css << "#{k}: #{v};"
       end
 

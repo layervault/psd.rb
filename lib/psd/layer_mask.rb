@@ -28,6 +28,8 @@ class PSD
       start_position = @file.tell
       finish = start_position + mask_size
 
+      PSD.logger.debug "Layer mask section: #{start_position} - #{finish}"
+
       return self if mask_size <= 0
 
       parse_layers
