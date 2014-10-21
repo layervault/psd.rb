@@ -50,6 +50,7 @@ class PSD
           document: {
             width: document_width,
             height: document_height,
+            depth: psd.header.depth,
             resources: {
               layer_comps: @psd.layer_comps,
               guides: @psd.guides,
