@@ -45,7 +45,7 @@ class PSD
     end
 
     def slices
-      resource(:slices).to_a
+      @slices ||= resource(:slices).to_a.map { |s| Slice.new(self, s) }
     end
   end
 end

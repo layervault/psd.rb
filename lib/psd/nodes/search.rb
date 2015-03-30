@@ -1,6 +1,10 @@
 class PSD
   module Node
     module Search
+      def find_by_id(id)
+        subtree.select { |n| n.id == id }.first
+      end
+
       # Searches the tree structure for a node at the given path. The path is
       # defined by the layer/folder names. Because the PSD format does not
       # require unique layer/folder names, we always return an array of all

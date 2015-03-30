@@ -17,7 +17,7 @@ class PSD
       # Default properties that all nodes contain
       PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
 
-      attr_reader :name, :parent
+      attr_reader :id, :name, :parent
       attr_accessor :children, :layer, :force_visible, :top_offset, :left_offset
 
       delegate :psd, to: :parent
@@ -32,6 +32,7 @@ class PSD
         @parent = parent
         @children = []
         
+        @id = begin layer.layer_id.id rescue nil end
         @force_visible = nil
         @top = @layer.top.to_i
         @bottom = @layer.bottom.to_i

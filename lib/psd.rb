@@ -25,6 +25,7 @@ end
 class PSD
   include Logger
   include Helpers
+  include Slices
 
   attr_reader :file, :opts
   alias :options :opts
