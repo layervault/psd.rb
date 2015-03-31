@@ -11,7 +11,7 @@ class PSD
         PSD.logger.debug "Attempting to parse RAW encoded channel..."
 
         (@chan_pos...(@chan_pos + @ch_info[:length] - 2)).each do |i|
-          @channel_data[i] = @file.read(1).bytes.to_a[0]
+          @channel_data[i] = @file.read(1).bytes[0]
         end
 
         @chan_pos += @ch_info[:length] - 2

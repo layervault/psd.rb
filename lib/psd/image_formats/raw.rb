@@ -5,7 +5,7 @@ class PSD
       private
 
       def parse_raw!
-        @channel_data = @file.read(@length).bytes.to_a
+        @channel_data = @file.read(@length).bytes
       end
     end
   end

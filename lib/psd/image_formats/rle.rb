@@ -39,13 +39,13 @@ class PSD
 
             if len < 128
               len += 1
-              @channel_data.insert @chan_pos, *@file.read(len).bytes.to_a
+              @channel_data.insert @chan_pos, *@file.read(len).bytes
               @chan_pos += len
             elsif len > 128
               len ^= 0xff
               len += 2
 
-              val = @file.read(1).bytes.to_a
+              val = @file.read(1).bytes
               @channel_data.insert @chan_pos, *(val * len) 
               @chan_pos += len
             end

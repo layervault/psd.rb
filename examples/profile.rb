@@ -1,15 +1,13 @@
-require 'ruby-prof'
-require './lib/psd'
-
-
+require 'memory_profiler'
+require 'psd'
 
 file = ARGV[0] || 'examples/images/example.psd'
-psd = PSD.new(file, parse_image: true)
 
-result = RubyProf.profile do
+report = MemoryProfiler.report do
+  psd = PSD.new(file)
   psd.parse!
+
+  psd.tree.to_png
 end
 
-printer = RubyProf::GraphHtmlPrinter.new(result)
-printer.print(File.new("./profile.html", 'w'), min_percent: 2)
-`open profile.html`
+report.pretty_print
