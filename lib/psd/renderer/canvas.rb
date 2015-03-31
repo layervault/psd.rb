@@ -1,10 +1,12 @@
 class PSD
   class Renderer
     class Canvas
+      extend Forwardable
+
       attr_reader :canvas, :node, :opts, :width, :height, :opacity, :fill_opacity
 
-      delegate :top, :right, :bottom, :left, to: :node
-      delegate :[], :[]=, :get_pixel, :set_pixel, to: :canvas
+      def_delegators :node, :top, :right, :bottom, :left
+      def_delegators :canvas, :[], :[]=, :get_pixel, :set_pixel
 
       def initialize(node, width = nil, height = nil, opts = {})
         @node = node

@@ -1,9 +1,11 @@
 class PSD
   class Layer
     module BlendModes
+      extend Forwardable
+      
       attr_reader :blend_mode
 
-      delegate :opacity, :visible, :clipped?, to: :blend_mode
+      def_delegators :blend_mode, :opacity, :visible, :clipped?
       alias_method :visible?, :visible
 
       # Is this layer hidden?

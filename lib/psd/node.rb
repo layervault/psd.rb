@@ -8,6 +8,8 @@ require 'psd/nodes/build_preview'
 class PSD
   module Node
     class Base
+      extend Forwardable
+
       include Enumerable
       include Ancestry
       include Search
@@ -20,10 +22,9 @@ class PSD
       attr_reader :id, :name, :parent
       attr_accessor :children, :layer, :force_visible, :top_offset, :left_offset
 
-      delegate :psd, to: :parent
-      delegate :name, to: :layer
-      delegate :each, to: :children
-      delegate :document_dimensions, to: :parent
+      def_delegators :parent, :psd, :document_dimensions
+      def_delegator :layer, :name
+      def_delegator :children, :each
 
       def initialize(layer, parent = nil)
         @layer = layer

@@ -3,7 +3,7 @@ require 'chunky_png'
 require 'xmp'
 # require "cairo"
 
-require 'active_support/core_ext/module/delegation'
+require 'forwardable'
 require 'active_support/concern'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'

@@ -1,6 +1,7 @@
 class PSD
   # Parses the full preview image at the end of the PSD document.
   class Image
+    extend Forwardable
     include ImageFormat::RAW
     include ImageFormat::RLE
     include ImageMode::CMYK
@@ -10,6 +11,9 @@ class PSD
 
     attr_reader :pixel_data, :opacity, :has_mask
     alias :has_mask? :has_mask
+
+    # We delegate a few useful methods to the header.
+    def_delegators :@header, :height, :width, :channels, :depth, :mode
 
     # All of the possible compression formats Photoshop uses.
     COMPRESSIONS = [
@@ -58,13 +62,6 @@ class PSD
       parse_image_data!
 
       return self
-    end
-
-    # We delegate a few useful methods to the header.
-    [:height, :width, :channels, :depth, :mode].each do |attribute|
-      define_method attribute do
-        @header.send(attribute)
-      end
     end
 
     private

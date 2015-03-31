@@ -3,12 +3,12 @@ require 'psd/node'
 class PSD
   module Node
     class Layer < PSD::Node::Base
+      extend Forwardable
+      
       attr_reader :layer
 
-      [:text, :ref_x, :ref_y, :blending_mode].each do |prop|
-        delegate prop, to: :@layer
-        delegate "#{prop}=", to: :@layer
-      end
+      def_delegators :@layer, :text, :ref_x, :ref_y, :blending_mode
+      def_delegators :@layer, :text=, :ref_x=, :ref_y=, :blending_mode=
 
       def empty?
         width == 0 || height == 0
