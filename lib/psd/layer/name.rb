@@ -19,7 +19,7 @@ class PSD
       def parse_legacy_layer_name
         @legacy_name_start = @file.tell
 
-        len = Util.pad4 @file.read(1).bytes[0]
+        len = Util.pad4 @file.read(1).bytes.to_a[0]
         @legacy_name = @file.read_string(len)
 
         @legacy_name_end = @file.tell

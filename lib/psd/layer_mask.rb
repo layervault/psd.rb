@@ -116,7 +116,7 @@ class PSD
       @global_mask[:opacity] = @file.read_short / 16.0
 
       # 0 = color selected, 1 = color protected, 128 = use value per layer
-      @global_mask[:kind] = @file.read(1).bytes[0]
+      @global_mask[:kind] = @file.read(1).bytes.to_a[0]
 
       PSD.logger.debug @global_mask
 

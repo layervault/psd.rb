@@ -71,12 +71,12 @@ class PSD
 
     # Reads a string of the given length and converts it to UTF-8 from the internally used MacRoman encoding.
     def read_string(length=nil)
-      length = @file.read(1).bytes[0] if length.nil?
+      length = @file.read(1).bytes.to_a[0] if length.nil?
       read(length).delete("\000")
     end
 
     def read_byte
-      read(1).bytes[0]
+      read(1).bytes.to_a[0]
     end
 
     # Reads a unicode string, which is double the length of a normal string and encoded as UTF-16.
