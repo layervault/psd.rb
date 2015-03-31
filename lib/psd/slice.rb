@@ -27,5 +27,13 @@ class PSD
     def associated_layer
       @psd.tree.find_by_id(associated_layer_id)
     end
+
+    def to_png
+      @png ||= @psd.image.to_png.crop(left, top, width, height)
+    end
+
+    def save_as_png(file)
+      @png.save(file, :fast_rgba)
+    end
   end
 end
