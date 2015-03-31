@@ -5,15 +5,15 @@ require 'xmp'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [
-  '/image_exports/*',
-  '/image_formats/*',
-  '/image_modes/*',
-  '/nodes/*',
-  '/layer_info/*',
-  '/layer/*',
-  '/**/*'
+  '/image_exports/*.rb',
+  '/image_formats/*.rb',
+  '/image_modes/*.rb',
+  '/nodes/*.rb',
+  '/layer_info/*.rb',
+  '/layer/*.rb',
+  '/**/*.rb'
 ].each do |path|
-  Dir.glob(dir_root + path) { |file| require file if File.file?(file) }
+  Dir.glob(dir_root + path) { |file| require file }
 end
 
 # A general purpose parser for Photoshop files. PSDs are broken up in to 4 logical sections:
