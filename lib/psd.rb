@@ -3,18 +3,27 @@ require 'psd/enginedata'
 require 'chunky_png'
 require 'xmp'
 
-dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
-[
-  '/image_exports/*.rb',
-  '/image_formats/*.rb',
-  '/image_modes/*.rb',
-  '/nodes/*.rb',
-  '/layer_info/*.rb',
-  '/layer/*.rb',
-  '/**/*.rb'
-].each do |path|
-  Dir.glob(dir_root + path) { |file| require file }
-end
+require 'psd/blend_mode'
+require 'psd/channel_image'
+require 'psd/color'
+require 'psd/descriptor'
+require 'psd/file'
+require 'psd/header'
+require 'psd/helpers'
+require 'psd/image'
+require 'psd/layer'
+require 'psd/layer_info'
+require 'psd/layer_mask'
+require 'psd/lazy_execute'
+require 'psd/logger'
+require 'psd/mask'
+require 'psd/node'
+require 'psd/path_record'
+require 'psd/renderer'
+require 'psd/resources'
+require 'psd/slices'
+require 'psd/util'
+require 'psd/version'
 
 # A general purpose parser for Photoshop files. PSDs are broken up in to 4 logical sections:
 # the header, resources, the layer mask (including layers), and the preview image. We parse

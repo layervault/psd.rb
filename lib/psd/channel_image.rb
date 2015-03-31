@@ -1,4 +1,6 @@
 require 'psd/image'
+require 'psd/image_formats/layer_rle'
+require 'psd/image_formats/layer_raw'
 
 class PSD
   # Represents an image for a single layer, which differs slightly in format from

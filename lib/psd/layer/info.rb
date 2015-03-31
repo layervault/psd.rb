@@ -1,3 +1,27 @@
+require 'psd/layer/info/blend_clipping_elements'
+require 'psd/layer/info/blend_interior_elements'
+require 'psd/layer/info/fill_opacity'
+require 'psd/layer/info/gradient_fill'
+require 'psd/layer/info/layer_group'
+require 'psd/layer/info/layer_id'
+require 'psd/layer/info/layer_name_source'
+require 'psd/layer/info/layer_section_divider'
+require 'psd/layer/info/legacy_typetool'
+require 'psd/layer/info/locked'
+require 'psd/layer/info/metadata_setting'
+require 'psd/layer/info/object_effects'
+require 'psd/layer/info/pattern'
+require 'psd/layer/info/placed_layer'
+require 'psd/layer/info/reference_point'
+require 'psd/layer/info/sheet_color'
+require 'psd/layer/info/solid_color'
+require 'psd/layer/info/typetool'
+require 'psd/layer/info/unicode_name'
+require 'psd/layer/info/vector_mask'
+require 'psd/layer/info/vector_origination'
+require 'psd/layer/info/vector_stroke'
+require 'psd/layer/info/vector_stroke_content'
+
 class PSD
   class Layer
     module Info

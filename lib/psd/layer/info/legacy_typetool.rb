@@ -1,5 +1,5 @@
 require 'psd/layer_info'
-require 'psd/layer_info/typetool'
+require 'psd/layer/info/typetool'
 
 class PSD
   class LegacyTypeTool < TypeTool

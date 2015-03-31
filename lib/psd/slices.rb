@@ -1,4 +1,4 @@
-require 'psd/node'
+require 'psd/slice'
 
 class PSD
   module Slices

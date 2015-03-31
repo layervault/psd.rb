@@ -1,4 +1,11 @@
+require 'psd/renderer/blender'
+require 'psd/renderer/canvas'
 require 'psd/renderer/canvas_management'
+require 'psd/renderer/clipping_mask'
+require 'psd/renderer/compose'
+require 'psd/renderer/layer_styles'
+require 'psd/renderer/mask'
+require 'psd/renderer/mask_canvas'
 
 class PSD
   class Renderer

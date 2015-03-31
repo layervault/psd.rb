@@ -1,5 +1,3 @@
-require 'psd/resources/base'
-
 class PSD
   class Resource
     module Section
@@ -25,3 +23,8 @@ class PSD
     end
   end
 end
+
+require 'psd/resources/guides'
+require 'psd/resources/layer_comps'
+require 'psd/resources/slices'
+require 'psd/resources/xmp_metadata'

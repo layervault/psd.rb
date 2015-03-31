@@ -1,3 +1,7 @@
+require 'psd/resource_section'
+require 'psd/resource'
+require 'psd/resources/base'
+
 class PSD
   # Parses and reads all of the Resource records in the document.
   class Resources

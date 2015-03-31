@@ -1,3 +1,10 @@
+require 'psd/image_formats/raw'
+require 'psd/image_formats/rle'
+require 'psd/image_modes/cmyk'
+require 'psd/image_modes/greyscale'
+require 'psd/image_modes/rgb'
+require 'psd/image_exports/png'
+
 class PSD
   # Parses the full preview image at the end of the PSD document.
   class Image

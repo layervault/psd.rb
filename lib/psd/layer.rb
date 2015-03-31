@@ -1,3 +1,14 @@
+require 'psd/layer/blend_modes'
+require 'psd/layer/blending_ranges'
+require 'psd/layer/channel_image'
+require 'psd/layer/exporting'
+require 'psd/layer/helpers'
+require 'psd/layer/info'
+require 'psd/layer/mask'
+require 'psd/layer/name'
+require 'psd/layer/path_components'
+require 'psd/layer/position_and_channels'
+
 class PSD
   # Represents a single layer and all of the data associated with
   # that layer.
