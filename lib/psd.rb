@@ -1,10 +1,7 @@
+require 'forwardable'
 require 'psd/enginedata'
 require 'chunky_png'
 require 'xmp'
-# require "cairo"
-
-require 'forwardable'
-require 'active_support/concern'
 
 dir_root = File.dirname(File.absolute_path(__FILE__)) + '/psd'
 [
