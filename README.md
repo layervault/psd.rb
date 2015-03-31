@@ -219,6 +219,31 @@ psd.tree.filter_by_comp("Version A").save_as_png('./Version A.png')
 psd.tree.children_at_path("Group 1").first.to_png
 ```
 
+### Slices
+
+Because slices are relative to the full document, you can access them directly on the `psd` object. Use `psd.slices` to get an array of all slices in the document.
+
+``` ruby
+slices = psd.slices
+slices.first.name #=> "Logo"
+slices.first.left #=> 20
+slices.first.width #=> 200
+```
+
+You can also search for slices if you know their name or ID. Because slice names do not need to be unique, `slices_by_name` will always return an array of all matches.
+
+``` ruby
+psd.slice_by_id(2)
+psd.slices_by_name('Logo')
+```
+
+Finally, you can export slices as PNGs.
+
+``` ruby
+psd.slices.first.to_png #=> ChunkyPNG canvas
+psd.slices_by_name('Logo').first.save_as_png('Logo.png') #=> writes Logo.png
+```
+
 ### Debugging
 
 If you run into any problems parsing a PSD, you can enable debug logging via the `PSD_DEBUG` environment variable. For example:
