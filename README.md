@@ -237,6 +237,13 @@ psd.slice_by_id(2)
 psd.slices_by_name('Logo')
 ```
 
+When you create a slice based off of a layer, Photoshop stores this relation in the file. If you have a slice that was created this way, you can easily get the associated layer.
+
+``` ruby
+slice = psd.slices_by_name('Logo').first
+slice.associated_layer #=> <PSD::Node::Layer>
+```
+
 Finally, you can export slices as PNGs.
 
 ``` ruby
