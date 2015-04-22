@@ -54,7 +54,7 @@ class PSD
             resources: {
               layer_comps: @psd.layer_comps,
               guides: @psd.guides,
-              slices: @psd.slices
+              slices: @psd.slices.map(&:to_hash)
             }
           }
         }

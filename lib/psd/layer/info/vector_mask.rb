@@ -16,8 +16,8 @@ class PSD
       @not_link = (tag & (0x01 << 1)) > 0
       @disable = (tag & (0x01 << 2)) > 0
 
-      num_records = (@length - 8) / 26
-      
+      # I haven't figured out yet why this is 10 and not 8.
+      num_records = (@length - 10) / 26
       @paths = []
       num_records.times do
         @paths << PathRecord.new(@file)

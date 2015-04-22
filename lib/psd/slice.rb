@@ -7,6 +7,7 @@ class PSD
 
     def initialize(psd, data)
       @psd = psd
+      @keys = data.keys
       data.each do |k, v|
         instance_variable_set("@#{k}", v)
       end
@@ -34,6 +35,10 @@ class PSD
 
     def save_as_png(file)
       @png.save(file, :fast_rgba)
+    end
+
+    def to_hash
+      Hash[@keys.map { |k| [k.to_sym, self.send(k)] }]
     end
   end
 end
