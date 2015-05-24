@@ -53,6 +53,7 @@ class PSD
         sizes: sizes,
         colors: colors,
         alignment: alignment,
+        leadings: leadings,
         css: to_css
       }
     end
@@ -62,6 +63,12 @@ class PSD
     def fonts
       return [] if engine_data.nil?
       engine_data.ResourceDict.FontSet.map(&:Name)
+    end
+
+    # Return all leadings (line spacing) for this layer.
+    def leadings
+      return [] if engine_data.nil? || !styles.has_key?('Leading')
+      styles['Leading'].uniq
     end
 
     # Return all font sizes for this layer.
