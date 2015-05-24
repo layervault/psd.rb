@@ -50,6 +50,7 @@ class PSD
     def font
       {
         name: fonts.first,
+        fonts: fonts,
         sizes: sizes,
         colors: colors,
         alignment: alignment,
