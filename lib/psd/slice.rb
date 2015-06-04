@@ -3,7 +3,7 @@ class PSD
     attr_reader :id, :group_id, :origin, :associated_layer_id, :name, :type,
                 :bounds, :url, :target, :message, :alt, :cell_text_is_html,
                 :cell_text, :horizontal_alignment, :vertical_alignment,
-                :color
+                :color, :outset
 
     def initialize(psd, data)
       @psd = psd
