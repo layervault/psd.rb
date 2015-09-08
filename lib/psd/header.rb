@@ -59,6 +59,10 @@ class PSD
       MODES[@mode]
     end
 
+    def big?
+      version == 2
+    end
+
     def rgb?
       mode == 3
     end

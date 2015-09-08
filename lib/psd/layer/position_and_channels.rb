@@ -21,7 +21,7 @@ class PSD
 
         @channels.times do
           channel_id = @file.read_short
-          channel_length = @file.read_int
+          channel_length = @header.big? ? @file.read_longlong : @file.read_int
 
           @channels_info << {id: channel_id, length: channel_length}
         end

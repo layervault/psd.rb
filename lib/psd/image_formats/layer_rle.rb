@@ -7,7 +7,7 @@ class PSD
       def parse_byte_counts!
         byte_counts = []
         height.times do
-          byte_counts << @file.read_short
+          byte_counts << (@header.big? ? @file.read_int : @file.read_short)
         end
 
         return byte_counts

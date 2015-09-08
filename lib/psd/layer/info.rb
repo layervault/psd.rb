@@ -51,6 +51,8 @@ class PSD
         gradient_fill: GradientFill
       }.freeze
 
+      BIG_LAYER_INFO_KEYS = %w{ LMsk Lr16 Lr32 Layr Mt16 Mt32 Mtrn Alph FMsk lnk2 FEid FXid PxSD }
+
       attr_reader :adjustments
       alias :info :adjustments
 
@@ -59,6 +61,14 @@ class PSD
       end
 
       private
+
+      def parse_additional_layer_info_length(key)
+        if @header.big? && BIG_LAYER_INFO_KEYS.include?(key)
+          Util.pad2 @file.read_longlong
+        else
+          Util.pad2 @file.read_int
+        end
+      end
 
       # This section is a bit tricky to parse because it represents all of the
       # extra data that describes this layer.
@@ -73,7 +83,7 @@ class PSD
           key = @file.read_string(4)
           @info_keys << key
 
-          length = Util.pad2 @file.read_int
+          length = parse_additional_layer_info_length(key)
           pos = @file.tell
 
           key_parseable = false

@@ -18,13 +18,14 @@ class PSD
     # Allows us to skip this section because it starts with the length of the section
     # stored as an integer.
     def skip
-      @file.seek @file.read_int, IO::SEEK_CUR
+      @file.seek parse_mask_size, IO::SEEK_CUR
       return self
     end
 
     # Parse this section, including all of the layers and folders.
     def parse
-      mask_size = @file.read_int
+      mask_size = parse_mask_size
+
       start_position = @file.tell
       finish = start_position + mask_size
 
@@ -49,8 +50,20 @@ class PSD
 
     private
 
+    def parse_mask_size
+      @header.big? ? @file.read_longlong : @file.read_int
+    end
+
+    def parse_layer_info_size
+      Util.pad2(@header.big? ? @file.read_longlong : @file.read_int)
+    end
+
+    def channel_information_length
+      @header.big? ? 10 : 6
+    end
+
     def parse_layers
-      layer_info_size = Util.pad2(@file.read_int)
+      layer_info_size = parse_layer_info_size
 
       if layer_info_size > 0
         layer_count = @file.read_short
@@ -60,7 +73,7 @@ class PSD
           @merged_alpha = true
         end
 
-        if layer_count * (18 + 6 * @header.channels) > layer_info_size
+        if layer_count * (18 + channel_information_length * @header.channels) > layer_info_size
           PSD.logger.error "Unlikely number of layers parsed: #{layer_count}"
         end
 
