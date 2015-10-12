@@ -21,6 +21,7 @@ class PSD
       def to_hash
         super.merge({
           type: :group,
+          open: section_divider ? section_divider.layer_type == 'open folder' : false,
           children: children.map(&:to_hash)
         })
       end
