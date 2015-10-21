@@ -15,7 +15,7 @@ class PSD
       @brightness = @file.read_short
       @contrast = @file.read_short
       @mean_value = @file.read_short
-      @lab_color = @file.read_byte
+      @lab_color = @file.read_boolean
     end
   end
 end
