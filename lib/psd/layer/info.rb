@@ -10,6 +10,7 @@ require 'psd/layer/info/layer_id'
 require 'psd/layer/info/layer_name_source'
 require 'psd/layer/info/layer_section_divider'
 require 'psd/layer/info/legacy_typetool'
+require 'psd/layer/info/levels'
 require 'psd/layer/info/locked'
 require 'psd/layer/info/metadata_setting'
 require 'psd/layer/info/object_effects'
@@ -41,6 +42,7 @@ class PSD
         layer_id: LayerID,
         layer_name_source: LayerNameSource,
         legacy_type: LegacyTypeTool,
+        levels: Levels,
         locked: Locked,
         metadata: MetadataSetting,
         name: UnicodeName,
