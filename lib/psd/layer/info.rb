@@ -1,5 +1,6 @@
 require 'psd/layer/info/blend_clipping_elements'
 require 'psd/layer/info/blend_interior_elements'
+require 'psd/layer/info/brightness_contrast'
 require 'psd/layer/info/fill_opacity'
 require 'psd/layer/info/gradient_fill'
 require 'psd/layer/info/hue_saturation'
@@ -31,6 +32,7 @@ class PSD
       LAYER_INFO = {
         blend_clipping_elements: BlendClippingElements,
         blend_interior_elements: BlendInteriorElements,
+        brightness_contrast: BrightnessContrast,
         fill_opacity: FillOpacity,
         gradient_fill: GradientFill,
         hue_saturation: HueSaturation,
