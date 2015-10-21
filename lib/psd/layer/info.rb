@@ -2,6 +2,7 @@ require 'psd/layer/info/blend_clipping_elements'
 require 'psd/layer/info/blend_interior_elements'
 require 'psd/layer/info/fill_opacity'
 require 'psd/layer/info/gradient_fill'
+require 'psd/layer/info/hue_saturation'
 require 'psd/layer/info/layer_group'
 require 'psd/layer/info/layer_id'
 require 'psd/layer/info/layer_name_source'
@@ -29,26 +30,27 @@ class PSD
       LAYER_INFO = {
         blend_clipping_elements: BlendClippingElements,
         blend_interior_elements: BlendInteriorElements,
-        type: TypeTool,
-        legacy_type: LegacyTypeTool,
-        metadata: MetadataSetting,
+        fill_opacity: FillOpacity,
+        gradient_fill: GradientFill,
+        hue_saturation: HueSaturation,
+        layer_id: LayerID,
         layer_name_source: LayerNameSource,
-        object_effects: ObjectEffects,
+        legacy_type: LegacyTypeTool,
+        locked: Locked,
+        metadata: MetadataSetting,
         name: UnicodeName,
+        nested_section_divider: NestedLayerDivider,
+        object_effects: ObjectEffects,
+        placed_layer: PlacedLayer,
+        reference_point: ReferencePoint,
         section_divider: LayerSectionDivider,
         sheet_color: SheetColor,
-        nested_section_divider: NestedLayerDivider,
-        reference_point: ReferencePoint,
-        layer_id: LayerID,
-        fill_opacity: FillOpacity,
-        placed_layer: PlacedLayer,
-        locked: Locked,
         solid_color: SolidColor,
+        type: TypeTool,
         vector_mask: VectorMask,
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
         vector_stroke_content: VectorStrokeContent,
-        gradient_fill: GradientFill
       }.freeze
 
       BIG_LAYER_INFO_KEYS = %w{ LMsk Lr16 Lr32 Layr Mt16 Mt32 Mtrn Alph FMsk lnk2 FEid FXid PxSD }
