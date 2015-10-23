@@ -3,6 +3,7 @@ require 'psd/layer/info/blend_interior_elements'
 require 'psd/layer/info/brightness_contrast'
 require 'psd/layer/info/content_generator'
 require 'psd/layer/info/curves'
+require 'psd/layer/info/exposure'
 require 'psd/layer/info/fill_opacity'
 require 'psd/layer/info/gradient_fill'
 require 'psd/layer/info/hue_saturation'
@@ -38,6 +39,7 @@ class PSD
         brightness_contrast: BrightnessContrast,
         content_generator: ContentGenerator,
         curves: Curves,
+        exposure: Exposure,
         fill_opacity: FillOpacity,
         gradient_fill: GradientFill,
         hue_saturation: HueSaturation,
