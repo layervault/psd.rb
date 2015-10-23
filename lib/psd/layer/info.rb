@@ -28,6 +28,7 @@ require 'psd/layer/info/vector_mask'
 require 'psd/layer/info/vector_origination'
 require 'psd/layer/info/vector_stroke'
 require 'psd/layer/info/vector_stroke_content'
+require 'psd/layer/info/vibrance'
 
 class PSD
   class Layer
@@ -63,6 +64,7 @@ class PSD
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
         vector_stroke_content: VectorStrokeContent,
+        vibrance: Vibrance
       }.freeze
 
       BIG_LAYER_INFO_KEYS = %w{ LMsk Lr16 Lr32 Layr Mt16 Mt32 Mtrn Alph FMsk lnk2 FEid FXid PxSD }
