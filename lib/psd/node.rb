@@ -91,6 +91,17 @@ class PSD
       end
       alias_method :clipped_by, :clipping_mask
 
+      # Color label is a little tricky. If you set the color of a group, all
+      # of it's descendants inhert the color unless manually overridden. So,
+      # if this node has no defined color, we have to walk up the ancestry tree
+      # to make sure the color isn't set somewhere else.
+      def color_label
+        color = layer.sheet_color.color
+        return color if color != :no_color || node.parent.root?
+
+        parent.color_label
+      end
+
       def layer?
         is_a?(PSD::Node::Layer)
       end
