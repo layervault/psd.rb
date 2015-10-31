@@ -54,6 +54,10 @@ class PSD
       (@flags & (0x01 << 2)) > 0
     end
 
+    def from_other_data
+      (@flags & (0x01 << 3)) > 0
+    end
+
     def to_hash
       return {} if @size == 0
 
