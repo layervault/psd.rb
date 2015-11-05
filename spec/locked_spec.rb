@@ -45,10 +45,10 @@ describe 'Locked' do
     expect(psd.tree.children[7].composite_locked?).to eq(true)
     expect(psd.tree.children[7].transparency_locked?).to eq(true)
 
-    expect(psd.tree.children[7].children[0].position_locked?).to eq(false)
-    expect(psd.tree.children[7].children[0].all_locked?).to eq(false)
-    expect(psd.tree.children[7].children[0].composite_locked?).to eq(false)
-    expect(psd.tree.children[7].children[0].transparency_locked?).to eq(false)
+    expect(psd.tree.children[7].children[0].position_locked?).to eq(true)
+    expect(psd.tree.children[7].children[0].all_locked?).to eq(true)
+    expect(psd.tree.children[7].children[0].composite_locked?).to eq(true)
+    expect(psd.tree.children[7].children[0].transparency_locked?).to eq(true)
 
     expect(psd.tree.children[7].children[1].position_locked?).to eq(true)
     expect(psd.tree.children[7].children[1].all_locked?).to eq(true)
@@ -56,9 +56,9 @@ describe 'Locked' do
     expect(psd.tree.children[7].children[1].transparency_locked?).to eq(true)
 
     expect(psd.tree.children[7].children[1].children[0].position_locked?).to eq(true)
-    expect(psd.tree.children[7].children[1].children[0].all_locked?).to eq(false)
-    expect(psd.tree.children[7].children[1].children[0].composite_locked?).to eq(false)
-    expect(psd.tree.children[7].children[1].children[0].transparency_locked?).to eq(false)
+    expect(psd.tree.children[7].children[1].children[0].all_locked?).to eq(true)
+    expect(psd.tree.children[7].children[1].children[0].composite_locked?).to eq(true)
+    expect(psd.tree.children[7].children[1].children[0].transparency_locked?).to eq(true)
 
     expect(psd.tree.children[8].position_locked?).to eq(true)
     expect(psd.tree.children[8].all_locked?).to eq(false)
