@@ -2,6 +2,7 @@ require 'psd/nodes/ancestry'
 require 'psd/nodes/build_preview'
 require 'psd/nodes/search'
 require 'psd/nodes/layer_comps'
+require 'psd/nodes/locking'
 
 # Internal structure to help us build trees of a Photoshop documents.
 # A lot of method names borrowed from the Ruby ancestry gem.
@@ -15,6 +16,7 @@ class PSD
       include Search
       include LayerComps
       include BuildPreview
+      include Locking
 
       # Default properties that all nodes contain
       PROPERTIES = [:name, :left, :right, :top, :bottom, :height, :width]
