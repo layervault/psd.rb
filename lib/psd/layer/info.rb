@@ -20,6 +20,7 @@ require 'psd/layer/info/metadata_setting'
 require 'psd/layer/info/object_effects'
 require 'psd/layer/info/pattern'
 require 'psd/layer/info/pattern_fill'
+require 'psd/layer/info/photo_filter'
 require 'psd/layer/info/placed_layer'
 require 'psd/layer/info/reference_point'
 require 'psd/layer/info/sheet_color'
@@ -58,6 +59,7 @@ class PSD
         nested_section_divider: NestedLayerDivider,
         object_effects: ObjectEffects,
         pattern_fill: PatternFill,
+        photo_filter: PhotoFilter,
         placed_layer: PlacedLayer,
         reference_point: ReferencePoint,
         section_divider: LayerSectionDivider,

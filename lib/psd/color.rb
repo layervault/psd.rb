@@ -6,8 +6,16 @@ class PSD
   module Color
     extend self
 
-      # This is a relic of libpsd that will likely go away in a future version. It
-      # stored the entire color value in a 32-bit address space for speed.
+    COLOR_SPACE = {
+      0 => :rgb,
+      1 => :hsb,
+      2 => :cmyk,
+      7 => :lab,
+      8 => :grayscale
+    }
+
+    # This is a relic of libpsd that will likely go away in a future version. It
+    # stored the entire color value in a 32-bit address space for speed.
     def color_space_to_argb(color_space, color_component)
       color = case color_space
       when 0
@@ -20,7 +28,7 @@ class PSD
           color_component[1] / 100.0, color_component[2] / 100.0,
           color_component[3] / 100.0
       when 7
-        lab_to_color *color_component
+        alab_to_color *color_component
       else
         0x00FFFFFF
       end
@@ -101,7 +109,7 @@ class PSD
 
     def alab_to_color(alpha, l, a, b)
       xyz = lab_to_xyz(l, a, b)
-      axyz_to_color alpha, xyz[:x], xyz[:y], xyz[:z]
+      axyz_to_color alpha, xyz[0], xyz[1], xyz[2]
     end
 
     def lab_to_xyz(l, a, b)
