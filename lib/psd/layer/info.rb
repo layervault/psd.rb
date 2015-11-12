@@ -1,6 +1,7 @@
 require 'psd/layer/info/blend_clipping_elements'
 require 'psd/layer/info/blend_interior_elements'
 require 'psd/layer/info/brightness_contrast'
+require 'psd/layer/info/color_balance'
 require 'psd/layer/info/content_generator'
 require 'psd/layer/info/curves'
 require 'psd/layer/info/exposure'
@@ -38,6 +39,7 @@ class PSD
         blend_clipping_elements: BlendClippingElements,
         blend_interior_elements: BlendInteriorElements,
         brightness_contrast: BrightnessContrast,
+        color_balance: ColorBalance,
         content_generator: ContentGenerator,
         curves: Curves,
         exposure: Exposure,
