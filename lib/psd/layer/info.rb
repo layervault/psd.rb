@@ -4,6 +4,7 @@ require 'psd/layer/info/blend_interior_elements'
 require 'psd/layer/info/brightness_contrast'
 require 'psd/layer/info/channel_mixer'
 require 'psd/layer/info/color_balance'
+require 'psd/layer/info/color_lookup'
 require 'psd/layer/info/content_generator'
 require 'psd/layer/info/curves'
 require 'psd/layer/info/exposure'
@@ -45,6 +46,7 @@ class PSD
         brightness_contrast: BrightnessContrast,
         channel_mixer: ChannelMixer,
         color_balance: ColorBalance,
+        color_lookup: ColorLookup,
         content_generator: ContentGenerator,
         curves: Curves,
         exposure: Exposure,
