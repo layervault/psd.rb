@@ -11,6 +11,7 @@ require 'psd/layer/info/exposure'
 require 'psd/layer/info/fill_opacity'
 require 'psd/layer/info/gradient_fill'
 require 'psd/layer/info/hue_saturation'
+require 'psd/layer/info/invert'
 require 'psd/layer/info/layer_group'
 require 'psd/layer/info/layer_id'
 require 'psd/layer/info/layer_name_source'
@@ -53,6 +54,7 @@ class PSD
         fill_opacity: FillOpacity,
         gradient_fill: GradientFill,
         hue_saturation: HueSaturation,
+        invert: Invert,
         layer_id: LayerID,
         layer_name_source: LayerNameSource,
         legacy_type: LegacyTypeTool,
