@@ -25,6 +25,7 @@ require 'psd/layer/info/pattern'
 require 'psd/layer/info/pattern_fill'
 require 'psd/layer/info/photo_filter'
 require 'psd/layer/info/placed_layer'
+require 'psd/layer/info/posterize'
 require 'psd/layer/info/reference_point'
 require 'psd/layer/info/sheet_color'
 require 'psd/layer/info/solid_color'
@@ -67,6 +68,7 @@ class PSD
         pattern_fill: PatternFill,
         photo_filter: PhotoFilter,
         placed_layer: PlacedLayer,
+        posterize: Posterize,
         reference_point: ReferencePoint,
         section_divider: LayerSectionDivider,
         sheet_color: SheetColor,
