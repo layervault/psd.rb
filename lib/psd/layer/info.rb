@@ -29,6 +29,7 @@ require 'psd/layer/info/posterize'
 require 'psd/layer/info/reference_point'
 require 'psd/layer/info/sheet_color'
 require 'psd/layer/info/solid_color'
+require 'psd/layer/info/threshold'
 require 'psd/layer/info/typetool'
 require 'psd/layer/info/unicode_name'
 require 'psd/layer/info/vector_mask'
@@ -73,6 +74,7 @@ class PSD
         section_divider: LayerSectionDivider,
         sheet_color: SheetColor,
         solid_color: SolidColor,
+        threshold: Threshold,
         type: TypeTool,
         vector_mask: VectorMask,
         vector_origination: VectorOrigination,
