@@ -10,6 +10,7 @@ require 'psd/layer/info/curves'
 require 'psd/layer/info/exposure'
 require 'psd/layer/info/fill_opacity'
 require 'psd/layer/info/gradient_fill'
+require 'psd/layer/info/gradient_map'
 require 'psd/layer/info/hue_saturation'
 require 'psd/layer/info/invert'
 require 'psd/layer/info/layer_group'
@@ -55,6 +56,7 @@ class PSD
         exposure: Exposure,
         fill_opacity: FillOpacity,
         gradient_fill: GradientFill,
+        gradient_map: GradientMap,
         hue_saturation: HueSaturation,
         invert: Invert,
         layer_id: LayerID,

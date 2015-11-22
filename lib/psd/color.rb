@@ -14,8 +14,9 @@ class PSD
       8 => :grayscale
     }
 
-    # This is a relic of libpsd that will likely go away in a future version. It
-    # stored the entire color value in a 32-bit address space for speed.
+    # In some places in the PSD file, colors are stored with a short that
+    # describes the color space, and the following 4 bytes that store the
+    # color data.
     def color_space_to_argb(color_space, color_component)
       color = case color_space
       when 0

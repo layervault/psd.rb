@@ -96,12 +96,12 @@ class PSD
     # Reads a 32-bit color space value.
     def read_space_color
       color_space = read_short
-      color_component = []
-      4.times do |i|
-        color_component.push(read_short >> 8)
+      color_components = []
+      4.times.map do |i|
+        color_components.push(read_short >> 8)
       end
 
-      Color.color_space_to_argb(color_space, color_component)
+      { color_mode: color_space, color_components: color_components }
     end
   end
 end
