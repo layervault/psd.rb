@@ -13,6 +13,7 @@ require 'psd/layer/info/gradient_fill'
 require 'psd/layer/info/gradient_map'
 require 'psd/layer/info/hue_saturation'
 require 'psd/layer/info/invert'
+require 'psd/layer/info/layer_mask_as_global_mask'
 require 'psd/layer/info/layer_group'
 require 'psd/layer/info/layer_id'
 require 'psd/layer/info/layer_name_source'
@@ -60,6 +61,7 @@ class PSD
         gradient_map: GradientMap,
         hue_saturation: HueSaturation,
         invert: Invert,
+        layer_mask_as_global_mask: LayerMaskAsGlobalMask,
         layer_id: LayerID,
         layer_name_source: LayerNameSource,
         legacy_type: LegacyTypeTool,
