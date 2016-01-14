@@ -35,6 +35,7 @@ require 'psd/layer/info/selective_color'
 require 'psd/layer/info/sheet_color'
 require 'psd/layer/info/solid_color'
 require 'psd/layer/info/threshold'
+require 'psd/layer/info/transparency_shapes_layer'
 require 'psd/layer/info/typetool'
 require 'psd/layer/info/unicode_name'
 require 'psd/layer/info/vector_mask'
@@ -85,6 +86,7 @@ class PSD
         sheet_color: SheetColor,
         solid_color: SolidColor,
         threshold: Threshold,
+        transparency_shapes_layer: TransparencyShapesLayer,
         type: TypeTool,
         vector_mask: VectorMask,
         vector_origination: VectorOrigination,
