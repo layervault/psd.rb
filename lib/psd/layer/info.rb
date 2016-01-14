@@ -2,6 +2,7 @@ require 'psd/layer/info/black_white'
 require 'psd/layer/info/blend_clipping_elements'
 require 'psd/layer/info/blend_interior_elements'
 require 'psd/layer/info/brightness_contrast'
+require 'psd/layer/info/channel_blending_restrictions'
 require 'psd/layer/info/channel_mixer'
 require 'psd/layer/info/color_balance'
 require 'psd/layer/info/color_lookup'
@@ -50,6 +51,7 @@ class PSD
         blend_clipping_elements: BlendClippingElements,
         blend_interior_elements: BlendInteriorElements,
         brightness_contrast: BrightnessContrast,
+        channel_blending_restrictions: ChannelBlendingRestrictions,
         channel_mixer: ChannelMixer,
         color_balance: ColorBalance,
         color_lookup: ColorLookup,
