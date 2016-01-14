@@ -39,6 +39,7 @@ require 'psd/layer/info/transparency_shapes_layer'
 require 'psd/layer/info/typetool'
 require 'psd/layer/info/unicode_name'
 require 'psd/layer/info/vector_mask'
+require 'psd/layer/info/vector_mask_as_global_mask'
 require 'psd/layer/info/vector_origination'
 require 'psd/layer/info/vector_stroke'
 require 'psd/layer/info/vector_stroke_content'
@@ -89,6 +90,7 @@ class PSD
         transparency_shapes_layer: TransparencyShapesLayer,
         type: TypeTool,
         vector_mask: VectorMask,
+        vector_mask_as_global_mask: VectorMaskAsGlobalMask,
         vector_origination: VectorOrigination,
         vector_stroke: VectorStroke,
         vector_stroke_content: VectorStrokeContent,

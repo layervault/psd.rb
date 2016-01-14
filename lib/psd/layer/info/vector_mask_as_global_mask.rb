@@ -1,9 +1,9 @@
 require 'psd/layer_info'
 
 class PSD
-  class LayerMaskAsGlobalMask < LayerInfo
+  class VectorMaskAsGlobalMask < LayerInfo
     def self.should_parse?(key)
-      key == 'lmgm'
+      key == 'vmgm'
     end
 
     attr_reader :enabled
