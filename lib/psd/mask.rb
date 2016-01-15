@@ -15,6 +15,8 @@ class PSD
       @left = 0
       @bottom = 0
       @right = 0
+      @default_color = 0
+      @flags = 0
     end
 
     def parse
