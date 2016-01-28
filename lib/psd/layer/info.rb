@@ -8,6 +8,7 @@ require 'psd/layer/info/color_balance'
 require 'psd/layer/info/color_lookup'
 require 'psd/layer/info/content_generator'
 require 'psd/layer/info/curves'
+require 'psd/layer/info/effects_layer'
 require 'psd/layer/info/exposure'
 require 'psd/layer/info/fill_opacity'
 require 'psd/layer/info/gradient_fill'
@@ -60,6 +61,7 @@ class PSD
         color_lookup: ColorLookup,
         content_generator: ContentGenerator,
         curves: Curves,
+        effects_layer: EffectsLayer,
         exposure: Exposure,
         fill_opacity: FillOpacity,
         gradient_fill: GradientFill,
