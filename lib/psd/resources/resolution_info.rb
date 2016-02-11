@@ -15,12 +15,12 @@ class PSD
 
         def parse
           # 32-bit fixed-point number (16.16)
-          @h_res = @file.read_int.to_f / (1 << 16)
+          @h_res = @file.read_uint.to_f / (1 << 16)
           @h_res_unit = @file.read_ushort
           @width_unit = @file.read_ushort
 
           # 32-bit fixed-point number (16.16)
-          @v_res = @file.read_int.to_f / (1 << 16)
+          @v_res = @file.read_uint.to_f / (1 << 16)
           @v_res_unit = @file.read_ushort
           @height_unit = @file.read_ushort
 
