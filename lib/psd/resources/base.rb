@@ -26,5 +26,6 @@ end
 
 require 'psd/resources/guides'
 require 'psd/resources/layer_comps'
+require 'psd/resources/saved_path'
 require 'psd/resources/slices'
 require 'psd/resources/xmp_metadata'

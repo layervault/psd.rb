@@ -19,6 +19,7 @@ class PSD
       case @record_type
       when 0, 3 then read_path_record
       when 1, 2, 4, 5 then read_bezier_point
+      when 6 then read_path_fill_rule_record
       when 7 then read_clipboard_record
       when 8 then read_initial_fill
       else @file.seek(24, IO::SEEK_CUR)
@@ -91,6 +92,10 @@ class PSD
 
       @leaving_vert = @file.read_path_number
       @leaving_horiz = @file.read_path_number
+    end
+
+    def read_path_fill_rule_record
+      @file.seek(24, IO::SEEK_CUR)
     end
 
     def read_clipboard_record

@@ -7,7 +7,7 @@ class PSD
   class Resources
     attr_reader :resources
     alias :data :resources
-    
+
     def initialize(file)
       @file = file
       @resources = {}
@@ -45,6 +45,13 @@ class PSD
       else
         @resources[id]
       end
+    end
+
+    # Paths exist between resource ID 2000 and 2997
+    def paths
+      @resources.
+        select { |id, r| id >= 2000 && id <= 2997 }.
+        map { |id, r| r }
     end
 
     def by_type(id)
