@@ -48,7 +48,7 @@ class PSD
     end
 
     # Paths exist between resource ID 2000 and 2997
-    def paths
+    def saved_paths
       @resources.
         select { |id, r| id >= 2000 && id <= 2997 }.
         map { |id, r| r }
