@@ -28,5 +28,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'guard'
   gem.add_development_dependency 'guard-rspec'
   gem.add_development_dependency 'rb-fsevent', '~> 0.9'
-  gem.add_development_dependency 'byebug'
 end
