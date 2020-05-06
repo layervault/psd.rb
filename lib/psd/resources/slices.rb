@@ -17,6 +17,8 @@ class PSD
           when 7, 8 then
             descriptor_version = @file.read_int
             @data = Descriptor.new(@file).parse
+          else
+            return
           end
 
           normalize_data!
