@@ -19,7 +19,7 @@ class PSD
           @data = []
 
           num_guides.times do
-            location = @file.read_int / 32
+            location = (@file.read_int / 32.0).ceil(1)
             direction = @file.read_byte == 0 ? "vertical" : "horizontal"
 
             @data.push({ :location => location, :direction => direction })
