@@ -3,7 +3,7 @@ require 'psd/layer_info'
 class PSD
   class ObjectEffects < LayerInfo
     def self.should_parse?(key)
-      key == 'lfx2'
+      ['lfx2', 'lmfx'].include? key
     end
     
     def parse
